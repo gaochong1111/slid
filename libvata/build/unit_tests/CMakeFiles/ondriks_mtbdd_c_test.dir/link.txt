@@ -1,0 +1,1 @@
+/usr/bin/g++   -O3 -DNDEBUG    CMakeFiles/ondriks_mtbdd_c_test.dir/ondriks_mtbdd_c_test.cc.o  -o ondriks_mtbdd_c_test -rdynamic libtests.a ../src/libvata.a -lboost_unit_test_framework -lboost_filesystem -lboost_system 

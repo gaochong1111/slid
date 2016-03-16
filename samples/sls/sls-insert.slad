@@ -1,0 +1,197 @@
+//Inductive definitions
+
+slist(E,M)::= E = nil & emp & M = emptyset | 
+exists X,M1,v. E |-> ((next,X),(data,v)) * slist(X,M1) & M={v} cup M1 & v <= M1
+
+slseg(E,F,M1,M2)::= E = F & emp & M1 = M2 | 
+exists X,M3,v. E |-> ((next,X), (data,v)) * slseg(X,F,M3,M2) & M1={v} cup M3 & v <= M3 |
+
+//C source code
+
+struct Node* insert(struct Node* root, int key){
+	struct Node *cur = root;
+	struct Node *parent = NULL;
+	struct Node *x;
+
+	// the original list is empty
+	if(root == NULL)
+	{
+	    x = malloc (sizeof (struct Node));
+		x->next = NULL;
+		x-> data = key;
+		root = x;
+		return root;
+	}
+
+	// the list is nonempty
+	if(cur->data == key)
+		return root;
+	else if(cur->data < key)
+	{
+		parent = cur;
+		cur = cur->next;
+	}
+
+	while(cur != NULL && cur->data < key)
+	{
+		parent = cur;
+		cur = cur->next;
+	}
+
+	// the key occurs in the list
+	if(cur != NULL && cur->data == key)
+	{
+		return root;
+	}
+
+	// otherwise, key does not occur in the list
+	x = malloc (sizeof (struct Node));
+	x->next = cur;
+	x-> data = key;
+
+	if(parent != NULL)
+		parent->next = x;
+	else root = x;
+
+	return root;
+}
+
+
+// Pre and post conditions and the corresponding verification conditions
+// M0 is the ghost variable
+
+Pre:  slist(root1,M0) & root = nil	
+
+Post: slist(root2,M1) & M1 = {key} 
+
+VC01: x |-> ((next,nil),(data,key)) & root1 = nil & root2 = x & M1 = {key}
+|-  slist(root2,M1) & M1 = {key}
+
+{
+assume(root == NULL);
+x = malloc (sizeof (struct Node));
+x->next = NULL;
+x-> data = key;
+root = x;
+return root;
+}
+
+Pre:  root |-> ((next,X), (data,d)) * slist(X,M1) & M0 =  {d} cup M1 & d <= M1 & d = key 	
+
+Post: slist(root,M0) & key in M0 & ret = root
+
+VC02: root |-> ((next,X), (data,d)) * slist(X,M1) & M0 =  {d} cup M1 & d <= M1 & d = key & ret = root
+|-  slist(root,M0) & key in M0 & ret = root
+{
+assume(root != NULL);
+assume(cur->data == key)
+ret = root;
+}
+
+Pre:  root |-> ((next,X), (data,d)) * slist(X,M1) & cur1 = root & parent1 = nil & M0 =  {d} cup M1 & d <= M1 & d < key
+
+Post: slseg(root,parent2,M2,M3) * parent2 |-> ((next,cur2),(data,d)) * slist(cur2,M1) & d <= M1 & (key in M0 <=> key in M1) & 
+M3 = ite(key in M1, M1 cup {d}, M1 cup {d} cup {key}) & M2 = ite(key in M0, M0, M0 cup {key})
+
+VC03: root |-> ((next,X), (data,d)) * slist(X,M1) & cur1 = root & parent1 = nil & M0 =  {d} cup M1 & d <= M1 & d < key & parent2 = cur1 & cur2 = X
+M2 = M3 & M2 = ite(key in M0, M0, M0 cup {key})
+|-  slseg(root,parent2,M2,M3) * parent2 |-> ((next,cur2),(data,d)) * slist(cur2,M1) & d <= M1 & (key in M0 <=> key in M1) & 
+M3 = ite(key in M1, M1 cup {d}, M1 cup {d} cup {key}) & M2 = ite(key in M0, M0, M0 cup {key})
+{
+assume(root != NULL);
+assume(cur1->data < key);
+parent2 = cur1;
+cur2 = cur1->next;
+}
+
+//The while loop
+Pre: slseg(root,parent1,M1,M2) * parent1 |-> ((next,cur1),(data,d1)) * slist(cur1,M3) & d1 <= M3 & (key in M0 <=> key in M3) &
+M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & M1 = ite(key in M0, M0, M0 cup {key}) & ! parent1 = nil & !cur1 = nil
+
+Post: slseg(root,parent2,M1,M4) * parent2 |-> ((next,cur2),(data,d2)) * slist(cur2,M5) & d2 <= M5 & (key in M0 <=> key in M5) & 
+M4 = ite(key in M5, M5 cup {d2}, M5 cup {d2} cup {key}) & M1 = ite(key in M0, M0, M0 cup {key}) & parent2 != nil
+
+VC04: slseg(root,parent1,M1,M2) * parent1 |-> ((next,cur1),(data,d1)) * cur1 |->((next,X),(data,d2)) * slist(X, M5) & 
+M3 = M5 cup {d2} & d2<= M5 & d1 <= M3 & (key in M0 <=> key in M3) & M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & 
+M1 = ite(key in M0, M0, M0 cup {key}) & ! parent1 = nil & d2 < key & parent2 = cur1 & cur2 = X &
+M2 = {d1} cup M4 
+|-
+slseg(root,parent2,M1,M4) * parent2 |-> ((next,cur2),(data,d2)) * slist(cur2,M5) & d2 <= M5 & (key in M0 <=> key in M5) & 
+M4 = ite(key in M5, M5 cup {d2}, M5 cup {d2} cup {key}) & M1 = ite(key in M0, M0, M0 cup {key}) & parent2 != nil
+
+{
+assume(cur1 != NULL && cur1->data < key);
+parent2 = cur1;
+cur2 = cur1->next;
+}
+
+
+Pre: slseg(root,parent,M1,M2) * parent |-> ((next,cur),(data,d1)) * cur |-> ((next,X),(data,key)) * slist(X,M4) & d1 <= M3 & (key in M0 <=> key in M3) & 
+M3 = {key} cup M4 & key <= M4 & M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & 
+M1 = ite(key in M0, M0, M0 cup {key}) & ! parent = nil & !cur = nil
+
+Post: slist(ret,M0) & key in M0
+
+VC05: slseg(root,parent,M1,M2) * parent |-> ((next,cur),(data,d1)) * cur |-> ((next,X),(data,key)) * slist(X,M4) & d1 <= M3 & (key in M0 <=> key in M3) & 
+M3 = {key} cup M4 & key <= M4 & M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & 
+M1 = ite(key in M0, M0, M0 cup {key}) & ! parent = nil & !cur = nil & ret = root
+|- 
+slist(ret,M0) & key in M0
+
+{
+assume(cur != NULL && cur->data == key);
+ret = root;
+}
+
+Pre1: slseg(root,parent,M1,M2) * parent |-> ((next,cur),(data,d1)) * slist(cur,M3) & d1 <= M3 & (key in M0 <=> key in M3) & 
+M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & 
+M1 = ite(key in M0, M0, M0 cup {key}) & ! parent = nil & cur = nil
+
+Pre2: slseg(root,parent,M1,M2) * parent |-> ((next,cur),(data,d1)) * cur |-> ((next,X),(data,d2)) * slist(X,M4) & d1 <= M3 & (key in M0 <=> key in M3) & 
+M3 = {d2} cup M4 & d2 <= M4 & M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & 
+M1 = ite(key in M0, M0, M0 cup {key}) & ! parent = nil & d2 < key
+
+Post: slist(ret,M1) & ! key in M0 & M1 = M0 cup {key}
+
+VC06: slseg(root,parent,M1,M2) * parent |-> ((next,x),(data,d1)) * slist(cur,M3) * x |->((next,cur),(data,key)) & d1 <= M3 & (key in M0 <=> key in M3) & 
+M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & 
+M1 = ite(key in M0, M0, M0 cup {key}) & ! parent = nil & cur = nil & ret = root
+|-
+slist(ret,M1) & ! key in M0 & M1 = M0 cup {key}
+
+VC07: 
+slseg(root,parent,M1,M2) * parent |-> ((next,x),(data,d1)) * cur |-> ((next,X),(data,d2)) * slist(X,M4) * x |->((next,cur),(data,key)) & 
+d1 <= M3 & (key in M0 <=> key in M3) & M3 = {d2} cup M4 & d2 <= M4 & M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key})
+M1 = ite(key in M0, M0, M0 cup {key}) & ! parent = nil & d2 > key & ret = root |-
+|-
+slist(ret,M1) & ! key in M0 & M1 = M0 cup {key}
+{
+assume(cur == NULL || cur->data > key);
+x = malloc (sizeof (struct Node));
+x->next = cur;
+x-> data = key;
+assume(parent != NULL);
+parent->next = x;
+ret = root;
+}
+
+
+Pre: root1 |-> ((next,X),(data,d1)) * slist(X,M1) & d1<= M1 & M0 = M1 cup {d1} & d1 > key & parent = nil & cur = root1 & ! root1 = nil
+
+Post: slist(ret,M2) & ! key in M0 & M2 = M0 cup {key}
+
+VC08: root1 |-> ((next,X),(data,d1)) * slist(X,M1) * x |-> ((next,cur),(data,key)) & d1<= M1 & M0 = M1 cup {d1} & d1 > key & parent = nil & cur = root1 & ! root1 = nil
+& root2 = x & ret = root2 & M2 = M0 cup {key}
+|-
+slist(ret,M2) & ! key in M0 & M2 = M0 cup {key}
+
+
+{
+assume(cur == NULL || cur->data < key);
+x = malloc (sizeof (struct Node));
+x->next = cur;
+x-> data = key;
+assume(parent == NULL);
+root = x;
+root;
+}

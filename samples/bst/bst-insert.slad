@@ -1,0 +1,114 @@
+
+//Inductive definitions
+
+bst(E,M)::= E = nil & emp & M = emptyset | 
+exists X,Y,M1,M2. E |-> ((left,X), (right,Y)) * bst(X,M1) * bst(Y,M2) & M1 < E.data < M2
+
+bsthole(E,F,M1,M2)::= E = F & emp & M1 = M2 | 
+exists X,Y,M3,M4. E |-> ((left,X), (right,Y)) * bst(X,M3) * bsthole(Y,F,M4,M2) & M3 < E.data < M4 |
+exists X,Y,M3,M4. E |-> ((left,X), (right,Y)) * bsthole(X,F,M3,M2) * bst(Y,M4) & M3 < E.data < M4
+
+//C source code
+
+struct Node* insert(struct Node* root, int key){
+	Node *cur;
+	if(root == NULL)
+	{
+		malloc x;
+		x->left = NULL;
+		x->right = NULL;
+		x-> data = key;
+		return x;
+	}
+	cur = root;
+	while(cur->data != key)
+		if(cur->data < key)
+			if (cur->right != NULL)
+				cur = cur->right;
+			else
+			{
+				malloc x;
+				x->left = NULL;
+				x->right = NULL;
+				x-> data = key;
+				cur->right = x;
+			}
+		else if (cur->left != NULL)
+				cur = cur->left;
+			else
+			{
+				malloc x;
+				x->left = NULL;
+				x->right = NULL;
+				x-> data = key;
+				cur->left = x;
+			}
+	return root;
+}
+
+// Pre and post conditions and the corresponding verification conditions.
+// Let M0 be the ghost variable representing the multiset of data values occurring in the original heap.
+
+Pre:  bsthole(root,cur1,M1,M2) * bst(cur1,M3) & cur1 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M3 => M2 = M3 ) & ( (! key in M3) => M2 = M3 cup {key})
+
+Post: bsthole(root,cur2,M1,M4) * bst(cur2,M5) & cur2 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M5 => M4 = M5 ) & ( (! key in M5) => M4 = M5 cup {key})
+
+VC: bsthole(root,cur1,M1,M2) * cur1 |->((left,X), (right,cur2)) * bst(X, M6) * bst(cur2, M5) & 
+M3 = {cur1.data} cup M6 cup M5 & M6 < cur1.data < M5 & cur1 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M3 => M2 = M3 ) & ( (! key in M3) => M2 = M3 cup {key}) &  
+cur1.data < key & cur2 != nil & M2 = {cur1.data} cup M6 cup M4 |- 
+bsthole(root,cur2,M1,M4) * bst(cur2,M5) & cur2 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M5 => M4 = M5 ) & ( (! key in M5) => M4 = M5 cup {key})
+{
+assume(cur1-> data != key);
+assume(cur1->data < key);
+assume(cur1->right != NULL);
+cur2 = cur1->right;
+}
+
+Pre:  bsthole(root,cur1,M1,M2) * bst(cur1,M3) & cur1 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M3 => M2 = M3 ) & ( (! key in M3) => M2 = M3 cup {key})
+
+Post:  bsthole(root,cur1,M1,M2) * bst(cur1,M2) & cur1 != nil & (! key in M0) & M1 = M0 cup {key} & key in M2
+
+VC: bsthole(root,cur1,M1,M2) * cur1 |-> ((left,Y),(right,x)) * bst(Y,M4) * x|-> ((left,nil),(right,nil)) & x.data = key & M3 = M4 cup {cur1.data} & M4 < cur1.data & cur1 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M3 => M2 = M3 ) & ( (! key in M3) => M2 = M3 cup {key}) & cur1.data < key |-
+bsthole(root,cur1,M1,M2) * bst(cur1,M2) & cur1 != nil & (! key in M0) & M1 = M0 cup {key} & key in M2
+{
+assume(cur1-> data != key);
+assume(cur1->data < key);
+assume(cur1->right == NULL);
+malloc x;
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+cur1->right = x;
+}
+
+Pre:  bsthole(root,cur1,M1,M2) * bst(cur1,M3) & cur1 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M3 => M2 = M3 ) & ( (! key in M3) => M2 = M3 cup {key})
+
+Post: bsthole(root,cur2,M1,M4) * bst(cur2,M5) & cur2 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M5 => M4 = M5 ) & ( (! key in M5) => M4 = M5 cup {key})
+
+VC: bsthole(root,cur1,M1,M2) * cur1 |->((left,cur2), (right,Y)) *  bst(cur2, M5) * bst(Y, M6) & 
+M3 = {cur1.data} cup M5 cup M6 & M5 < cur1.data < M6 & cur1 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M3 => M2 = M3 ) & ( (! key in M3) => M2 = M3 cup {key}) &  
+cur1.data > key & cur2 != nil & M2 = {cur1.data} cup M4 cup M6 |- 
+bsthole(root,cur2,M1,M4) * bst(cur2,M5) & cur2 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M5 => M4 = M5 ) & ( (! key in M5) => M4 = M5 cup {key})
+{
+assume(cur1-> data != key);
+assume(cur1->data > key);
+assume(cur1->left != NULL);
+cur2 = cur1->left;
+}
+
+Pre:  bsthole(root,cur1,M1,M2) * bst(cur1,M3) & cur1 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M3 => M2 = M3 ) & ( (! key in M3) => M2 = M3 cup {key})
+
+Post:  bsthole(root,cur1,M1,M2) * bst(cur1,M2) & cur1 != nil & (! key in M0) & M1 = M0 cup {key} & key in M2
+
+VC: bsthole(root,cur1,M1,M2) * cur1 |-> ((left,x),(right,Y)) * x|-> ((left,nil),(right,nil)) * bst(Y,M4) & x.data = key & M3 = M4 cup {cur1.data} & cur1.data < M4 & cur1 != nil & (key in M0 => M1 = M0) & ((! key in M0) => M1 = M0 cup {key}) & ( key in M3 => M2 = M3 ) & ( (! key in M3) => M2 = M3 cup {key}) & cur1.data > key |-
+bsthole(root,cur1,M1,M2) * bst(cur1,M2) & cur1 != nil & (! key in M0) & M1 = M0 cup {key} & key in M2
+{
+assume(cur1-> data != key);
+assume(cur1->data > key);
+assume(cur1->left == NULL);
+malloc x;
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+cur1->left = x;
+}

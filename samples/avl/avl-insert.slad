@@ -1,0 +1,1371 @@
+
+//Inductive definitions
+// Each node has two data fields: data, balance (the balance factor, the difference of the heights of the right and left subtree). 
+
+avl(E,M, H)::= E = nil & emp & M = emptyset & H = 0 | 
+exists X,Y,M1,M2,H1,H2. E |-> ((left,X), (right,Y)) * avl(X,M1,H1) * avl(Y,M2,H2) & M = {E.data} cup M1 cup M2 & M1 < E.data < M2 & ite(H2 > H1, H = H2+1 , H = H1+1) & E.balance = H2 - H1 & -1 <= E.balance <= 1 
+
+avlhole(E,F, M1, H1, M2, H2)::= E = F & emp & M1 = M2 & H1 = H2 | 
+exists X,Y,M3,M4,H3,H4. E |-> ((left,X), (right,Y)) * avl(X,M3,H3) * avlhole(Y,F,M4,H4,M2,H2) & M1 = {E.data} cup M3 cup M4 & M3 < E.data < M4 & ite(H4 > H3, H1 = H4+1 , H = H3+1) & E.balance = H4 - H3 & -1 <= E.balance <= 1 |
+exists X,Y,M3,M4,H3,H4. E |-> ((left,X), (right,Y)) * avlhole(X,F,M3,H3,M2,H2) * avl(Y,M4,H4) & M1 = {E.data} cup M3 cup M4 & M3 < E.data < M4 & ite(H4 > H3, H1 = H4+1 , H1 = H3+1) & E.balance = H4 - H3 & -1 <= E.balance <= 1
+
+// avlhole with the property that each node on the path from E to F is balanced
+
+bavlhole(E,F, M1, H1, M2, H2)::= E = F & emp & M1 = M2 & H1 = H2 | 
+exists X,Y,M3,M4,H3,H4. E |-> ((left,X), (right,Y)) * avl(X,M3,H3) * bavlhole(Y,F,M4,H4,M2,H2) & M1 = {E.data} cup M3 cup M4 & M3 < E.data < M4 & H3 = H4 & H1 = H3+1 & E.balance = 0 |
+exists X,Y,M3,M4,H3,H4. E |-> ((left,X), (right,Y)) * bavlhole(X,F,M3,H3,M2,H2) * avl(Y,M4,H4) & M1 = {E.data} cup M3 cup M4 & M3 < E.data < M4 & H3 = H4 & H1 = H3+1 & E.balance = 0
+
+// avlhole with the property that each node on the path from E to F is unbalanced
+
+ubavlhole(E,F, M1, H1, M2, H2)::= E = F & emp & M1 = M2 & H1 = H2 | 
+exists X,Y,M3,M4,H3,H4. E |-> ((left,X), (right,Y)) * avl(X,M3,H3) * ubavlhole(Y,F,M4,H4,M2,H2) & M1 = {E.data} cup M3 cup M4 & M3 < E.data < M4 & H3 = H4 & H1 = H3+1 & -1 <= E.balance <=1 & ! E.balance = 0 |
+exists X,Y,M3,M4,H3,H4. E |-> ((left,X), (right,Y)) * ubavlhole(X,F,M3,H3,M2,H2) * avl(Y,M4,H4) & M1 = {E.data} cup M3 cup M4 & M3 < E.data < M4 & H3 = H4 & H1 = H3+1 & -1 <= E.balance <=1 & ! E.balance = 0
+
+//C source code
+
+struct Node * insert(struct Node *root, int key)
+{
+	struct Node *cur = root,
+	struct Node *parent = NULL;
+	struct Node *unbalance = root;
+	struct Node *unbparent = NULL;
+	struct Node *x;
+	struct Node *rgt;
+	struct Node *rgtleft;
+	struct Node * lft;
+	struct Node * lftright;
+
+	//the original tree is empty
+	if (root == NULL) {
+		x = malloc (sizeof (struct Node));
+	    x->left = NULL;
+	    x->right = NULL;
+	    x->data = key;
+	    x ->balance = 0;
+		return x;
+	}
+
+	// the tree is nonempty
+
+	if(cur->data == key)
+	{
+		return root;
+	}
+	else
+	{
+		if(cur->balance != 0)
+		{
+			unbalance = cur;
+			unbparent = parent;
+		}
+
+		if(cur->data > key)
+		{
+			parent = cur;
+			cur = cur->left;
+		}
+		else
+		{
+			parent = cur;
+			cur = cur->right;
+		}
+	}
+
+	// search for the key
+	while(cur != NULL && cur->data != key)
+	{
+		if(cur->balance != 0)
+		{
+			unblanance = cur;
+			unbparent = parent;
+		}
+		parent = cur;
+		if(cur->data > key)
+			cur = cur->left;
+		else
+			cur = cur->right;
+	}
+
+	// the key occurs in the tree
+	if(cur != NULL)
+	{
+		return root;
+	}
+
+	// otherwise, key does not occur in the tree, parent ! = NULL
+	x = malloc (sizeof (struct Node));
+	x->left = NULL;
+	x->right = NULL;
+	x-> data = key;
+	x->balance = 0;
+
+	if(parent->data > key)
+	{
+		parent->left = x;
+	}
+	else
+	{
+		parent->right = x;
+	}
+
+	// update the balance factor top-down, starting from unbalance
+	// originally all the nodes on the path from unbalance to parent, excluding unbalance, are balanced
+	cur = unbalance;
+	while(cur->data != key){
+		if (cur->data > key)
+		{
+			cur->balance --;
+			cur = cur->left;
+		}
+		else
+		{
+			cur->balance ++;
+			cur = cur->right;
+		}
+	}
+
+	// rotate if the tree becomes unbalance after insertion
+	if (unbalance->balance == 2)
+	{
+		rgt = unbalance->right;
+
+		if (rgt->balance == 1) {
+			// rotate unbalance left
+			unbalance->right = rgt->left;
+			rgt->left = unbalance;
+			unbalance->balance = 0;
+			rgt->balance = 0;
+			if(unbparent != NULL)
+			{
+				if(unbparent->data > key)
+				{
+					unbparent->left = rgt;
+				}
+				else
+				{
+					unbparent->right = rgt;
+				}
+			}
+			else
+				root = rgt;
+		}
+		else
+		// in this case, it must be the case that rgt-> balance == -1
+		{
+			rgtleft = rgt->left;
+
+			// rotate rgt right, then rotate unbalance left
+			rgt->left = rgtleft->right;
+			rgtleft->right = rgt;
+			unbalance->right = rgtleft;
+			unbalance->right = rgtleft->left;
+			rgtleft->left = unbalance;
+
+			rgtleft->balance = 0;
+
+			if (rgtleft->balance == 1){
+				unbalance->balance = -1;
+				rgt->balance = 0;
+			}
+			else if(rgtleft->balance == 0)
+			{
+				unbalance->balance = 0;
+				rgt->balance = 0;
+			}
+			else
+			{
+				unbalance->balance = 0;
+				rgt->balance = 1;
+			}
+
+			if(unbparent != NULL)
+			{
+				if(unbparent->data > key)
+				{
+					unbparent->left = rgtleft;
+				}
+				else
+				{
+					unbparent->right = rgtleft;
+				}
+			}
+			else
+				root = rgtleft;
+		}
+	}
+	else if (unbalance->balance == -2)
+	{
+		lft = unbalance->left;
+
+		if (lft->balance == -1) {
+			//rotate unbalance right
+			unbalance->left = lft->right;
+			lft->right = unbalance;
+			unbalance->balance = 0;
+			lft->balance = 0;
+			if(unbparent != NULL)
+			{
+				if(unbparent->data > key)
+				{
+					unbparent->left = lft;
+				}
+				else
+				{
+					unbparent->right = lft;
+				}
+			}
+			else
+				root = lft;
+		}
+		else
+		// in this case, it must be the case that lft->balance == 1
+		{
+			lftright = lft->right;
+			// rotate lft left, then roate unbalance right
+			lft->right = lftright->left;
+			lftright->left = lft;
+			unbalance->left = lftright->right;
+			lftright->right = unbalance;
+
+			if(lftright->balance == 1) {
+				unbalance->balance = 0;
+				lft->balance = -1;
+			}
+			else if(lftright->balance == 0)
+			{
+				unbalance->balance = 0;
+				lft->balance = 0;
+			}
+			else
+			{
+				unbalance->balance = 1;
+				lft->balance = 0;
+			}
+			lftright->balance = 0;
+			if(unbparent != NULL)
+			{
+				if(unbparent->data > key)
+				{
+					unbparent->left = lftright;
+				}
+				else
+				{
+					unbparent->right = lftright;
+				}
+			}
+			else
+				root = lftright;
+		}
+	}
+	/* if after insertion, unbalance -> balance == +1, -1, then this happens only if originally
+	 * all nodes on the path from root to parent have balance == 0, and unbalance == root.
+	*/
+
+	return root;
+}
+
+
+// Pre and post conditions and the corresponding verification conditions.
+// Let M0 be the ghost variable representing the multiset of data values occurring in the original heap.
+
+// blocks before the first while loop
+
+{
+assume(root == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->balance = 0;
+root = x;
+ret = root;
+}
+
+
+{
+assume(root != NULL);
+assume(cur->data == key);
+ret = root;
+}
+
+
+{
+assume(root != NULL);
+assume(cur1->data != key);
+assume(cur1->balance != 0);
+unblananced = cur1;
+unbparent = parent1;
+assume(cur1->data > key);
+parent2 = cur1;
+cur2 = cur1->left;
+}
+
+{
+assume(root != NULL);
+assume(cur->data1 != key);
+assume(cur1->balance == 0);
+assume(cur1->data > key);
+parent2 = cur1;
+cur2 = cur1->left;
+}
+
+{
+assume(root != NULL);
+assume(cur1->data != key);
+assume(cur1->balance != 0);
+unblananced = cur1;
+unbparent = parent1;
+assume(cur1->data < key);
+parent2 = cur1;
+cur2 = cur1->right;
+}
+
+{
+assume(root != NULL);
+assume(cur1->data != key);
+assume(cur1->balance == 0);
+assume(cur1->data < key);
+parent2 = cur1;
+cur2 = cur1->right;
+}
+
+// blocks in the first while loop
+// M0 is the ghost variable.
+
+// unbparent1 = nil, root.data > key, unbalance1 = parent1
+
+Pre1: root |-> ((left,cur1),(right,Y),(data,d1),(balance,b1)) * avl(cur1, M1, H1) * avl(Y, M2, H2) & M1 < d1 < M2 & b1 = H2 - H1 & -1 <= b1 <= 1 & M0 = {d1} cup M1 cup M2 & key in M0 <=> key in M1 & parent1 = root & unbparent1 = nil & unbalance1 = root & d1 > key
+
+Post1: avlhole(root, unbparent2, M3,H3,M4,H4) * unbparent2 |-> ((left,unbalance2),(right,Y),(data,d1),(balance,b1)) * parent2 |-> ((left,cur2),(right,U),(data,d2),(balance,b2)) * avl(cur2, M6, H6) * avl(U, M7,H7) * avl(Y, M2, H2) & M6 < d2 < M7 & b2 = H7 - H6 & -1 <= b2 <= 1 & ite(key in M6, M4 = {d1} cup {d2} cup M6 cup M7 cup M2, M4 = {d1} cup {d2} cup M6 cup M7 cup M2 cup {key}) & ite(H7 > H6, H1=H7+1, H1=H6+1) & ite(H2 > H1, H4 = H2+1, H4 = H1+1) & {d2} cup M6 cup M7 < d1 < M2 & b1 = H2 - H1 & -1<= b1 <= 1 & ite(key in M0, M3 = M0, M3 = M0 cup {key}) & key in M0 <=> key in M6 & ! parent2 = nil & ! unbparent2 = nil & unbalance2 = parent2 & d1> key & d2 > key & ! b2 = 0
+
+VC01: root |-> ((left,cur1),(right,Y),(data,d1),(balance,b1)) * cur1 |-> ((left,V),(right,U),(data,d2),(balance,b2)) * avl(V, M6, H6) * avl(U, M7,H7) * avl(Y, M2, H2) & M1 = {d2} cup M6 cup M7 & M6 < d2 < M7 & ite(H7>H6, H1 = H7+1,H1=H6+1) & b2 = H7 - H6 & -1 <=b2 <= 1 & M1 < d1 < M2 & b1 = H2 - H1 & -1 <= b1 <= 1 & M0 = {d1} cup M1 cup M2 & key in M0 <=> key in M1 & parent1 = root & unbparent1 = nil & unbalance1 = root & d1 > key & b2 != 0 & unbalance2 = cur1 & unbparent2 = parent1 & !cur1 = nil & parent2 = cur1 & d2 > key & cur2 = V & M3 = M4 & H3 = H4 & ite(key in M1, M4 = M0, M4 = M0 cup {key})
+|-
+avlhole(root, unbparent2, M3,H3,M4,H4) * unbparent2 |-> ((left,unbalance2),(right,Y),(data,d1),(balance,b1)) * parent2 |-> ((left,cur2),(right,U),(data,d2),(balance,b2)) * avl(cur2, M6, H6) * avl(U, M7,H7) * avl(Y, M2, H2) & M6 < d2 < M7 & b2 = H7 - H6 & -1 <= b2 <= 1 & ite(key in M6, M4 = {d1} cup {d2} M6 cup M7 cup M2, M4 = {d1} cup {d2} M6 cup M7 cup M2 cup {key}) & ite(H7 > H6, H1=H7+1, H1=H6+1) & ite(H2 > H1, H4 = H2+1, H4 = H1+1) & {d2} cup M6 cup M7 < d1 < M2 & b1 = H2 - H1 & -1<= b1 <= 1 & ite(key in M0, M3 = M0, M3 = M0 cup {key}) & key in M0 <=> key in M6 & ! parent2 = nil & ! unbparent2 = nil & unbalance2 = parent2 & d1> key & d2 > key & ! b2 = 0
+
+// unbparent1 = nil, root.data < key, unbalance1 = parent1
+
+// unbparent1 = nil, root.data > key, unbalance1 != parent1, parent1.data > key
+
+Pre2: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent1, M1, H1, M2, H2) * parent1|->((left,cur1), (right, Z), (data, d2), (balance, b2)) * avl(cur1, M4, H4) * avl(Z, M5, H5) * avl(Y, M3, H3) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d2} cup M4 cup M5, M2 = {d2} cup M4 cup M5 cup {key}) & ite(H5>H4, H2 = H5+1, H2 = H4+1) & ite(key in M0, M0 = {d1} cup M1 cup M3, M0 = ({d1} cup M1 cup M3) \ {key}) & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M4 & ! parent1 = nil & unbparent1 = nil & unbalance1 = root & d1 > key & d2 > key
+
+Post2: avlhole(root, unbparent2, M6,H6,M7,H7) * unbparent2 |-> ((left,unbalance2),(right,Z),(data,d2),(balance,b2)) * parent2 |-> ((left,cur2),(right,U),(data,d3),(balance,b3)) * avl(cur2, M8, H8) * avl(U,M9,H9) * avl(Z, M5,H5) & M8 < d3 < M9 & b3 = H9 - H8 & -1 <= b3 <= 1 & ite(key in M8, M7 = {d2} cup {d3} cup M8 cup M9 cup M5, M7 = {d2} cup {d3} cup M8 cup M9 cup M5 cup {key}) & ite(H9 > H8, H4=H9+1, H4=H8+1) & ite(H5 > H4, H7 = H5+1, H7 = H4+1) & {d3} cup M8 cup M9 < d2 < M5 & b2 = H5 - H4 & -1<= b2 <= 1 & ite(key in M0, M6 = M0, M6 = M0 cup {key}) & key in M0 <=> key in M8 & ! parent2 = nil & ! unbparent2 = nil & unbalance2 = parent2 & d2> key & d3 > key & ! b3 = 0 
+
+VC02: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent1, M1, H1, M2, H2) * parent1|->((left,cur1), (right, Z), (data, d2), (balance, b2)) * cur1 |-> ((left,V),(right,U),(data,d3),(balance,b3)) * avl(V,M8,H8) * avl(U,M9,H9) * avl(Z, M5, H5) * avl(Y, M3, H3) & M4 = {d3} cup M8 cup M9 & M8 < d3 < M9 & ite(H9>H8, H4 = H9 +1, H4 = H8 +1) & b3 = H9-H8 & -1<=b3<=1 & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d2} cup M4 cup M5, M2 = {d2} cup M4 cup M5 cup {key}) & ite(H5>H4, H2 = H5+1, H2 = H4+1) & ite(key in M0, M0 = {d1} cup M1 cup M3, M0 = ({d1} cup M1 cup M3) \ {key}) & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M4 & ! parent1 = nil & unbparent1 = nil & unbalance1 = root & d1 > key & d2 > key & ! b3 =0 & unbalance2 = cur1 & unbparent2 = parent1 & !cur1 = nil & parent2 = cur1 & d3 > key & cur2 = V & M6 = {d1} cup M1 cup M3 & M7 = M2 & H7 = H2 |-
+avlhole(root, unbparent2, M6,H6,M7,H7) * unbparent2 |-> ((left,unbalance2),(right,Z),(data,d2),(balance,b2)) * parent2 |-> ((left,cur2),(right,U),(data,d3),(balance,b3)) * avl(cur2, M8, H8) * avl(U,M9,H9) * avl(Z, M5,H5) & M8 < d3 < M9 & b3 = H9 - H8 & -1 <= b3 <= 1 & ite(key in M8, M7 = {d2} cup {d3} cup M8 cup M9 cup M5, M7 = {d2} cup {d3} cup M8 cup M9 cup M5 cup {key}) & ite(H9 > H8, H4=H9+1, H4=H8+1) & ite(H5 > H4, H7 = H5+1, H7 = H4+1) & {d3} cup M8 cup M9 < d2 < M5 & b2 = H5 - H4 & -1<= b2 <= 1 & ite(key in M0, M6 = M0, M6 = M0 cup {key}) & key in M0 <=> key in M8 & ! parent2 = nil & ! unbparent2 = nil & unbalance2 = parent2 & d2> key & d3 > key & ! b3 = 0 
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance != 0);
+unbalance2 = cur1;
+unbparent2 = parent1;
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+// unbparent1 = nil, root.data > key, unbalance1 != parent1, parent1.data < key
+
+// unbparent1 = nil, root.data < key, unbalance1 != parent1, parent1.data > key
+
+// unbparent1 = nil, root.data < key, unbalance1 != parent1, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 = parent1, parent1.data > key
+
+Pre3: avlhole(root, unbparent1, M1,H1,M2,H2) * unbparent1 |-> ((left,unbalance1),(right,X),(data,d1),(balance,b1)) * parent1 |-> ((left,cur1),(right,Y),(data,d2),(balance,b2)) * avl(cur1, M4, H4) * avl(Y, M5,H5) * avl(X, M3, H3) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d1} cup {d2} cup M4 cup M5 cup M3, M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key}) & ite(H5 > H4, h = H5+1, h = H4+1) & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M4 cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M4 & ! parent1 = nil & ! unbparent1 = nil & unbalance1 = parent1 & d1> key & d2 > key & ! b2 = 0
+
+Post3: avlhole(root, unbparent2, M1,H1,M6,H6) * unbparent2 |-> ((left,unbalance2),(right,Y),(data,d2),(balance,b2)) * parent2 |-> ((left,cur2),(right,Z),(data,d3),(balance,b3)) * avl(cur2, M7, H7) * avl(Z,M8,H8) * avl(Y, M5,H5) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d2} cup {d3} cup M7 cup M8 cup M5, M6 = {d2} cup {d3} cup M7 cup M8 cup M5 cup {key}) & ite(H8 > H7, h=H8+1, h=H7+1) & ite(H5 > h, H6 = H5+1, H6 = h+1) & {d3} cup M7 cup M8 < d2 < M5 & b2 = H5 - h & -1<= b2 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent2 = nil & ! unbparent2 = nil & unbalance2 = parent2 & d2 > key & d3 > key & ! b3 = 0 
+
+VC03: avlhole(root, unbparent1, M1,H1,M2,H2) * unbparent1 |-> ((left,unbalance1),(right,X),(data,d1),(balance,b1)) * parent1 |-> ((left,cur1),(right,Y),(data,d2),(balance,b2)) * cur1 |-> ((left,U), (right,Z),(data,d3),(balance,b3)) * avl(U, M7,H7) * avl(Z,M8,H8) * avl(Y, M5,H5) * avl(X, M3, H3) & M4 = {d3} cup M7 cup M8 & M7 < d3 < M8 & ite(H8 > H7, H4 = H8 +1, H4 = H7+1) & b3 = H8 - H7 & -1 <=b3 <= 1 & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d1} cup {d2} cup M4 cup M5 cup M3, M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key}) & ite(H5 > H4, h=H5+1, h=H4+1) & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M4 cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M4 & ! parent1 = nil & ! unbparent1 = nil & unbalance1 = parent1 & d1> key & d2 > key & ! b2 = 0 & ! b3 =0 & unbalance2 = cur1 & unbparent2 = parent1 & !cur1 = nil & parent2 = cur1 & d3 > key & cur2 = U & ite(key in M7, M6 = {d2} cup M4 cup M5, M6 = {d2} cup M4 cup M5 cup {key}) & H6 = h |-
+avlhole(root, unbparent2, M1,H1,M6,H6) * unbparent2 |-> ((left,unbalance2),(right,Y),(data,d2),(balance,b2)) * parent2 |-> ((left,cur2),(right,Z),(data,d3),(balance,b3)) * avl(cur2, M7, H7) * avl(Z,M8,H8) * avl(Y, M5,H5) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d2} cup {d3} cup M7 cup M8 cup M5, M6 = {d2} cup {d3} cup M7 cup M8 cup M5 cup {key}) & ite(H8 > H7, H4=H8+1, H4=H7+1) & ite(H5 > H4, H6 = H5+1, H6 = H4+1) & {d3} cup M7 cup M8 < d2 < M5 & b2 = H5 - H4 & -1<= b2 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent2 = nil & ! unbparent2 = nil & unbalance2 = parent2 & d2 > key & d3 > key & ! b3 = 0
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance != 0);
+unbalance2 = cur1;
+unbparent2 = parent1;
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 = parent1, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 = parent1, parent1.data > key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 = parent1, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 != parent1, unbalance1.data > key, parent1.data > key
+
+Pre4: avlhole(root, unbparent1, M1,H1,M2,H2) * unbparent1 |-> ((left,unbalance1),(right,X),(data,d1),(balance,b1)) * unbalance1 |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent1,M4,H4,M6,H6) * parent1 |-> ((left,cur1),(right,U),(data,d3),(balance,b3)) * avl(cur1, M7, H7) * avl(U,M8,H8) * avl(Z, M5,H5) * avl(X, M3, H3) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H6 = H8+1, H6 = H7+1) & M4 < d2 < M5 & b2 = H5 - H4 & ite(key in M0, M2 = {d1} cup {d2} cup M4 cup M5 cup M3, M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key}) & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent1 = nil & ! unbparent1 = nil & d1> key & d2 > key & d3 > key & ! b2 = 0
+
+Post4: avlhole(root, unbparent2, M1,H1,M9,H9) * unbparent2 |-> ((left,unbalance2),(right,U),(data,d3),(balance,b3)) * parent2 |-> ((left,cur2),(right,V),(data,d4),(balance,b4)) * avl(cur2, M10, H10) * avl(V,M11,H11) * avl(U, M8,H8) & M10 < d4 < M11 & b4 = H11 - H10 & -1 <= b4 <= 1 & ite(key in M10, M9 = {d3} cup {d4} cup M10 cup M11 cup M8, M9 = {d3} cup {d4} cup M10 cup M11 cup M8 cup {key}) & ite(H11 > H10, H7=H11+1, H7=H10+1) & ite(H8 > H7, H9 = H8+1, H9 = H7+1) & {d4} cup M10 cup M11 < d3 < M8 & b3 = H8 - H7 & -1<= b3 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M10 & ! parent2 = nil & ! unbparent2 = nil & unbalance2 = parent2 & d3 > key & d4 > key & ! b4 = 0
+
+VC04: avlhole(root, unbparent1, M1,H1,M2,H2) * unbparent1 |-> ((left,unbalance1),(right,X),(data,d1),(balance,b1)) * unbalance1 |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent1,M4,H4,M6,H6) * parent1 |-> ((left,cur1),(right,U),(data,d3),(balance,b3)) * cur1 |-> ((left,W),(right,V),(data,d4),(balance,b4)) * avl(W, M10, H10) * avl(V,M11,H11) * avl(U,M8,H8) * avl(Z, M5,H5) * avl(X, M3, H3) & M7 = {d4} cup M10 cup M11 & M10 < d4 < M11 & ite(H11 > H10, H7 = H11+1,H7=H10+1) & b4 = H11-H10 & -1 <=b4<=1 & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H6 = H8+1, H6 = H7+1) & M4 < d2 < M5 & b2 = H5 - H4 & ite(key in M0, M2 = {d1} cup {d2} cup M4 cup M5 cup M3, M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key}) & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent1 = nil & ! unbparent1 = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & !b4=0 & unbalance2 = cur1 & unbparent2 = parent1 & !cur1 = nil & parent2 = cur1 & d4 > key & cur2 = W & ite(key in M10, M9 = {d3} cup M7 cup M8, M9 = {d3} cup M7 cup M8 cup {key}) & H9 = H6 |-
+avlhole(root, unbparent2, M1,H1,M9,H9) * unbparent2 |-> ((left,unbalance2),(right,U),(data,d3),(balance,b3)) * parent2 |-> ((left,cur2),(right,V),(data,d4),(balance,b4)) * avl(cur2, M10, H10) * avl(V,M11,H11) * avl(U, M8,H8) & M10 < d4 < M11 & b4 = H11 - H10 & -1 <= b4 <= 1 & ite(key in M10, M9 = {d3} cup {d4} cup M10 cup M11 cup M8, M9 = {d3} cup {d4} cup M10 cup M11 cup M8 cup {key}) & ite(H11 > H10, H7=H11+1, H7=H10+1) & ite(H8 > H7, H9 = H8+1, H9 = H7+1) & {d4} cup M10 cup M11 < d3 < M8 & b3 = H8 - H7 & -1<= b3 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M10 & ! parent2 = nil & ! unbparent2 = nil & unbalance2 = parent2 & d3 > key & d4 > key & ! b4 = 0
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance != 0);
+unbalance2 = cur1;
+unbparent2 = parent1;
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 != parent1, unbalance1.data > key, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 != parent1, unbalance1.data < key, parent1.data > key
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 != parent1, unbalance1.data < key, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 != parent1, unbalance1.data > key, parent1.data > key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 != parent1, unbalance1.data > key, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 != parent1, unbalance1.data < key, parent1.data > key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 != parent1, unbalance1.data < key, parent1.data < key
+
+
+****************************************
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance != 0);
+unbalance = cur1;
+unbparent = parent1;
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+// unbparent1 = nil, root.data > key, unbalance1 = parent1
+
+Pre1: root |-> ((left,cur1),(right,Y),(data,d1),(balance,b1)) * avl(cur1, M1, H1) * avl(Y, M2, H2) & M1 < d1 < M2 & b1 = H2 - H1 & -1 <= b1 <= 1 & M0 = {d1} cup M1 cup M2 & key in M0 <=> key in M1 & parent1 = root & unbparent1 = nil & unbalance1 = root & d1 > key
+
+// unbparent2 = nil, root.data > key, unbalance2 != parent2, parent2.data > key
+
+Post1: root |-> ((left,parent2),(right,Y),(data,d1),(balance,b1)) * bavlhole(parent2, parent2, M3, H1, M3, H1) * parent2|->((left,cur2), (right, Z), (data, d2), (balance, b2)) * avl(cur2, M4, H4) * avl(Z, M5, H5) * avl(Y, M2, H2) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M3 = {d2} cup M4 cup M5, M3 = {d2} cup M4 cup M5 cup {key}) & ite(H5>H4, H1 = H5+1, H1 = H4+1) & ite(key in M0, M0 = {d1} cup M3 cup M2, M0 = ({d1} cup M3 cup M2) \ {key}) & M3 < d1 < M2 & b1 = H2 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M4 & ! parent2 = nil & unbparent2 = nil & unbalance2 = root & d1 > key & d2 > key & b2 = 0
+
+VC05: root |-> ((left,cur1),(right,Y),(data,d1),(balance,b1)) * cur1|->((left,X), (right, Z), (data, d2), (balance, b2)) * avl(X, M4, H4) * avl(Z, M5, H5) * avl(Y, M2, H2) & M1 = {d2} cup M4 cup M5 & M4 < d2 < M5 & ite(H5>H4, H1 = H5+1, H1=H4+1) & b2 = H5-H4 & -1 <=b2 <=1 & M1 < d1 < M2 & b1 = H2 - H1 & -1 <= b1 <= 1 & key in M0 <=> key in M1 & parent1 = root & unbparent1 = nil & unbalance1 = root & d1 > key & b2 = 0 & !cur1 = nil & parent2 = cur1 & d2 > key & cur2 = X & M1 = M3 & H1 = H3 & ite(key in M4, M3 = M1, M3 = M1 cup {key}) & unbparent2 = unbparent1 & unbalance2 = unbalance1
+|-
+root |-> ((left,parent2),(right,Y),(data,d1),(balance,b1)) * bavlhole(parent2, parent2, M3, H1, M3, H1) * parent2|->((left,cur2), (right, Z), (data, d2), (balance, b2)) * avl(cur2, M4, H4) * avl(Z, M5, H5) * avl(Y, M2, H2) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M3 = {d2} cup M4 cup M5, M3 = {d2} cup M4 cup M5 cup {key}) & ite(H5>H4, H1 = H5+1, H1 = H4+1) & ite(key in M0, M0 = {d1} cup M3 cup M2, M0 = ({d1} cup M3 cup M2) \ {key}) & M3 < d1 < M2 & b1 = H2 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M4 & ! parent2 = nil & unbparent2 = nil & unbalance2 = root & d1 > key & d2 > key & b2 = 0
+
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance == 0);
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+
+// unbparent1 = nil, root.data < key, unbalance1 = parent1
+
+// unbparent1 = nil, root.data > key, unbalance1 != parent1, parent1.data > key
+
+Pre2: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent1, M1, H1, M2, H2) * parent1|->((left,cur1), (right, Z), (data, d2), (balance, b2)) * avl(cur1, M4, H4) * avl(Z, M5, H5) * avl(Y, M3, H3) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d2} cup M4 cup M5, M2 = {d2} cup M4 cup M5 cup {key}) & ite(H5>H4, H2 = H5+1, H2 = H4+1) & ite(key in M0, M0 = {d1} cup M1 cup M3, M0 = ({d1} cup M1 cup M3) \ {key}) & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M4 & ! parent1 = nil & unbparent1 = nil & unbalance1 = root & d1 > key & d2 > key & b2 = 0
+
+// unbparent2 = nil, root.data > key, unbalance2 != parent2, parent2.data > key, parent2.balance = 0
+
+Post2: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent2, M1, H1, M6, H6) * parent2|->((left,cur2), (right, U), (data, d3), (balance, b3)) * avl(cur2, M7, H7) * avl(U, M8, H8) * avl(Y, M3, H3) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H6 = H8+1, H6 = H7+1) & ite(key in M0, M0 = {d1} cup M1 cup M3, M0 = ({d1} cup M1 cup M3) \ {key}) & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M7 & ! parent2 = nil & unbparent2 = nil & unbalance2 = root & d1 > key & d3 > key & b3 = 0
+
+VC06: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent1, M1, H1, M2, H2) * parent1|->((left,cur1), (right, Z), (data, d2), (balance, b2)) * cur1|->((left,V), (right, U), (data, d3), (balance, b3)) * avl(V, M7, H7) * avl(U, M8, H8) * avl(Z, M5, H5) * avl(Y, M3, H3) & M4 = {d3} cup M7 cup M8 & M7 < d3 < M8 & ite(H8 > H7, H4 = H8+1, H4 = H7+1) & b3 = H8 - H7 & -1 <= b3 <= 1 & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d2} cup M4 cup M5, M2 = {d2} cup M4 cup M5 cup {key}) & ite(H5>H4, H2 = H5+1, H2 = H4+1) & ite(key in M0, M0 = {d1} cup M1 cup M3, M0 = ({d1} cup M1 cup M3) \ {key}) & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M4 & ! parent1 = nil & unbparent1 = nil & unbalance1 = root & d1 > key & d2 > key & b2 =0 & ! cur1 =nil & b3 = 0 & parent2 = cur1 & d3 > key & cur2 = V & ite(key in M4, M6 = M4, M6 = M4 cup {key}) & H6 = H4 & unbparent2 = unbparent1 & unbalance2 = unbalance1 |-
+root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent2, M1, H1, M6, H6) * parent2|->((left,cur2), (right, U), (data, d3), (balance, b3)) * avl(cur2, M7, H7) * avl(U, M8, H8) * avl(Y, M3, H3) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H6 = H8+1, H6 = H7+1) & ite(key in M0, M0 = {d1} cup M1 cup M3, M0 = ({d1} cup M1 cup M3) \ {key}) & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M7 & ! parent2 = nil & unbparent2 = nil & unbalance2 = root & d1 > key & d3 > key & b3 = 0 
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance == 0);
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+// unbparent1 = nil, root.data > key, unbalance1 != parent1, parent1.data < key
+
+// unbparent1 = nil, root.data < key, unbalance1 != parent1, parent1.data > key
+
+// unbparent1 = nil, root.data < key, unbalance1 != parent1, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 = parent1, parent1.data > key
+
+Pre3: avlhole(root, unbparent1, M1,H1,M2,H2) * unbparent1 |-> ((left,unbalance1),(right,X),(data,d1),(balance,b1)) * parent1 |-> ((left,cur1),(right,Y),(data,d2),(balance,b2)) * avl(cur1, M4, H4) * avl(Y, M5,H5) * avl(X, M3, H3) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d1} cup {d2} cup M4 cup M5 cup M3, M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key}) & ite(H5 > H4, h = H5+1, h = H4+1) & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M4 cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M4 & ! parent1 = nil & ! unbparent1 = nil & unbalance1 = parent1 & d1> key & d2 > key & ! b2 = 0 
+
+// unbparent2 != nil, unbparent2.data > key, unbalance2 != parent2, parent2.data > key, unbparent2 = unbparent1, unbalance2 = unbalance1, parent2.balance = 0
+
+Post3: avlhole(root, unbparent2, M1,H1,M2,H2) * unbparent2 |-> ((left,unbalance2),(right,X),(data,d1),(balance,b1)) * unbalance2 |-> ((left,parent2),(right,Y),(data,d2),(balance,b2)) * bavlhole(parent2,parent2,M6,H4,M6,H4) * parent2 |-> ((left,cur2),(right,U),(data,d3),(balance,b3)) * avl(cur2, M7, H7) * avl(U,M8,H8) * avl(Y, M5,H5) * avl(X, M3, H3) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H4 = H8+1, H4 = H7+1) & M6 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M6 cup M5 cup M3 & {d2} cup M6 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h = H4 +1) & ite(H3 > h, H2 = H3+1, H2 = h+1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent2 = nil & ! unbparent2 = nil & d1> key & d2 > key & d3 > key & b3 = 0
+
+VC07: avlhole(root, unbparent1, M1,H1,M2,H2) * unbparent1 |-> ((left,unbalance1),(right,X),(data,d1),(balance,b1)) * parent1 |-> ((left,cur1),(right,Y),(data,d2),(balance,b2)) * cur1 |-> ((left,V),(right,U),(data,d3),(balance,b3)) * avl(V, M7, H7) * avl(U,M8,H8) * avl(Y, M5,H5) * avl(X, M3, H3) & M4 = {d3} cup M7 cup M8 & M7 < d3 < M8 & ite(H8>H7,H4 = H8+1, H4 = H7+1) & b2 = H8 - H7 & -1 <= b2 <= 1 & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d1} cup {d2} cup M4 cup M5 cup M3, M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key}) & ite(H5 > H4, h = H5+1, h = H4+1) & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M4 cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M4 & ! parent1 = nil & ! unbparent1 = nil & unbalance1 = parent1 & d1> key & d2 > key & ! b2 = 0 & ! cur1 = nil & b3 =0 & parent2 = cur1 & d3 > key & cur2 = V & unbparent2 = unbparent1 & unbalance2 = unbalance1 & ite(key in M7, M6 = M4, M6 = M4 cup {key}) |-
+avlhole(root, unbparent2, M1,H1,M2,H2) * unbparent2 |-> ((left,unbalance2),(right,X),(data,d1),(balance,b1)) * unbalance2 |-> ((left,parent2),(right,Y),(data,d2),(balance,b2)) * bavlhole(parent2,parent2,M6,H4,M6,H4) * parent2 |-> ((left,cur2),(right,U),(data,d3),(balance,b3)) * avl(cur2, M7, H7) * avl(U,M8,H8) * avl(Y, M5,H5) * avl(X, M3, H3) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H4 = H8+1, H4 = H7+1) & M6 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M6 cup M5 cup M3 & {d2} cup M6 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h = H4 +1) & ite(H3 > h, H2 = H3+1, H2 = h+1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent2 = nil & ! unbparent2 = nil & d1> key & d2 > key & d3 > key & b3 = 0
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance == 0);
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 = parent1, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 = parent1, parent1.data > key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 = parent1, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 != parent1, unbalance1.data > key, parent1.data > key
+
+Pre4: avlhole(root, unbparent1, M1,H1,M2,H2) * unbparent1 |-> ((left,unbalance1),(right,X),(data,d1),(balance,b1)) * unbalance1 |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent1,M4,H4,M6,H6) * parent1 |-> ((left,cur1),(right,U),(data,d3),(balance,b3)) * avl(cur1, M7, H7) * avl(U,M8,H8) * avl(Z, M5,H5) * avl(X, M3, H3) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H6 = H8+1, H6 = H7+1) & M4 < d2 < M5 & b2 = H5 - H4 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent1 = nil & ! unbparent1 = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0
+
+// unbparent2 = unbparent1 != nil, unbparent2.data > key, unbalance2 = unbalance1 != parent2, unbalance2.data > key, parent2.data > key, parent2.balance = 0
+
+Post4: avlhole(root, unbparent2, M1,H1,M2,H2) * unbparent2 |-> ((left,unbalance2),(right,X),(data,d1),(balance,b1)) * unbalance2 |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent2,M4,H4,M9,H9) * parent2 |-> ((left,cur2),(right,V),(data,d4),(balance,b4)) * avl(cur2, M10, H10) * avl(V,M11,H11) * avl(Z, M5,H5) * avl(X, M3, H3) & M10 < d4 < M11 & b4 = H11 - H10 & -1 <= b4 <= 1 & ite(key in M11, M9 = {d4} cup M10 cup M11, M9 = {d4} cup M10 cup M11 cup {key}) & ite(H11>H10, H9 = H11+1, H9 = H10+1) & M4 < d2 < M5 & b2 = H5 - H4 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M10 & ! parent2 = nil & ! unbparent2 = nil & d2> key & d4 > key & b4 = 0
+
+VC08: avlhole(root, unbparent1, M1,H1,M2,H2) * unbparent1 |-> ((left,unbalance1),(right,X),(data,d1),(balance,b1)) * unbalance1 |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent1,M4,H4,M6,H6) * parent1 |-> ((left,cur1),(right,U),(data,d3),(balance,b3)) * cur1 |-> ((left,W),(right,V),(data,d4),(balance,b4)) * avl(W, M10, H10) * avl(V,M11,H11) * avl(U,M8,H8) * avl(Z, M5,H5) * avl(X, M3, H3) & M7 = {d4} cup M10 cup M11 & M10 < d4 < M11 & ite(H11 > H10, H7 = H11 +1, H7 = H10+1) & b4 = H11 - H10 & -1 <=b4 <= 1 & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H6 = H8+1, H6 = H7+1) & M4 < d2 < M5 & b2 = H5 - H4 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent1 = nil & ! unbparent1 = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 =0 & ! cur1 = nil & b4=0 & parent2 = cur1 & d4 > key & cur2 = W & ite(key in M10, M9 = M7, M9 = M7 cup {key}) |-
+avlhole(root, unbparent2, M1,H1,M2,H2) * unbparent2 |-> ((left,unbalance2),(right,X),(data,d1),(balance,b1)) * unbalance2 |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent2,M4,H4,M9,H7) * parent2 |-> ((left,cur2),(right,V),(data,d4),(balance,b4)) * avl(cur2, M10, H10) * avl(V,M11,H11) * avl(Z, M5,H5) * avl(X, M3, H3) & M10 < d4 < M11 & b4 = H11 - H10 & -1 <= b4 <= 1 & ite(key in M10, M9 = {d4} cup M10 cup M11, M9 = {d4} cup M10 cup M11 cup {key}) & M4 < d2 < M5 & b2 = H5 - H4 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M10 & ! parent2 = nil & ! unbparent2 = nil & d2> key & d4 > key & b4 = 0
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance == 0);
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 != parent1, unbalance1.data > key, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 != parent1, unbalance1.data < key, parent1.data > key
+
+// unbparent1 != nil, unbparent1.data > key, unbalance1 != parent1, unbalance1.data < key, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 != parent1, unbalance1.data > key, parent1.data > key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 != parent1, unbalance1.data > key, parent1.data < key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 != parent1, unbalance1.data < key, parent1.data > key
+
+// unbparent1 != nil, unbparent1.data < key, unbalance1 != parent1, unbalance1.data < key, parent1.data < key
+
+****************************************
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance == 0);
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->left;
+}
+
+
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance != 0);
+unblananced = cur1;
+unbparent = parent1;
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->right;
+}
+
+{
+assume(cur1 != NULL && cur1->data != key);
+assume(cur1->balance == 0);
+parent2 = cur1;
+assume(cur1->data > key);
+cur2 = cur1->right;
+}
+
+
+// the blocks between the first while loop and second while loop
+
+{
+assume(cur == NULL || cur->data == key);
+assume(cur != NULL);
+ret = root;
+}
+
+// unbparent = nil, root.data > key, unbalance = parent, parent.data > key & cur = nil
+
+Pre1: root |-> ((left,cur),(right,Y),(data,d1),(balance,b1)) * avl(cur, M1, H1) * avl(Y, M2, H2) & M1 < d1 < M2 & b1 = H2 - H1 & -1 <= b1 <= 1 & M0 = {d1} cup M1 cup M2 & key in M0 <=> key in M1 & parent = root & unbparent = nil & unbalance = root & d1 > key & cur = nil
+
+Post1: root |-> ((left,x),(right,Y),(data,d1),(balance,b1)) * x |->((left,nil),(right,nil),(data,key),(balance,0)) * avl(Y,M2,H2) & d1 < M2 & b1 = H2 & -1 <= b1 <= 1 & M0 = {d1} cup M2 & parent = root & unbparent = nil & unbalance = root & d1 > key & !key in M0
+
+VC09: root |-> ((left,x),(right,Y),(data,d1),(balance,b1))  * avl(cur, M1, H1) * avl(Y, M2, H2) * x |->((left,nil),(right,nil),(data,key),(balance,0)) & M1 < d1 < M2 & b1 = H2 - H1 & -1 <= b1 <= 1 & M0 = {d1} cup M1 cup M2 & key in M0 <=> key in M1 & parent = root & unbparent = nil & unbalance = root & d1 > key & cur = nil |-
+root |-> ((left,x),(right,Y),(data,d1),(balance,b1)) * x |->((left,nil),(right,nil),(data,key),(balance,0)) * avl(Y,M2,H2) & d1 < M2 & b1 = H2 & -1 <= b1 <= 1 & M0 = {d1} cup M2 & parent = root & unbparent = nil & unbalance = root & d1 > key & !key in M0
+
+{
+assume(cur == NULL || cur->data == key);
+assume(cur == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->balance = 0;
+assume(parent->data > key);
+parent->left = x;
+}
+
+// unbparent = nil, root.data > key, unbalance = parent, parent.data < key & cur = nil
+
+// unbparent = nil, root.data < key, unbalance = parent, parent.data > key & cur = nil
+
+// unbparent = nil, root.data < key, unbalance = parent, parent.data < key & cur = nil
+
+// unbparent = nil, root.data > key, unbalance != parent, parent.data > key & cur = nil
+
+// unbparent = nil, root.data > key, unbalance != parent, parent.data < key & cur = nil
+
+// unbparent = nil, root.data < key, unbalance != parent, parent.data > key & cur = nil
+
+// unbparent = nil, root.data < key, unbalance != parent, parent.data < key & cur = nil
+
+// unbparent = nil, unbparent.data > key, unbalance != parent, parent.data > key & cur = nil
+
+Pre2: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent, M1, H1, M2, H2) * parent|->((left,cur), (right, Z), (data, d2), (balance, b2)) * avl(cur, M4, H4) * avl(Z, M5, H5) * avl(Y, M3, H3) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d2} cup M4 cup M5, M2 = {d2} cup M4 cup M5 cup {key}) & ite(H5>H4, H2 = H5+1, H2 = H4+1) & ite(key in M0, M0 = {d1} cup M1 cup M3, M0 = ({d1} cup M1 cup M3) \ {key}) & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M4 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & cur = nil
+
+Post2: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent, M1, H1, M2, H2) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M3, H3) & M2 = {d2} cup {key} & H2 = 1 & M0 = ({d1} cup M1 cup M3) \ {key} & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0
+
+VC10: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent, M1, H1, M2, H2) * parent|->((left,x), (right, Z), (data, d2), (balance, b2)) * avl(cur, M4, H4) * avl(Z, M5, H5) * avl(Y, M3, H3) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d2} cup M4 cup M5, M2 = {d2} cup M4 cup M5 cup {key}) & ite(H5>H4, H2 = H5+1, H2 = H4+1) & ite(key in M0, M0 = {d1} cup M1 cup M3, M0 = ({d1} cup M1 cup M3) \ {key}) & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & key in M0 <=> key in M4 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & cur = nil |-
+root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent, M1, H1, M2, H2) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M3, H3) & M2 = {d2} cup {key} & H2 = 1 & M0 = ({d1} cup M1 cup M3) \ {key} & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0
+{
+assume(cur == NULL || cur->data == key);
+assume(cur == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->balance = 0;
+assume(parent->data > key);
+parent->left = x;
+}
+
+// unbparent = nil, unbparent.data > key, unbalance != parent, parent.data < key & cur = nil
+
+// unbparent = nil, unbparent.data < key, unbalance != parent, parent.data > key & cur = nil
+
+// unbparent = nil, unbparent.data < key, unbalance1 != parent, parent.data < key & cur = nil
+
+// unbparent != nil, unbparent.data > key, unbalance = parent, parent.data > key & cur = nil
+
+Pre3: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,cur),(right,Y),(data,d2),(balance,b2)) * avl(cur, M4, H4) * avl(Y, M5,H5) * avl(X, M3, H3) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d1} cup {d2} cup M4 cup M5 cup M3, M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key}) & ite(H5 > H4, h = H5+1, h = H4+1) & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M4 cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M4 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & ! b2 = 0 & cur = nil
+
+Post3: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M5,H5) * avl(X, M3, H3) &  d2 < M5 & b2 = H5 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key} & h = H5+1 & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & ! b2 = 0
+
+VC11: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b2)) * avl(cur, M4, H4) * avl(Y, M5,H5) * avl(X, M3, H3) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & ite(key in M4, M2 = {d1} cup {d2} cup M4 cup M5 cup M3, M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key}) & ite(H5 > H4, h = H5+1, h = H4+1) & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M4 cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M4 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & ! b2 = 0 & cur = nil |-
+avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M5,H5) * avl(X, M3, H3) &  d2 < M5 & b2 = H5 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key} & h = H5+1 & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & ! b2 = 0
+{
+assume(cur1 == NULL || cur1->data == key);
+assume(cur1 == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->balance = 0;
+assume(parent->data > key);
+parent->left = x;
+}
+
+
+// unbparent != nil, unbparent.data > key, unbalance = parent, parent.data < key & cur = nil
+
+// unbparent != nil, unbparent.data < key, unbalance = parent, parent.data > key & cur = nil
+
+// unbparent != nil, unbparent.data < key, unbalance1 = parent, parent.data < key & cur = nil
+
+// unbparent != nil, unbparent.data > key, unbalance != parent, unbalance.data > key, parent.data > key & cur = nil
+
+Pre4: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent,M4,H4,M6,H6) * parent |-> ((left,cur),(right,U),(data,d3),(balance,b3)) * avl(cur, M7, H7) * avl(U,M8,H8) * avl(Z, M5,H5) * avl(X, M3, H3) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H6 = H8+1, H6 = H7+1) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & cur = nil
+
+Post4: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent,M4,H4,M6,H6) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M6 = {d3} cup {key} & H6 = 1 & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <=1 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 & M1 = M0 cup {key} & !key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0
+
+VC12: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent,M4,H4,M6,H6) * parent |-> ((left,x),(right,U),(data,d3),(balance,b3)) * avl(cur, M7, H7) * avl(U,M8,H8) * avl(Z, M5,H5) * avl(X, M3, H3) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) & M7 < d3 < M8 & b3 = H8 - H7 & -1 <= b3 <= 1 & ite(key in M7, M6 = {d3} cup M7 cup M8, M6 = {d3} cup M7 cup M8 cup {key}) & ite(H8>H7, H6 = H8+1, H6 = H7+1) & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <=1  & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1  & ite(key in M0, M1 = M0, M1 = M0 cup {key}) & key in M0 <=> key in M7 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & cur = nil |-
+avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent,M4,H4,M6,H6) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M6 = {d3} cup {key} & H6 = 1 & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <=1 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & !key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0
+{
+assume(cur1 == NULL || cur1->data == key);
+assume(cur1 == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->balance = 0;
+assume(parent->data > key);
+parent->left = x;
+}
+
+// unbparent != nil, unbparent.data > key, unbalance != parent, unbalance.data > key, parent.data < key & cur = nil
+
+// unbparent != nil, unbparent.data > key, unbalance != parent, unbalance.data < key, parent.data > key & cur = nil
+
+// unbparent != nil, unbparent.data > key, unbalance != parent, unbalance.data < key, parent.data < key & cur = nil
+
+// unbparent != nil, unbparent.data < key, unbalance != parent, unbalance.data > key, parent.data > key & cur = nil
+
+// unbparent != nil, unbparent.data < key, unbalance != parent, unbalance.data > key, parent.data < key & cur = nil
+
+// unbparent != nil, unbparent.data < key, unbalance != parent, unbalance.data < key, parent.data > key & cur = nil
+
+// unbparent != nil, unbparent.data < key, unbalance != parent, unbalance.data < key, parent.data < key & cur = nil
+
+****************************************
+{
+assume(cur1 == NULL || cur1->data == key);
+assume(cur1 == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->balance = 0;
+assume(parent->data > key);
+parent->left = x;
+}
+
+{
+assume(cur1 == NULL || cur1->data == key);
+assume(cur1 == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->balance = 0;
+assume(parent->data < key);
+parent->right = x;
+}
+
+
+// the blocks in the second while loop
+// cur = unbalance is taken as the precondition
+
+// unbparent = nil, root.data > key, unbalance = parent, parent.data > key
+
+Pre1: root |-> ((left,x),(right,Y),(data,d1),(balance,b1)) * x |->((left,nil),(right,nil),(data,key),(balance,0)) * avl(Y,M2,H2) & d1 < M2 & b1 = H2 & -1 <= b1 <= 1 & M0 = {d1} cup M2 & parent = root & unbparent = nil & unbalance = root & d1 > key & !key in M0 & cur1 = unbalance
+
+Post1: root |-> ((left,x),(right,Y),(data,d1),(balance,b2)) * x |->((left,nil),(right,nil),(data,key),(balance,0)) * avl(Y,M2,H2) & d1 < M2 & b2 = H2-1 & M0 = {d1} cup M2 & parent = root & unbparent = nil & unbalance = root & d1 > key & !key in M0 & cur2 = x
+
+VC13: root |-> ((left,x),(right,Y),(data,d1),(balance,b2)) * x |->((left,nil),(right,nil),(data,key),(balance,0)) * avl(Y,M2,H2) & d1 < M2 & b1 = H2 & -1 <= b1 <= 1 & M0 = {d1} cup M2 & parent = root & unbparent = nil & unbalance = root & d1 > key & !key in M0 & cur1 = unbalance & b2 = b1 -1 & cur2 = x |-
+root |-> ((left,x),(right,Y),(data,d1),(balance,b2)) * x |->((left,nil),(right,nil),(data,key),(balance,0)) * avl(Y,M2,H2) & d1 < M2 & b2 = H2-1 & M0 = {d1} cup M2 & parent = root & unbparent = nil & unbalance = root & d1 > key & !key in M0 & cur2 = x
+{
+assume(cur1->data != key);
+assume(cur1->data > key);
+cur1->balance --;
+cur2 = cur1->left;
+}
+
+// unbparent = nil, root.data > key, unbalance1 = parent, parent.data < key
+
+// unbparent = nil, root.data < key, unbalance = parent, parent.data > key
+
+// unbparent = nil, root.data < key, unbalance = parent, parent.data < key
+
+// unbparent = nil, root.data > key, unbalance != parent, parent.data > key
+
+// unbparent = nil, root.data > key, unbalance != parent, parent.data < key
+
+// unbparent = nil, root.data < key, unbalance != parent, parent.data > key
+
+// unbparent = nil, root.data < key, unbalance != parent, parent.data < key
+
+// unbparent = nil, unbparent.data > key, unbalance != parent, parent.data > key
+
+Pre2-1: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * bavlhole(X, parent, M1, H1, M2, H2) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M3, H3) & M2 = {d2} cup {key} & H2 = 1 & M0 = ({d1} cup M1 cup M3) \ {key} & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & cur1 = unbalance
+
+Post2-1: root |-> ((left,cur2),(right,Y),(data,d1),(balance,b3)) * ubavlhole(cur2,cur2,M1,H4,M1,H4) * bavlhole(cur2, parent, M1, H1, M2, H2) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M3, H3) & M2 = {d2} cup {key} & H2 = 1 & M0 = ({d1} cup M1 cup M3) \ {key} & M1 < d1 < M3 & b3 = H3 -H4 & -2 <= b3 <= 0 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & H4 = H1+1 & ! cur2 = unbalance 
+
+VC14: root |-> ((left,X),(right,Y),(data,d1),(balance,b3)) * bavlhole(X, parent, M1, H1, M2, H2) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M3, H3) & M2 = {d2} cup {key} & H2 = 1 & M0 = ({d1} cup M1 cup M3) \ {key} & M1 < d1 < M3 & b1 = H3 - H1 & -1<= b1 <= 1 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & cur1 = unbalance & b3 = b1 -1 & cur2 = X & H4 = H1 + 1 |-
+root |-> ((left,cur2),(right,Y),(data,d1),(balance,b3)) * ubavlhole(cur2,cur2,M1,H4,M1,H4) * bavlhole(cur2, parent, M1, H1, M2, H2) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M3, H3) & M2 = {d2} cup {key} & H2 = 1 & M0 = ({d1} cup M1 cup M3) \ {key} & M1 < d1 < M3 & b3 = H3 -H1-1 & -2 <= b3 <= 0 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & H4 = H1+1 & ! cur2 = unbalance 
+
+{
+assume(cur1->data != key);
+assume(cur1->data > key);
+cur1->balance --;
+cur2 = cur1->left;
+}
+
+Pre2-2: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * ubavlhole(X,cur1,M1,H1,M2,H2) * bavlhole(cur1, parent, M2, H3, M3, H4) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M3 = {d2} cup {key} & H4 = 1 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & -2<= b1 <= 0 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & H2 = H3+1 & ! cur1 = unbalance
+
+Post2-2: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * ubavlhole(X,cur2,M1,H1,M6,H6) * bavlhole(cur2, parent, M6, H7, M3, H4) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M3 = {d2} cup {key} & H4 = 1 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & -2 <= b1 <= 0 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & H6 = H7+1 & ! cur2 = unbalance
+
+VC15: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * ubavlhole(X,cur1,M1,H1,M2,H2) * cur1 |->((left,U),(right,V),(data,d3),(balance,b4)) * bavlhole(U, parent, M6, H7, M3, H4) * avl(V,M7,H8) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M2 = {d3} cup M6 cup M7 & M6 < d3 < M7 & ite(H8 > H7, H3 = H8 +1, H3 = H7 +1) & b3 = H8 - H7 & b3 = 0 & M3 = {d2} cup {key} & H4 = 1 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & -2<= b1 <= 0 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & H2 = H3+1 & ! cur1 = unbalance & d3 > key & b4 = b3-1 & cur2 = U & H6 = H7+1 |-
+root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * ubavlhole(X,cur2,M1,H1,M6,H6) * bavlhole(cur2, parent, M6, H7, M3, H4) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M3 = {d2} cup {key} & H4 = 1 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & -2 <= b1 <= 0 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = 0 & H6 = H7+1 & ! cur2 = unbalance
+
+{
+assume(cur1->data != key);
+assume(cur1->data > key);
+cur1->balance --;
+cur2 = cur1->left;
+}
+
+
+// unbparent = nil, unbparent.data > key, unbalance != parent, parent.data < key
+
+// unbparent = nil, unbparent.data < key, unbalance != parent, parent.data > key
+
+// unbparent = nil, unbparent.data < key, unbalance != parent, parent.data < key
+
+// unbparent != nil, unbparent.data > key, unbalance = parent, parent.data > key
+
+Pre3-1: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M5,H5) * avl(X, M3, H3) &  d2 < M5 & b2 = H5 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M5 cup M3 cup {key} & h = H5+1 & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & ! b2 = 0 & cur1 = unbalance
+
+Post3-1: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M5,H5) * avl(X, M3, H3) &  d2 < M5 & H5 =1 & b3 = 0 & M2 = {d1} cup {d2} cup M5 cup M3 cup {key} & ite(H3 > 2, H2 = H3+1, H2 = 3) & {d2} cup M5 < d1 < M3 & b1 = H3 - 2 & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & cur2 = x
+
+VC16: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M5,H5) * avl(X, M3, H3) &  d2 < M5 & b2 = H5 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M5 cup M3 cup {key} & h = H5+1 & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1 > key & d2 > key & ! b2 = 0 & cur1 = unbalance & b3 = b2 -1 & cur2 = x |-
+avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M5,H5) * avl(X, M3, H3) &  d2 < M5 & H5 =1 & b3 = 0 & M2 = {d1} cup {d2} cup M5 cup M3 cup {key} & ite(H3 > 2, H2 = H3+1, H2 = 3) & {d2} cup M5 < d1 < M3 & b1 = H3 - 2 & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & cur2 = x
+
+Pre3-2: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M5,H5) * avl(X, M3, H3) &  d2 < M5 & b2 = H5 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 cup {key} & h = H5+1 & ite(H3 > h, H2 = H3+1, H2 = h+1) & {d2} cup M5 < d1 < M3 & b1 = H3 - h & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & ! b2 = 0 & ! cur1 = unbalance
+
+// This implies cur1 = x, but this implies cur1.data = key, so exit the loop
+  
+{
+assume(cur1->data != key);
+assume(cur1->data > key);
+cur1->balance --;
+cur2 = cur1->left;
+}
+
+// unbparent != nil, unbparent.data > key, unbalance = parent, parent.data < key
+
+// unbparent != nil, unbparent.data < key, unbalance = parent, parent.data > key
+
+// unbparent != nil, unbparent.data < key, unbalance = parent, parent.data < key
+
+// unbparent != nil, unbparent.data > key, unbalance != parent, unbalance.data > key, parent.data > key
+
+Pre4-1: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * bavlhole(Y,parent,M4,H4,M6,H6) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M6 = {d3} cup {key} & H6 = 1 & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & cur1 = unbalance
+
+Post4-1: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,cur2),(right,Z),(data,d2),(balance,b4)) * ubavlhole(cur2,cur2,M4,H7,M4,H7) * bavlhole(cur2,parent,M4,H4,M6,H6) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M6 = {d3} cup {key} & H6 = 1 & M4 < d2 < M5 & b4 = H5 - H7 & -2 <= b4 <= 0 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & H7 = H4+1
+
+VC17: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b4)) * bavlhole(Y,parent,M4,H4,M6,H6) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M6 = {d3} cup {key} & H6 = 1 & M4 < d2 < M5 & b2 = H5 - H4 & -1 <= b2 <= 1 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & cur1 = unbalance & b4 = b2-1 & cur2 = Y & H7 = H4 +1 |-
+avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,cur2),(right,Z),(data,d2),(balance,b4)) * ubavlhole(cur2,cur2,M4,H7,M4,H7) * bavlhole(cur2,parent,M4,H4,M6,H6) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M6 = {d3} cup {key} & H6 = 1 & M4 < d2 < M5 & b4 = H5 - H7 & -2 <= b4 <= 0 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5>H4, h = H5 +1, h= H4 +1) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & H7 = H4+1
+
+{
+assume(cur1->data != key);
+assume(cur1->data > key);
+cur1->balance --;
+cur2 = cur1->left;
+}
+
+
+Pre4-2: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * ubavlhole(Y,cur1,M4,H4,M6,H6) * bavlhole(cur1,parent,M6,H7,M7,H8) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M7 = {d3} cup {key} & H8 = 1 & M4 < d2 < M5 & b2 = H5 - H4 & -2 <= b2 <= 0 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5+1 > H4, h = H5+1, h= H4) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & ! cur1 = unbalance & H6 = H7+1
+
+Post4-2: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * ubavlhole(Y,cur2,M4,H4,M9,H9) * bavlhole(cur2,parent,M9,H10,M7,H8) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M7 = {d3} cup {key} & H8 = 1 & M4 < d2 < M5 & b2 = H5 - H4 & -2 <= b2 <= 0 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5+1 > H4, h = H5+1, h = H4) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & ! cur1 = unbalance & H9 = H10+1
+
+VC18: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * ubavlhole(Y,cur1,M4,H4,M6,H6) * cur1 |->((left,U),(right,V),(data,d4),(balance,b5)) * bavlhole(U, parent, M9, H10, M7, H8) * avl(V,M11,H11) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) & M6 = {d4} cup M10 cup M11 & M10 < d4 < M11 & ite(H11 > H10, H7 = H11 +1, H7 = H10 +1) & b4 = H11 - H10 & b4 = 0 & M7 = {d3} cup {key} & H8 = 1 & M4 < d2 < M5 & b2 = H5 - H4 & -2 <= b2 <= 0 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5+1 > H4, h = H5+1, h= H4) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & ! cur1 = unbalance & H6 = H7+1 & b5 = b4 -1 & d4 > key & cur2 = U & H9 = H10+1 |-
+avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * ubavlhole(Y,cur2,M4,H4,M9,H9) * bavlhole(cur2,parent,M9,H10,M7,H8) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M7 = {d3} cup {key} & H8 = 1 & M4 < d2 < M5 & b2 = H5 - H4 & -2 <= b2 <= 0 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5+1 > H4, h = H5+1, h = H4) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = 0 & ! cur1 = unbalance & H9 = H10+1
+
+{
+assume(cur1->data != key);
+assume(cur1->data > key);
+cur1->balance --;
+cur2 = cur1->left;
+}
+
+// unbparent != nil, unbparent.data > key, unbalance != parent, unbalance.data > key, parent.data < key
+
+// unbparent != nil, unbparent.data > key, unbalance != parent, unbalance.data < key, parent.data > key
+
+// unbparent != nil, unbparent.data > key, unbalance != parent, unbalance.data < key, parent.data < key
+
+// unbparent != nil, unbparent.data < key, unbalance != parent, unbalance.data > key, parent.data > key
+
+// unbparent != nil, unbparent.data < key, unbalance != parent, unbalance.data > key, parent.data < key
+
+// unbparent != nil, unbparent.data < key, unbalance != parent, unbalance.data < key, parent.data > key
+
+// unbparent != nil, unbparent.data < key, unbalance != parent, unbalance.data < key, parent.data < key
+
+// cur = unbalance is taken as the precondition
+
+********************************
+assume(cur->data != key);
+assume(cur->data > key);
+cur->balance --;
+cur = cur->left;
+
+assume(cur->data != key);
+assume(cur->data < key);
+cur->balance ++;
+cur = cur->right;
+
+
+// the blocks after the second while loop
+// apply rotations if necessary
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance == 1);
+// rotate unbalance left
+unbalance->right = rgt->left;
+rgt->left = unbalance;
+unbalance->balance = 0;
+rgt->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data > key);
+unbparent->left = rgt;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance == 1);
+// rotate unbalance left
+unbalance->right = rgt->left;
+rgt->left = unbalance;
+unbalance->balance = 0;
+rgt->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = rgt;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance == 1);
+// rotate unbalance left
+unbalance->right = rgt->left;
+rgt->left = unbalance;
+unbalance->balance = 0;
+rgt->balance = 0;
+assume(unbparent == NULL);
+root = rgt;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == 1);
+unbalance->balance = -1;
+rgt->balance = 0;
+rgtleft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data > key);
+unbparent->left = rgtleft;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == 1);
+unbalance->balance = -1;
+rgt->balance = 0;
+rgtleft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = rgtleft;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == 1);
+unbalance->balance = -1;
+rgt->balance = 0;
+rgtleft->balance = 0;
+assume(unbparent == NULL);
+root = rgtleft;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == 0);
+unbalance->balance = 0;
+rgt->balance = 0;
+rgtleft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data > key);
+unbparent->left = rgtleft;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == 0);
+unbalance->balance = 0;
+rgt->balance = 0;
+rgtleft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = rgtleft;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == 0);
+unbalance->balance = 0;
+rgt->balance = 0;
+rgtleft->balance = 0;
+assume(unbparent == NULL);
+root = rgtleft;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == -1);
+unbalance->balance = 0;
+rgt->balance = 1;
+rgtleft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data > key);
+unbparent->left = rgtleft;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == -1);
+unbalance->balance = 0;
+rgt->balance = 1;
+rgtleft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = rgtleft;
+ret = root;
+
+assume(unbalance->balance == 2);
+rgt = unbalance->right;
+assume(rgt->balance != 1);
+// in this case, it must be the case that rgt-> balance == -1
+rgtleft = rgt->left;
+// rotate rgt right, then rotate unbalance left
+rgt->left = rgtleft->right;
+rgtleft->right = rgt;
+unbalance->right = rgtleft;
+unbalance->right = rgtleft->left;
+rgtleft->left = unbalance;
+assume(rgtleft->balance == -1);
+unbalance->balance = 0;
+rgt->balance = 1;
+rgtleft->balance = 0;
+assume(unbparent == NULL);
+root = rgtleft;
+ret = root;
+
+
+Pre1: root |-> ((left,x),(right,Y),(data,d1),(balance,b2)) * x |->((left,nil),(right,nil),(data,key),(balance,0)) * avl(Y,M2,H2) & d1 < M2 & b2 = H2-1 & M0 = {d1} cup M2 & parent = root & unbparent = nil & unbalance = root & d1 > key & !key in M0 & cur = x
+
+// b2 = H2-1 implies b2 >= -1, so no rotation is needed.
+
+Pre2: root |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * ubavlhole(X,parent,M1,H1,M3,H6) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M3 = {d2} cup {key} & H4 = 1 & H6 = 2 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & b1=-2 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root & d1 > key & d2 > key & b2 = -1 & cur = x
+
+// unbparent = nil, the block cannot be executed.
+
+Pre3: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * parent |-> ((left,x),(right,Y),(data,d2),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M5,H5) * avl(X, M3, H3) &  d2 < M5 & H5 =1 & b3 = 0 & M2 = {d1} cup {d2} cup M5 cup M3 cup {key} & ite(H3 > 2, H2 = H3+1, H2 = 3) & {d2} cup M5 < d1 < M3 & b1 = H3 - 2 & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & unbalance = parent & d1> key & d2 > key & cur = x
+
+// unbalance = parent, parent.balance = b3 =0, no rotation is needed
+
+{
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance == -1);
+//rotate unbalance right
+unbalance->left = lft->right;
+lft->right = unbalance;
+unbalance->balance = 0;
+lft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data > key);
+unbparent->left = lft;
+ret = root;
+}
+
+
+Pre4: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * ubavlhole(Y,parent,M4,H4,M7,H8) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M7 = {d3} cup {key} & H8 = 2 & M4 < d2 < M5 & b2 = H5 - H4 & b2=-2 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5+1>H4, h = H5 +1, h= H4) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = -1 & cur = x & Y.data > key
+
+Post4: avl(ret,M1,H1) & M1 = M0 cup {key} & ! key in M0
+
+VC19: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,lft),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,V),(right,Z),(data,d2),(balance,0)) * lft |-> ((left,U),(right,unbalance),(data,d4),(balance,0)) * ubavlhole(U,parent,M9,H10+1,M7,2) * avl(V,M10,H10) * parent |-> ((left,x),(right,nil),(data,d3),(balance,-1)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H10) * avl(X, M3, H3) & M4 = {d4} cup M9 cup M10 & M9 < d4 < M10 & !b4 = 0 & M7 = {d3} cup {key} & M4 < d2 < M5 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & & b1 = H3 - (H10+2) & -1<= b1 <= 1  &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & cur = x & ret = root
+|-
+avl(ret,M1,H1) & M1 = M0 cup {key} & ! key in M0
+
+****************************************
+{
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance == -1);
+//rotate unbalance right
+unbalance->left = lft->right;
+lft->right = unbalance;
+unbalance->balance = 0;
+lft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data > key);
+unbparent->left = lft;
+ret = root;
+}
+
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance == -1);
+//rotate unbalance right
+unbalance->left = lft->right;
+lft->right = unbalance;
+unbalance->balance = 0;
+lft->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = lft;
+ret = root;
+
+
+Pre2: root0 |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * unavlhole(X,parent,M1,H1,M3,H6) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M3 = {d2} cup {key} & H4 = 1 & H6 = 2 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & b1=-2 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root0 & d1 > key & d2 > key & b2 = -1 & cur = x
+
+Post2: avl(ret,M7,H7) & M7 = M0 cup {key} & ! key in M0
+
+VC20: root0 |-> ((left,V),(right,Y),(data,d1),(balance,0)) * X |-> ((left,U),(right,unbalance),(data,d3),(balance,0)) * unavlhole(U,parent,M8,H8,M3,H6) * avl(V,M9,H9) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M1 = {d3} cup M8 cup M9 & M8 < d3 < M9 & ite(H9>H8, H1 = H9+1,H1=H8+1) & b3 = H9 - H8 & b3 = -1 & M3 = {d2} cup {key} & H4 = 1 & H6 = 2 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & b1=-2 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root0 & d1 > key & d2 > key & b2 = -1 & cur = x & lft = X & root1 = lft & ret = root1 & M7 = {d3} cup M8 cup {d1} cup M9 cup M4 & H7 = H8 + 1 |-
+avl(ret,M7,H7) & M7 = M0 cup {key} & ! key in M0
+
+****************************************
+{
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance == -1);
+//rotate unbalance right
+unbalance->left = lft->right;
+lft->right = unbalance;
+unbalance->balance = 0;
+lft->balance = 0;
+assume(unbparent == NULL);
+root = lft;
+ret = root;
+}
+
+Pre4: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,unbalance),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,Y),(right,Z),(data,d2),(balance,b2)) * ubavlhole(Y,parent,M4,H4,M7,H8) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) &  M7 = {d3} cup {key} & H8 = 2 & M4 < d2 < M5 & b2 = H5 - H4 & b2=-2 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5+1>H4, h = H5 +1, h= H4) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = -1 & cur = x & Y.data > key & ! Y = parent
+
+Post4: avl(ret,M1,H1) & M1 = M0 cup {key} & ! key in M0 
+
+VC21: avlhole(root, unbparent, M1,H1,M2,H2) * unbparent |-> ((left,lftright),(right,X),(data,d1),(balance,b1)) * unbalance |-> ((left,V1),(right,Z),(data,d2),(balance,0)) * Y |-> ((left,U),(right,U1),(data,d4),(balance,-1)) * ubavlhole(U,parent,M9,H9,M7,H8) * V |-> ((left,lft),(right,unbalance),(data,d5),(balance,0)) * avl(U1,M11,H11) * avl(V1,M12,H12) * parent |-> ((left,x),(right,nil),(data,d3),(balance,b3)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Z, M5,H5) * avl(X, M3, H3) & M10 = {d5} cup M11 cup M12 & M11 < d5 < M12 & ite(H12 > H11, H10 = H12+1, H10 = H11 +1) & b5 = H12 - H11 & b5 = 1 & M4 = {d4} cup M9 cup M10 & M9 < d4 < M10 & ite(H10 > H9, H4 = H10 +1, H4 = H9 +1) & b4 = H10 - H9 & -1 <= b4 <=1 & !b4=0 & !b4 = -1 & M7 = {d3} cup {key} & H8 = 2 & M4 < d2 < M5 & b2 = H5 - H4 & b2=-2 & M2 = {d1} cup {d2} cup M4 cup M5 cup M3 & {d2} cup M4 cup M5 < d1 < M3 & ite(H5+1>H4, h = H5 +1, h= H4) & b1 = H3 - h  & -1<= b1 <= 1 &  M1 = M0 cup {key} & ! key in M0 & ! parent = nil & ! unbparent = nil & d1> key & d2 > key & d3 > key & ! b2 = 0 & b3 = -1 & cur = x & lft = Y & lftright = V & ret = root |-
+avl(ret,M1,H1) & M1 = M0 cup {key} & ! key in M0
+
+****************************************
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == 1);
+unbalance->balance = 0;
+lft->balance = -1;
+lftright->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data > key);
+unbparent->left = lftright;
+ret = root;
+
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == 1);
+unbalance->balance = 0;
+lft->balance = -1;
+lftright->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = lftright;
+ret = root;
+
+Pre2: root0 |-> ((left,X),(right,Y),(data,d1),(balance,b1)) * ubavlhole(X,parent,M1,H1,M3,H6) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M3 = {d2} cup {key} & H4 = 1 & H6 = 2 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & b1=-2 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root0 & d1 > key & d2 > key & b2 = -1 & cur = x & ! X = parent
+
+Post2: avl(ret,M7,H7) & M7 = M0 cup {key} & ! key in M0
+
+VC22: root0 |-> ((left,V1),(right,Y),(data,d1),(balance,0)) * X|->((left,U),(right,U1),(data,d3),(balance,-1)) * ubavlhole(U,parent,M8,H8,M3,H6) * V |-> ((left,lft),(right,unbalance),(data,d4),(balance,0)) * avl(U1,M10,H10) * avl(V1,M11,H11) * parent|->((left,x), (right, nil), (data, d2), (balance, b2)) * x |-> ((left,nil),(right,nil),(data,key), (balance,0)) * avl(Y, M4, H5) & M9 = {d4} cup M10 cup M11 & M10 < d4 < M11 & ite(H11>H10, H9 = H11 +1, H9 = H10 +1) & b4 = H11-H10 & b4=1 & M1 = {d3} cup M8 cup M9 & M8 < d3 < M9 & ite(H9 > H8, H1 = H9 +1, H1 = H8 +1) & b3 = H9-H8 & -1 <= b3 <= 1 & ! b3 =0 & ! b3 = -1 & H4 = 1 & H6 = 2 & M0 = ({d1} cup M1 cup M4) \ {key} & M1 < d1 < M4 & b1 = H5 - H1 & b1=-2 & ! key in M0 & ! parent = nil & unbparent = nil & unbalance = root0 & d1 > key & d2 > key & b2 = -1 & cur = x & lft = X & lftright = V & root1 = lftright & ret = root1 & M7 = {d4} cup {d3} cup M8 cup  M10 cup  {d1} cup M11 cup M4 & H7 = H8 + 2 |-
+avl(ret,M7,H7) & M7 = M0 cup {key} & ! key in M0
+
+****************************************
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == 1);
+unbalance->balance = 0;
+lft->balance = -1;
+lftright->balance = 0;
+assume(unbparent == NULL);
+root = lftright;
+ret = root;
+
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == 0);
+unbalance->balance = 0;
+lft->balance = 0;
+lftright->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = lftright;
+ret = root;
+
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == 0);
+unbalance->balance = 0;
+lft->balance = 0;
+lftright->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = lftright;
+ret = root;
+
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == 0);
+unbalance->balance = 0;
+lft->balance = 0;
+lftright->balance = 0;
+assume(unbparent == NULL);
+root = lftright;
+ret = root;
+
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == -1);
+unbalance->balance = 1;
+lft->balance = 0;
+lftright->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data > key);
+unbparent->left = lftright;
+ret = root;
+
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == -1);
+unbalance->balance = 1;
+lft->balance = 0;
+lftright->balance = 0;
+assume(unbparent != NULL);
+assume(unbparent->data < key);
+unbparent->right = lftright;
+ret = root;
+
+assume(unbalance->balance == -2);
+lft = unbalance->left;
+assume(lft->balance != -1);
+// in this case, it must be the case that lft->balance == 1
+lftright = lft->right;
+// rotate lft left, then roate unbalance right
+lft->right = lftright->left;
+lftright->left = lft;
+unbalance->left = lftright->right;
+lftright->right = unbalance;
+assume(lftright->balance == -1);
+unbalance->balance = 1;
+lft->balance = 0;
+lftright->balance = 0;
+assume(unbparent == NULL);
+root = lftright;
+ret = root;
+}

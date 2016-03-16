@@ -1,0 +1,65 @@
+//Inductive definitions
+
+bst(E,M)::= E = nil & emp & M = emptyset | 
+exists X,Y,M1,M2. E |-> ((left,X), (right,Y)) * bst(X,M1) * bst(Y,M2) & M={E.data} cup M1 cup M2 & M1 < E.data < M2
+
+bsthole(E,F,M1,M2)::= E = F & emp & M1 = M2 | 
+exists X,Y,M3,M4. E |-> ((left,X), (right,Y)) * bst(X,M3) * bsthole(Y,F,M4,M2) & M1={E.data} cup M3 cup M4 & M3 < E.data < M4 |
+exists X,Y,M3,M4. E |-> ((left,X), (right,Y)) * bsthole(X,F,M3,M2) * bst(Y,M4) & M1={E.data} cup M3 cup M4 & M3 < E.data < M4
+
+//C source code
+
+struct Node* search(struct Node* root, int key){
+	Node *cur;
+	cur = root;
+	while (cur != NULL)
+	{
+		if (cur->data == key)
+			return cur;
+		else if (cur->data > key)
+			cur = cur->left;
+		else
+			cur = cur->right;
+	}
+	return NULL;
+}
+
+// Pre and post conditions and the corresponding verification conditions
+
+Pre:  bsthole(root,cur1,M1,M2) * bst(cur1,M2) & (key in M1 <=> key in M2)	
+
+Post: bsthole(root,cur1,M1,M2) * bst(cur1,M2) & ret != nil & ret.data = key
+
+VC: bsthole(root,cur1,M1,M2) * bst(cur1,M2) & (key in M1 <=> key in M2) & cur1 != nil & cur1.data = key & ret = cur1 |- 
+bsthole(root,cur1,M1,M2) * bst(cur1,M2) & ret != nil & ret.data = key
+{
+assume(cur1 != NULL)
+assume(cur1->data == key)
+ret = cur1;
+}
+
+Pre: bsthole(root,cur1,M1,M2) * bst(cur1,M2) & (key in M1 <=> key in M2)	
+
+Post: bsthole(root,cur2,M1,M3) * bst(cur2,M3) & (key in M1 <=> key in M3)
+
+VC: bsthole(root,cur1,M1,M2) * cur1 |->((left,cur2),(right,X)) * bst(cur2,M3) * bst(X,M4) & 
+M2 = {cur1.data} cup M3 cup M4 & M3 < cur1.data < M4 & (key in M1 <=> key in M2) & cur1.data > key |-
+bsthole(root,cur2,M1,M3) * bst(cur2,M3) & (key in M1 <=> key in M3)
+{
+assume(cur1 != NULL)
+assume(cur1->data > key)
+cur2 = cur1->left
+}
+
+Pre: bsthole(root,cur1,M1,M2) * bst(cur1,M2) & (key in M1 <=> key in M2)
+
+Post: bsthole(root,cur2,M1,M3) * bst(cur2,M3) & (key in M1 <=> key in M3)
+	
+VC: bsthole(root,cur1,M1,M2) * cur1 |->((left,X),(right,cur2)) * bst(X,M4) * bst(cur2,M3) & 
+M2 = {cur1.data} cup M4 cup M3 & M4 < cur1.data < M3 & (key in M1 <=> key in M2) & cur1.data < key |-
+bsthole(root,cur2,M1,M3) * bst(cur2,M3) & (key in M1 <=> key in M3)
+{
+assume(cur1 != NULL)
+assume(cur1->data < key)
+cur2 = cur1->right
+}

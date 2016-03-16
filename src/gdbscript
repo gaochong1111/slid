@@ -1,0 +1,68 @@
+define print_preds_array
+	set $i=0
+	while ($i<($arg0)->size_)
+		p *(($arg0)->data_[$i])
+		set $i++
+	end
+end
+
+define print_m
+	set $i=0
+	while($i<($arg0)->size)
+		set $j=0
+		while($j<($arg0)->size)
+			printf "%3d   ", (($arg0)->m)[$i][$j]
+			set $j++
+		end
+		printf "\n"
+		set $i++
+	end
+end
+
+define print_vars1
+	set $i=0
+	while($i<($arg0)->size_)
+		p *(($arg0)->data_[$i])
+		set $i++
+	end
+end
+
+define print_vars2
+	set $i=0
+	while ($i < ($arg0)->size_)
+		p ($arg0)->data_[$i]
+		set $i++
+	end
+end
+
+define print_noll_pred_binding
+	p *($arg0)
+
+	printf "**********printing the variables:\n"
+	print_vars ($arg0)->vars
+end
+
+define print_noll_pred_rule
+	printf "***********variables*************\n"
+	if(($arg0)->vars != 0x0)
+	end
+	printf "**********fargs*****************\n"
+	p ($arg0)->fargs
+	printf "**********pure*****************\n"
+	if($arg0->pure != 0x0)
+		p $arg0->pure
+	end
+	p ($arg0)->pure
+	printf "**********pto******************\n"
+	if(($arg0)->pto != 0x0)
+		p ($arg0)->pto
+	end
+	printf "**********nst*******************\n"
+	if(($arg0)->nst != 0x0)
+		p ($arg0)->nst
+	end
+	printf "**********rec*******************\n"
+	if(($arg0)->rec != 0x0)
+		p ($arg0)->rec
+	end
+end

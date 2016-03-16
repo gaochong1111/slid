@@ -1,0 +1,92 @@
+2015, January 10th
+- exteded ast and typing for theory of data
+
+2015, January 5th
+- added dp with unfolding check and lemma generation
+
+2014, December 10th
+- added in syntax the theory of Int and Bag_of_Int
+  not yet supported by the dp
+- added dp with unfolding check 
+
+2014, October 22nd
+- options improvement 
+- better printing of sat diagnosis
+
+2014, October 6th
+- clean the options and add a verbosity level
+
+2014, October 1st
+- add a weak test for well-formedness of acyclic list
+  segments and special test for dll segments.
+- change of status for some benchmarks in dll.
+
+2014, September 29th
+- add options to trigger different optimisations of the
+  decision procedure.
+
+2014, July 25th
+- new version of the algorithm for translating general
+  predicate definitions to tree automata
+
+2014, July 23rd
+- deal with nested loops in predicate matrix by translating it
+  into an predicate edge in the matrix graph.
+
+2014, July 15th
+- generate correct labels for the nodes of trees generated
+  from nested calls of predicates in TA.
+
+2014, July 4th
+- new algorithm for general predicate definitions,
+  where the formula with two unfoldings of the matrix is 
+  used to build the tree automaton.
+
+2014, June 29th
+- first version of the refactoring of graph2ta: from
+  graph is built a tree (see noll_tree.*) and then a TA
+
+
+2014, June 26th
+- start implementing the general translation of predicate
+  definitions into the Tree Automata in noll_pred2ta_gen.c; 
+  this version only builds the tree of the predicate matrix 
+  based on the existing code.
+- require some refactoring of graph2ta in order to reuse
+  the marking and tree building.
+
+2014, June 16th
+- found bug in noll2sat and noll2bool in the encoding of
+  the transitivity for = relation, all examples pass now
+
+2014, June 13th
+- fix parsing of predicates to avoid distinct 
+  between first arg and args of different types
+- allow empty negative formulas to obtain sat problems
+- make norm_incr to stop as soons as the formula is unsat
+- fix memory deallocation problem for fsat
+- 0 errors in sll0a_sat
+- add to the boolean abstraction two clauses for det_pto_pto
+  in order to infer difference relation between x and z in 
+  ls(x,y)* y->u * z->v 
+  5 errors in sll0a_entl
+
+
+2014, June 12th
+- write test for select_wellformedness (only cond 2)
+- add partial treatment of dll in wellformedness
+- fixed lecture of minisat result on linux
+- fixed bug for emp formula in RHS
+- 14 errors in sll0a_entl
+- 55 errors in sll0a_sat
+
+2014, June 11th
+- indentation of sources done without tabs
+- emp formulas generate empty graphs
+- pass sll0a_entl benchmark revealed problem in select
+- 181 errors in sll0a_entl
+
+2014, June 10th
+- checkings of predicate definitions aligned to paper
+- dll definition base case accepted
+- emp space formula introduced

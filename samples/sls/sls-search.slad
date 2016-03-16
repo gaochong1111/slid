@@ -1,0 +1,77 @@
+//Inductive definitions
+
+slist(E,M)::= E = nil & emp & M = emptyset | 
+exists X,M1,v. E |-> ((next,X),(data,v)) * slist(X,M1) & M={v} cup M1 & v <= M1
+
+slseg(E,F,M1,M2)::= E = F & emp & M1 = M2 | 
+exists X,M3,v. E |-> ((next,X), (data,v)) * slseg(X,F,M3,M2) & M1={v} cup M3 & v < M3 |
+
+//C source code
+
+int search(struct Node* root, int key){
+	struct Node *cur = root;
+	while (cur != NULL)
+	{
+		if (cur->data == key)
+			return 1;
+		else if(cur->data < key)
+			cur = cur->next;
+		else
+			return 0;
+	}
+	return 0;
+}
+
+// Pre and post conditions and the corresponding verification conditions
+// M0 is the ghost variable
+
+Pre:  slseg(root,cur1,M0,M1) * slist(cur1,M1) & (key in M0 <=> key in M1)	
+
+Post: slist(root,M0) & ret = 1 & key in M0
+
+VC1: slseg(root, cur1, M0, M1) * cur1 |->((next,X), (data, d)) * slist(X,M2) & M1 = {d} cup M2 & d < M2 & (key in M0 <=> key in M1) & cur1 != nil & d = key & ret = 1 |- 
+slist(root, M0) & ret = 1 & key in M0
+{
+assume(cur1 != NULL);
+assume(cur1->data == key);
+ret = 1;
+}
+
+Pre:  slseg(root,cur1,M0,M1) * slist(cur1,M1) & (key in M0 <=> key in M1)	
+
+Post:  slseg(root,cur2,M0,M1) * slist(cur2,M2) & (key in M0 <=> key in M2)	
+
+VC2: slseg(root,cur1,M0,M1) * cur1 |-> (((next,X)),(data,d)) * slist(X,M2) & 
+M1 = {d} cup M2  &  d < M2 & d < key & (key in M0 <=> key in M1) & cur2 = X 
+|-
+slseg(root,cur2,M0,M2) * slist(cur2,M2) & (key in M0 <=> key in M2)
+{
+assume(cur1 != NULL)
+assume(cur1->data < key)
+cur2 = cur1->next
+}
+
+Pre:  slseg(root,cur1,M0,M1) * slist(cur1,M1) & (key in M0 <=> key in M1)	
+
+Post: slist(root,M0) * ! (key in M0) & ret = 0
+
+VC3: slseg(root,cur1,M0,M1) * cur1 |-> (((next,X),(data,d)) * slist(X,M2) & 
+M1 = {d} cup M2 & d < M2 & d > key & (key in M0 <=> key in M1) & ret = 0 |-
+slist(root,M0) * ! (key in M0) & ret = 0
+{
+assume(cur1 != NULL);
+assume(cur1->data > key);
+ret = 0;
+}
+
+Pre:  slseg(root,cur,M0,M1) * slist(cur,M1) & (key in M0 <=> key in M1)	
+
+Post: slist(root, M0) & ! key in M0 & ret = 0
+
+VC4: slseg(root,cur,M0,M1) * slist(cur,M1) & (key in M0 <=> key in M1) & cur = nil & ret = 0 |-
+slist(root, M0) & ! key in M0 & ret = 0
+
+{
+assume(cur == NULL);
+ret = 0;
+}

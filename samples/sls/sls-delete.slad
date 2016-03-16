@@ -1,0 +1,137 @@
+//Inductive definitions
+
+slist(E,M)::= E = nil & emp & M = emptyset | 
+exists X,M1,v. E |-> ((next,X),(data,v)) * slist(X,M1) & M={v} cup M1 & v <= M1
+
+slseg(E,F,M1,M2)::= E = F & emp & M1 = M2 | 
+exists X,M3,v. E |-> ((next,X), (data,v)) * slseg(X,F,M3,M2) & M1={v} cup M3 & v <= M3 |
+
+//C source code
+
+struct Node* delete(struct Node* root, int key){
+	struct Node *cur = root;
+	struct Node *parent = NULL;
+	struct Node *nxtparent = NULL;
+	struct Node *keynode;
+	struct Node *lft;
+	struct Node *rgt;
+	struct Node *subroot;
+
+	// the original list is empty
+	if(root == NULL)
+		return root;
+
+	// the list is nonempty
+	if(cur->data < key)
+	{
+		parent = cur;
+		cur = cur->next;
+	}
+
+	while(cur != NULL && cur->data < key) {
+			parent = cur; cur = cur->next;
+	}
+
+	// only delete when the key occurs in the list
+	keynode = cur;
+	if(keynode != NULL && keynode->data == key)
+	{
+		nxt = keynode->next;
+		free(keynode);
+		if(parent != NULL)
+		{
+			parent->next = nxt;
+		}
+		else
+			root = nxt;
+	}
+	return root;
+}
+
+// Pre and post conditions and the corresponding verification conditions
+// M0 is the ghost variable
+
+{
+assume(root == NULL);
+ret = root;
+}
+
+Pre:  slist(root,M0) & ! root = nil & cur1 = root
+
+Post: slseg(root,parent2,M1,M2) * parent2|->((next,cur2),(data,d)) * slist(cur2,M3) & d <= M3 & 
+(key in M0 <=> key in M3) & M2 = (M3 cup {d}) \ {key} & M1 = M0 \ {key}
+
+VC01: root |-> ((next,X),(data,d)) * slist(X,M3) & d<= M3 & M0 = {d} cup M3 & ! root = nil & cur1 = root & d < key & parent2 = cur1 & cur2 = X
+& M1 = M2 & M2 = (M3 cup {d}) \ {key}
+|-
+slseg(root,parent2,M1,M2) * parent2|->((next,cur2),(data,d)) * slist(cur2,M3) & d <= M3 & 
+(key in M0 <=> key in M3) & M2 = (M3 cup {d}) \ {key} & M1 = M0 \ {key}
+{
+assume(root != NULL);
+assume(cur1->data < key);
+parent2 = cur1;
+cur2 = cur1->next;
+}
+
+
+// The while loop
+
+Pre: slseg(root,parent1,M1,M2) * parent1|->((next,cur1),(data,d1)) * slist(cur1,M3) & d1 <= M3 & 
+(key in M0 <=> key in M3) & M2 = (M3 cup {d1}) \ {key} & M1 = M0 \ {key}
+
+Post: slseg(root,parent2,M1,M4) * parent2|->((next,cur2),(data,d2)) * slist(cur2,M5) & d2 <= M5 & 
+(key in M0 <=> key in M5) & M4 = (M5 cup {d2}) \ {key} & M1 = M0 \ {key}
+
+VC02: slseg(root,parent1,M1,M2) * parent1|->((next,cur1),(data,d1)) * cur1|->((next,X),(data,d2))* slist(X,M5) & M3 = {d2} cup M5
+& d2 <= M5 & d1 <= M3 & (key in M0 <=> key in M3) & M2 = (M3 cup {d1}) \ {key} & M1 = M0 \ {key} & cur1 != nil & d2 < key & parent2 = cur1 &
+cur2 = X & M4 = (M5 cup {d2}) \ {key}
+|-
+slseg(root,parent2,M1,M4) * parent2|->((next,cur2),(data,d2)) * slist(cur2,M5) & d2 <= M5 & 
+(key in M0 <=> key in M5) & M4 = (M5 cup {d2}) \ {key} & M1 = M0 \ {key}
+
+{
+assume(cur1 != NULL && cur1->data < key);
+parent2 = cur1; 
+cur2 = cur1->next;
+}
+
+
+Pre: slseg(root,parent,M1,M2) * parent|->((next,cur),(data,d)) * slist(cur,M3) & d <= M3 & 
+(key in M0 <=> key in M3) & M2 = (M3 cup {d}) \ {key} & M1 = M0 \ {key}
+
+Post: slist(ret,M1) & key in M0 & M1 = M0 \ {key}
+
+VC03: slseg(root,parent,M1,M2) * parent|->((next,nxt),(data,d)) * slist(X,M4) & M3 = {d2} cup M4 &
+d2 <= M4 & d <= M3 & 
+(key in M0 <=> key in M3) & M2 = (M3 cup {d}) \ {key} & M1 = M0 \ {key} & keynode = cur & ! keynode = nil & d2 = key & nxt = X & ret = root
+|-
+slist(ret,M1) & key in M0 & M1 = M0 \ {key}
+
+{
+keynode = cur;
+assume(keynode != NULL && keynode->data == key);
+nxt = keynode->next;
+free(keynode);
+assume(parent != NULL);
+parent->next = nxt;
+ret = root;
+}
+
+Pre: root1|->((next,X),(data,d)) * slist(X,M1) & M0= {d} cup M1 & d <= M1 & cur = root
+
+Post: slist(ret,M1) & key in M0 & M1 = M0 \ {key}
+
+VC04: slist(X,M1) & M0= {d} cup M1 & d <= M1 & 
+ cur = root1 & keynode = cur & d = key & nxt = X & root2 = nxt & ret = root2
+|-
+slist(ret,M1) & key in M0 & M1 = M0 \ {key}
+
+{
+keynode = cur;
+assume(keynode != NULL && keynode->data == key);
+nxt = keynode->next;
+free(keynode);
+assume(parent == NULL);
+root = nxt;
+ret = root;
+}

@@ -1,0 +1,25 @@
+!SESSION 2016-03-09 23:10:48.584 -----------------------------------------------
+eclipse.buildId=4.5.1.M20150904-0015
+java.version=1.7.0_91
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -data /home/guxc/Documents/workspace/spen/src -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.core.resources 4 77 2016-03-09 23:12:36.704
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2016-03-09 23:12:36.704
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2016-03-09 23:12:36.704
+!MESSAGE /home/guxc/Documents/workspace/spen/src overlaps the workspace location: /home/guxc/Documents/workspace/spen/src
+
+!ENTRY org.eclipse.ui.ide 4 4 2016-03-09 23:16:29.399
+!MESSAGE Problems saving workspace
+
+!ENTRY org.eclipse.ui.ide 2 1 2016-03-09 23:16:29.399
+!MESSAGE Problems occurred while trying to save the state of the workbench.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2016-03-09 23:16:29.399
+!MESSAGE The project description file (.project) for 'RemoteSystemsTempFiles' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+
+!ENTRY org.eclipse.core.resources 2 10035 2016-03-09 23:16:29.838
+!MESSAGE The workspace will exit with unsaved changes in this session.

@@ -1,0 +1,1685 @@
+
+//Inductive definitions
+// Each node has two data fields: data, color (0: red, 1: black). 
+
+rbt(E, M, N, C)::= E = nil & emp & M = emptyset & N = 1 & C = 1 | 
+exists X,Y,M1,M2,N1,N2,C1,C2. E |-> ((left,X), (right,Y)) * rbt(X,M1,N1,C1) * rbt(Y,M2,N2,C2) & M = {E.data} cup M1 cup M2 & M1 < E.data < M2 & N1 = N2 & c = E.color  & 0 <= c <= 1 & ite(c=0, N = N1, N=N1+1) & c = 0 => (C1 = 1 & C2 = 1)
+
+rbthole(E,F, M1, N1, C1, M2, N2, C2)::= E = F & emp & M1 = M2 & N1 = N2 & C1 = C2 | 
+exists X,Y,M3,M4,N3,N4, C3, C4. E |-> ((left,X), (right,Y)) * rbt(X,M3,N3,C3) * rbthole(Y,F,M4,N4,C4, M2, N2, C2) & M1 = {E.data} cup M3 cup M4 & M3 < E.data < M4 & N3 = N4 & C1 = E.color & 0 <= C1,C3,C4 <= 1 & ite(C1=0, N=N1, N=N1+1) & C1 = 0 => (C3 = 1 & C4 = 1) |
+exists X,Y,M3,M4,N3,N4, C3, C4. E |-> ((left,X), (right,Y)) * rbthole(X,F,M3,N3,C3, M2, N2, C2) * rbt(Y,M4,N4,C4) & M1 = {E.data} cup M3 cup M4 & M3 < E.data < M4 & N3 = N4 & C1 = E.color & 0 <= C1,C3,C4 <= 1 & ite(C1=0, N=N1, N=N1+1) & C1 = 0 => (C3 = 1 & C4 = 1)
+
+// rbthole with the property that the nodes on the path from E to F alternate between red and black, with the root black, and all the children of black nodes are red nodes
+
+brrbthole(E,F, M1, N1, C1, M2, N2, C2)::= E = F & emp & M1 = M2 & H1 = H2 & C1 = C2 | 
+exists X,Y,U,V,M3,M4,M5,H3,H4,H5,C3,C4,C5. E |-> ((left,X), (right,Y)) * Y |->((left,U),(right,V)) * rbt(X,M3,N3,C3) * brrbthole(U,F,M4,N4,C4,M2,N2,C2) * rbt(V,M5,N5,C5) & M1 = {E.data} cup M3 cup {Y.data} cup M4 cup M5 & M3 < E.data < {Y.data} cup M4 cup M5 & M4 < Y.data < M5 & C1 = E.color & C1 = 1 & C3 = 0 & Y.color = 0 & C4 = 1 & N4 = N5 & N3 = N4 & N1 = N3 +1 |
+exists X,Y,U,V,M3,M4,M5,H3,H4,H5,C3,C4,C5. E |-> ((left,X), (right,Y)) * Y |->((left,U),(right,V)) * rbt(X,M3,N3,C3) * rbt(U,M4,N4,C4) * brrbthole(V,F,M5,N5,C5,M2,N2,C2) & M1 = {E.data} cup M3 cup {Y.data} cup M4 cup M5 & M3 < E.data < {Y.data} cup M4 cup M5 & M4 < Y.data < M5 & C1 = E.color & C1 = 1 & C3 = 0 & Y.color = 0 & C5 = 1 & N4 = N5 & N3 = N4 & N1 = N3 +1 |
+exists X,Y,U,V,M3,M4,M5,H3,H4,H5,C3,C4,C5. E |-> ((left,X), (right,Y)) * X |->((left,U),(right,V)) * rbt(U,M3,N3,C3) * brrbthole(V,F,M4,N4,C4,M2,N2,C2) * rbt(Y,M5,N5,C5) & M1 = {E.data} cup {X.data} cup M3 cup M4 cup M5 & {X.data} cup M3 cup M4 < E.data < M5 & M3 < X.data < M4 & C1 = E.color & C1 = 1 & X.color = 0 & C5 = 0 & C4 = 1 & N3 = N4 & N3 = N5 & N1 = N5 +1 |
+exists X,Y,U,V,M3,M4,M5,H3,H4,H5,C3,C4,C5. E |-> ((left,X), (right,Y)) * X |->((left,U),(right,V)) * brrbthole(U,F,M3,N3,C3, M2, N2, C2) * rbt(V,M4,N4,C4) * rbt(Y,M5,N5,C5) & M1 = {E.data} cup {X.data} cup M3 cup M4 cup M5 & {X.data} cup M3 cup M4 < E.data < M5 & M3 < X.data < M4 & C1 = E.color & C1 = 1 & X.color = 0 & C5 = 0 & C3 = 1 & N3 = N4 & N3 = N5 & N1 = N5 +1
+
+// rbthole with the property that the nodes on the path from E to F alternate between red and black, with the root red
+
+rbrbthole(E,F, M1, N1, C1, M2, N2, C2)::= E = F & emp & M1 = M2 & H1 = H2 & C1 = C2 | 
+exists X,Y,U,V,M3,M4,M5,H3,H4,H5,C3,C4,C5. E |-> ((left,X), (right,Y)) * Y |->((left,U),(right,V)) * rbt(X,M3,N3,C3) * rbrbthole(U,F,M4,N4,C4,M2,N2,C2) * rbt(V,M5,N5,C5) & M1 = {E.data} cup M3 cup {Y.data} cup M4 cup M5 & M3 < E.data < {Y.data} cup M4 cup M5 & M4 < Y.data < M5 & C1 = E.color & C1 = 0 & C3 = 1 & Y.color = 1 & C4 = 0 & N4 = N5 & N3 = N4 + 1 & N1 = N3 |
+exists X,Y,U,V,M3,M4,M5,H3,H4,H5,C3,C4,C5. E |-> ((left,X), (right,Y)) * Y |->((left,U),(right,V)) * rbt(X,M3,N3,C3) * rbt(U,M4,N4,C4) * rbrbthole(V,F,M5,N5,C5,M2,N2,C2) & M1 = {E.data} cup M3 cup {Y.data} cup M4 cup M5 & M3 < E.data < {Y.data} cup M4 cup M5 & M4 < Y.data < M5 & C1 = E.color & C1 = 0 & C3 = 1 & Y.color = 1 & C5 = 0 & N4 = N5 & N3 = N4 + 1 & N1 = N3 |
+exists X,Y,U,V,M3,M4,M5,H3,H4,H5,C3,C4,C5. E |-> ((left,X), (right,Y)) * X |->((left,U),(right,V)) * rbt(U,M3,N3,C3) * rbrbthole(V,F,M4,N4,C4,M2,N2,C2) * rbt(Y,M5,N5,C5) & M1 = {E.data} cup {X.data} cup M3 cup M4 cup M5 & {X.data} cup M3 cup M4 < E.data < M5 & M3 < X.data < M4 & C1 = E.color & C1 = 0 & X.color = 1 & C5 = 1 & C4 = 0 & N3 = N4 & N5 = N3+1 & N1 = N5 |
+exists X,Y,U,V,M3,M4,M5,H3,H4,H5,C3,C4,C5. E |-> ((left,X), (right,Y)) * X |->((left,U),(right,V)) * rbrbthole(U,F,M3,N3,C3, M2, N2, C2) * rbt(V,M4,N4,C4) * rbt(Y,M5,N5,C5) & M1 = {E.data} cup {X.data} cup M3 cup M4 cup M5 & {X.data} cup M3 cup M4 < E.data < M5 & M3 < X.data < M4 & C1 = E.color & C1 = 0 & X.color = 1 & C5 = 1 & C3 = 0 & N3 = N4 & N5 = N3+1 & N1 = N5
+
+//C source code
+
+struct Node * insert(struct Node *root, int key)
+{
+	struct Node *cur = root;
+	struct Node *parent = NULL, *grandpa = NULL, *ggrandpa = NULL;
+	struct Node *uncle;
+	struct Node *cusnode = root; // the node where the top-down update of the colors starts
+	struct Node *cusparent = NULL; // the parent of usnode
+	struct Node *x;
+	int is_even = 0;
+
+	//the original tree is empty
+	if (root == NULL) {
+		x = malloc (sizeof (struct Node));
+	    x->left = NULL;
+	    x->right = NULL;
+	    x->data = key;
+	    x ->color = 0; // 0: red, 1: black
+		return x;
+	}
+
+	// the tree is nonempty
+
+	if(cur->data == key)
+		return root;
+
+	if(cur->data > key)
+	{
+		parent = cur;
+		cur = cur->left;
+	}
+	else
+	{
+		parent = cur;
+		cur = cur->right;
+	}
+	is_even = 1;
+
+	while(cur != NULL && cur->data != key)
+	{
+		parent = cur;
+
+		if(cur->data > key)
+			cur = cur->left;
+		else
+			cur = cur->right;
+
+		if(is_even == 0)
+			is_even = 1;
+		else
+			is_even = 0;
+	}
+	// the key occurs in the tree
+	if(cur != NULL)
+		return root;
+
+	// otherwise, key does not occur in the tree
+	x = malloc (sizeof (struct Node));
+	x->left = NULL;
+	x->right = NULL;
+	x-> data = key;
+	x->color = 0;
+
+	if(parent->data > key)
+		parent->left = x;
+	else
+		parent->right = x;
+
+	if(parent == root)
+		return root;
+
+	// rebalance the red-black tree
+	// at first determine the cusnode by traversing top-down
+	if(is_even == 0)
+	{
+		ggrandpa = NULL;
+		grandpa  = root;
+	}
+	else
+	{
+		ggrandpa = root;
+		if(root->data > key)
+			grandpa = root->left;
+		else
+			grandpa = root->right;
+	}
+
+	// since parent != root, the subtree rooted at grandpa has depth at least two
+	if(grandpa->data > key)
+	{
+		parent = grandpa->left;
+		uncle = grandpa->right;
+	}
+	else
+	{
+		parent = grandpa->right;
+		uncle = grandpa->left;
+	}
+	if(parent->data > key)
+		cur = parent->left;
+	else
+		cur = parent->right;
+	cusnode = grandpa;
+	cusparent = ggrandpa;
+
+	// determine the cusnode
+	is_even = 0;
+	while(cur!=NULL)
+	{
+		if(is_even == 0)
+		{
+			if(parent->color == 1 || uncle == NULL || uncle->color == 1)
+			{
+				cusnode = grandpa;
+				cusparent = ggrandpa;
+			}
+		}
+
+		ggrandpa = grandpa;
+		grandpa = parent;
+		if(grandpa->data > key)
+			uncle = grandpa->right;
+		else
+			uncle = grandpa->left;
+
+		parent = cur;
+
+		if(parent->data > key)
+			cur = parent->left;
+		else
+			cur = parent->right;
+
+		if(is_even == 0)
+			is_even = 1;
+		else
+			is_even = 0;
+	}
+
+	// update the color top-down, starting from cusnode
+	// in the original tree all the even-position nodes on the path from cusnode to the grandpa of x,
+	// excluding cusnode, have the red color and their uncles are red
+
+	grandpa = cusnode;
+	if (grandpa->data > key)
+		parent = grandpa->left;
+	else
+		parent = grandpa->right;
+	if (parent->data > key)
+		cur = parent->left;
+	else
+		cur = parent->right;
+	grandpa = cur;
+
+	while(grandpa->data != key)
+	{
+		if (grandpa->data > key)
+		{
+			parent = grandpa->left;
+			uncle = grandpa ->right;
+		}
+		else
+		{
+			parent = grandpa->right;
+			uncle = grandpa->left;
+		}
+		if (parent->data > key)
+			cur = parent->left;
+		else
+			cur = parent->right;
+
+		grandpa->color = 0; // red
+		parent->color = 1; // black
+		uncle->color = 1; // black
+
+		grandpa = cur;
+	}
+
+	// apply the rotations if necessary
+	if (cusnode->data > key)
+	{
+		parent = cusnode->left;
+		uncle = cusnode->right;
+		if (parent->data > key)
+			cur = parent->left;
+		else
+			cur = parent->right;
+
+		// this happens only if cusnode = root or cusparent = root
+		if (parent->color == 0 && uncle != NULL && uncle->color == 0)
+		{
+			if(cusparent != NULL)
+			{
+				cusnode->color = 0;
+				parent->color = 1;
+				uncle->color = 1;
+			}
+			else
+			{
+				cusnode->color = 1;
+				parent->color = 1;
+				uncle->color = 1;
+			}
+		}
+		else if(parent->color == 0) // in this case, uncle == NULL or uncle is black
+		{
+			if (parent->data < key)
+			{
+				// rotate left around parent, then rotate right around cusnode
+				parent->right = cur -> left;
+				cur -> left = parent;
+				cusnode->left = cur->right;
+				cur->right = cusnode;
+				cur->color = 1;
+				cusnode->color = 0;
+				if(cusparent != NULL)
+				{
+					if(cusparent->data > key)
+						cusparent->left = cur;
+					else
+						cusparent->right = cur;
+				}
+				else
+					root = cur;
+			}
+			else
+			{
+				// rotate right around cusnode
+				parent->color = 1;
+				cusnode->color = 0;
+				cusnode->left = parent->right;
+				parent->right = cusnode;
+				if(cusparent != NULL)
+				{
+					if(cusparent->data > key)
+						cusparent->left = parent;
+					else
+						cusparent->right = parent;
+				}
+				else
+					root = parent;
+			}
+		}
+	}
+	else
+	{
+		parent = cusnode->right;
+		uncle = cusnode->left;
+		if (parent->data > key)
+			cur = parent->left;
+		else
+			cur = parent->right;
+
+		// this happens only if cusnode = root or cusparent = root
+		if (parent->color == 0 && uncle != NULL && uncle->color == 0)
+		{
+			if(cusparent != NULL)
+			{
+				cusnode->color = 0;
+				parent->color = 1;
+				uncle->color = 1;
+			}
+			else
+			{
+				cusnode->color = 1;
+				parent->color = 1;
+				uncle->color = 1;
+			}
+		}
+		else if(parent->color == 0)
+		{
+			if (parent->data > key)
+			{
+				// rotate right around parent, then rotate left around cusnode
+				cusnode->right = cur->left;
+				cur->left = cusnode;
+				parent->left = cur->right;
+				cur->right = parent;
+				cur->color = 1;
+				cusnode->color = 0;
+				if(cusparent != NULL)
+				{
+					if (cusparent->data > key)
+						cusparent->left = cur;
+					else
+						cusparent->right = cur;
+				}
+				else
+					root = cur;
+			}
+			else
+			{
+				parent->color = 1;
+				cusnode->color = 0;
+				// rotate left around cusnode
+				cusnode->right = parent->left;
+				parent->left = cusnode;
+				if(cusparent != NULL)
+				{
+					if (cusparent->data > key)
+						cusparent->left = parent;
+					else
+						cusparent->right = parent;
+				}
+				else
+					root = parent;
+			}
+		}
+	}
+	return root;
+}
+
+// Pre and post conditions and the corresponding verification conditions.
+// Let M0 be the ghost variable representing the multiset of data values occurring in the original heap.
+
+// blocks before the first while loop
+
+{
+//the original tree is empty
+assume(root == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x->data = key;
+x ->color = 0; // 0: red, 1: black
+return x;
+}
+
+{
+cur = root;
+assume(root != NULL);
+assume(cur->data == key);
+return root;
+}
+
+{
+cur = root;
+assume(cur->data > key);
+parent = cur;
+cur = cur->left;
+is_even = 1;
+}
+
+{
+cur = root;
+assume(cur->data < key);
+parent = cur;
+cur = cur->right;
+is_even = 1;
+}
+
+// the blocks for the first while loop
+
+// unbparent1 = nil, root.data > key, unbalance1 = parent1
+
+{
+assume(cur != NULL && cur->data != key);
+parent = cur;
+assume(cur->data > key);
+cur = cur->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+Pre1: rbthole(root,parent1,M1,N1,C1,M2,N2,C2) * parent1 |-> ((left,cur1),(right,X),(data,d1),(color,C2)) * rbt(cur1,M3,N3,C3) * rbt(X,M4,N4,C4) & M3 < d1 < M4 & N3 = N4 & 0 <= C2 <=1 & M2 = ite(key in M3, M3 cup {d1} cup M4, M3 cup {d1} cup M4 cup {key}) & N2 = ite(C2=0, N3, N3+1) & (C2 = 0 => C3 = 1 & C4 =1) & M1=ite(key in M0, M0, M0 cup {key}) & C1 = 1 & key in M0 <=> key in M3 & d1 > key & ! parent1 = nil & is_even = 1
+
+Post1: rbthole(root,parent2,M1,N1,C1,M5,N5,C5) * parent2 |-> ((left,cur2),(right,Y),(data,d2),(color,C5)) * rbt(cur2,M6,N6,C6) * rbt(Y,M7,N7,C7) & M6 < d2 < M7 & N6 = N7 & N5 = ite(C5=0, N6, N6+1) & 0<=C5<=1 & (C5 = 0 => C6 = 1 & C7 =1) &  M5 = ite(key in M6, M6 cup {d2} cup M7, M6 cup {d2} cup M7 cup {key}) & M1 = ite(key in M0, M0, M0 cup {key}) & C1 = 1 & key in M0 <=> key in M6 & d2 > key & ! parent2 = nil  & is_even = 0
+
+VC01: rbthole(root,parent1,M1,N1,C1,M2,N2,C2) * parent1 |-> ((left,cur1),(right,X),(data,d1),(color,C2)) * cur1|->((left,Z),(right,Y),(data,d2),(color,c2)) * rbt(Z,M6,N6,C6) * rbt(Y,M7,N7,C7) * rbt(X,M4,N4,C4) & M6 < d2 < M7 & N6=N7 & 0<=c2<=1 & (c2=0 => C6=1 & C7=1) & M3 = M6 cup {d2} cup M7 & N3=ite(c2=0,N6,N6+1) & C3=c2 & M3 < d1 < M4 & N3=N4 & 0 <= C2 <=1 & M2=ite(key in M3, {d1} cup M3 cup M4, {d1} cup M3 cup M4 cup {key}) & N2 = ite(C2=0, N3, N3+1) & (C2 = 0 => C3 = 1 & C4 =1) & M1=ite(key in M0, M0, M0 cup {key}) & C1 = 1 & key in M0 <=> key in M3 & d1 > key & ! parent1 = nil & is_even = 0 & d2 > key & cur2 = Y & M5 = ite(key in M0, M3, M3 cup {key}) & N5 = N3 & C5 = C3 
+|-
+rbthole(root,parent2,M1,N1,C1,M5,N5,C5) * parent2 |-> ((left,cur2),(right,Y),(data,d2),(color,C5)) * rbt(cur2,M6,N6,C6) * rbt(Y,M7,N7,C7) & M6 < d2 < M7 & N6 = N7 & N5 = ite(C5=0, N6, N6+1) & (C5 = 0 => C6 = 1 & C7 =1) & M5 = ite(key in M6, M6 cup {d2} cup M7, M6 cup {d2} cup M7 cup {key}) & M1 = ite(key in M0, M0, M0 cup {key}) & C1 = 1 & key in M0 <=> key in M6 & d2 > key & ! parent2 = nil & is_even = 0
+
+**********************************************
+{
+assume(cur != NULL && cur->data != key);
+parent = cur;
+assume(cur->data > key);
+cur = cur->left;
+assume(is_even == 1);
+is_even = 0;
+}
+
+{
+assume(cur != NULL && cur->data != key);
+parent = cur;
+assume(cur->data < key);
+cur = cur->right;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur != NULL && cur->data != key);
+parent = cur;
+assume(cur->data < key);
+cur = cur->right;
+assume(is_even == 1);
+is_even = 0;
+}
+
+// the blocks after the first while loop
+// the key occurs in the tree
+{
+assume(cur != NULL);
+return root;
+}
+
+Pre: rbthole(root,parent,M1,N1,C1,M2,N2,C2) * parent |-> ((left,cur),(right,X),(data,d1),(color,C2)) * rbt(cur,M3,N3,C3) * rbt(X,M4,N4,C4) & M3 < d1 < M4 & N3 = N4 & 0<=C2<=1 & (C2 = 0 => C3 = 1 & C4 =1) & M2=ite(key in M3, {d1} cup M3 cup M4, {d1} cup M3 cup M4 cup {key}) & N2 = ite(C2=0, N3, N3+1) & M1=ite(key in M0, M0, M0 cup {key}) & C1 = 1 &  & key in M0 <=> key in M3 & d1 > key & ! parent = nil & is_even = 1 & cur = nil
+
+Post: rbthole(root,parent,M1,N1,C1,M2,N2,C2) * parent |-> ((left,x),(right,X),(data,d1),(color,C2)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(X,M4,N4,C4) & {key} < d1 < M4 & N4=1 & M2 = {d1} cup {key} cup M4 & N2=ite(C2=0, N4, N4+1) & 0<=C2<=1 & (C2 = 0 => C4 =1) & M1 = M0 cup {key} & C1 = 1 & ! key in M0 & ! parent = nil & is_even = 1
+
+VC02: rbthole(root,parent,M1,N1,C1,M2,N2,C2) * parent |-> ((left,x),(right,X),(data,d1),(color,C2)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(cur,M3,N3,C3) * rbt(X,M4,N4,C4) & M3 < d1 < M4 & N3 = N4 & 0<=C2<=1 & (C2 = 0 => C3 = 1 & C4 =1) & M2=ite(key in M3, {d1} cup M3 cup M4, {d1} cup M3 cup M4 cup {key}) & N2 = ite(C2=0, N3, N3+1) & M1=ite(key in M0, M0, M0 cup {key}) & C1 = 1 &  & key in M0 <=> key in M3 & d1 > key & ! parent = nil & is_even = 1 & cur = nil 
+|-
+rbthole(root,parent,M1,N1,C1,M2,N2,C2) * parent |-> ((left,x),(right,X),(data,d1),(color,C2)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(X,M4,N4,C4) & {key} < d1 < M4 & N4=1 & M2 = {d1} cup {key} cup M4 & N2=ite(C2=0, N4, N4+1) & 0<=C2<=1 & (C2 = 0 => C4 =1) & M1 = M0 cup {key} & C1 = 1 & ! key in M0 & ! parent = nil & is_even = 1
+
+**********************************************
+{
+assume(cur == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->color = 0;
+assume(parent->data > key);
+parent->left = x;
+}
+
+{
+assume(cur == NULL);
+x = malloc (sizeof (struct Node));
+x->left = NULL;
+x->right = NULL;
+x-> data = key;
+x->color = 0;
+assume(parent->data < key);
+parent->right = x;
+}
+
+{
+assume(parent == root);
+return root;
+}
+
+// rebalance the red-black tree
+// at first determine the cusnode by traversing top-down
+// introduce a ghost variable parent0 from now on
+
+{
+assume(parent != root);
+assume(is_even == 0);
+ggrandpa = NULL;
+grandpa  = root;
+assume(grandpa->data > key);
+parent = grandpa->left;
+uncle = grandpa->right;
+assume(parent->data > key);
+cur = parent->left;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 0);
+ggrandpa = NULL;
+grandpa  = root;
+assume(grandpa->data > key);
+parent = grandpa->left;
+uncle = grandpa->right;
+assume(parent->data < key);
+cur = parent->right;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 0);
+ggrandpa = NULL;
+grandpa  = root;
+assume(grandpa->data < key);
+parent = grandpa->right;
+uncle = grandpa->left;
+assume(parent->data > key);
+cur = parent->left;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 0);
+ggrandpa = NULL;
+grandpa  = root;
+assume(grandpa->data < key);
+parent = grandpa->right;
+uncle = grandpa->left;
+assume(parent->data < key);
+cur = parent->right;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+Pre: root |-> ((left,X),(right,Y),(data,d1),(color,c1)) * rbthole(X,parent0,M1,N1,C1,M2,N2,C2) * rbt(Y,M3,N3,C3) * parent0 |-> ((left,x),(right,Z),(data,d2),(color,C2)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M4,N4,C4) & key < d2 < M4 & N4=1 & 0<=C2 <=1 & C2 = 0 => C4 =1 & C2=0 => C4=1 & M2 = {d2} cup {key} cup M4 & N2=ite(C2=0, N4, N4+1) & M1 < d1 < M3 & N1 = N3 & c1 = 1 & M0 cup {key} = ({d1} cup M1 cup M3) &  & ! key in M0 & ! parent0 = nil & is_even = 1 & ! parent0 = root
+
+Post: ggrandpa |-> ((left,grandpa),(right,Y),(data,d1),(color,c1)) * rbt(Y,M3,N3,C3) * grandpa |-> ((left,parent),(right,uncle),(data,d3),(color,C1)) * rbt(uncle,M6,N6,C6) * parent |-> ((left,cur),(right,V),(data,d4),(color,c4)) * rbthole(cur,parent0,M5,N5,C5,M2,N2,C2) * rbt(V,M7,N7,C7) * parent0 |-> ((left,x),(right,Z),(data,d2),(color,C2)) * rbt(Z,M4,N4,C4) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & key < d2 < M4 & N4=1 & 0<=C2<=1 & C2 = 0 => C4 =1 & M2 = {d2} cup {key} cup M4 & N2=ite(C2=0, N4, N4+1) & M5 < d4 < M7 & N5 = N7 & 0<=c4<=1 & (c4 = 0 => C5 = 1 & C7 = 1) & {d4} cup M5 cup M7 < d3 < M6 & 0<=C1<=1 & n4 = ite(C4=0,N7,N7+1) & n4 = N6 & (C1 = 0 => c4 = 1 & C6 = 1) & {d4} cup M5 cup M7 cup {d3} cup M6 < d1 < M3 & c1 = 1 & n3 = N3 & n3=ite(C1=0,N6,N6+1) & M0 cup {key} = {d4} cup M5 cup M7 cup {d3} cup M6 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ggrandpa = root & cusnode = grandpa & cusparent = ggrandpa & ! cusparent = nil
+
+VC03:
+root |-> ((left,X),(right,Y),(data,d1),(color,c1)) * rbt(Y,M3,N3,C3) * X |-> ((left,U1),(right,V1),(data,d3),(color,C1)) * rbt(V1,M6,N6,C6) * U1 |-> ((left,U2),(right,V),(data,d4),(color,c4)) * rbthole(U2,parent0,M5,N5,C5,M2,N2,C2) * rbt(V,M7,N7,C7) * parent0 |-> ((left,x),(right,Z),(data,d2),(color,C2)) * rbt(Z,M4,N4,C4) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M5 < d4 < M7 & N5 = N7 & 0<=c4<=1 & (c4 = 0 => C5 = 1 & C7 = 1) & {d4} cup M5 cup M7 < d3 < M6 & 0<=C1<=1 & N6 = ite(c4=0,N7,N7+1) & (C1 = 0 => c4 = 1 & C6 = 1) & M1 = {d3} cup M6 cup {d4} cup M5 cup M7 & N1 = ite(C1=0,N6,N6+1) & key < d2 < M4 & N4=1 & 0<=C2 <=1 & C2 = 0 => C4 =1  & M2 = {d2} cup {key} cup M4 & N2=ite(C2=0, N4, N4+1) & M1 < d1 < M3 & N1 = N3 & c1 = 1 & M0 cup {key} = ({d1} cup M1 cup M3) &  & ! key in M0 & ! parent0 = nil & is_even = 1 & ! parent0 = root & ggrandpa = root & grandpa = X & parent = U1 & cur = U2 & cusnode = grandpa & cusparent = ggrandpa
+|-
+ggrandpa |-> ((left,grandpa),(right,Y),(data,d1),(color,c1)) * rbt(Y,M3,N3,C3) * grandpa |-> ((left,parent),(right,uncle),(data,d3),(color,C1)) * rbt(uncle,M6,N6,C6) * parent |-> ((left,cur),(right,V),(data,d4),(color,c4)) * rbthole(cur,parent0,M5,N5,C5,M2,N2,C2) * rbt(V,M7,N7,C7) * parent0 |-> ((left,x),(right,Z),(data,d2),(color,C2)) * rbt(Z,M4,N4,C4) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & key < d2 < M4 & N4=1 & 0<=C2<=1 & C2 = 0 => C4 =1 & M2 = {d2} cup {key} cup M4 & N2=ite(C2=0, N4, N4+1) & M5 < d4 < M7 & N5 = N7 & 0<=c4<=1 & (c4 = 0 => C5 = 1 & C7 = 1) & {d4} cup M5 cup M7 < d3 < M6 & 0<=C1<=1 & N6 = ite(c4=0,N7,N7+1) & (C1 = 0 => c4 = 1 & C6 = 1) & {d4} cup M5 cup M7 cup {d3} cup M6 < d1 < M3 & c1 = 1 & N3 =ite(C1=0,N6,N6+1) & M0 cup {key} = {d4} cup M5 cup M7 cup {d3} cup M6 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ggrandpa = root & cusnode = grandpa & cusparent = ggrandpa & ! cusparent = nil
+
+**********************************************
+{
+assume(parent != root);
+assume(is_even == 1);
+ggrandpa = root;
+assume(root->data > key);
+grandpa = root->left;
+assume(grandpa->data > key);
+parent = grandpa->left;
+uncle = grandpa->right;
+assume(parent->data > key);
+cur = parent->left;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 1);
+ggrandpa = root;
+assume(root->data > key);
+grandpa = root->left;
+assume(grandpa->data > key);
+parent = grandpa->left;
+uncle = grandpa->right;
+assume(parent->data < key);
+cur = parent->right;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 1);
+ggrandpa = root;
+assume(root->data > key);
+grandpa = root->left;
+assume(grandpa->data < key);
+parent = grandpa->right;
+uncle = grandpa->left;
+assume(parent->data > key);
+cur = parent->left;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 1);
+ggrandpa = root;
+assume(root->data > key);
+grandpa = root->left;
+assume(grandpa->data < key);
+parent = grandpa->right;
+uncle = grandpa->left;
+assume(parent->data < key);
+cur = parent->right;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 1);
+ggrandpa = root;
+assume(root->data < key);
+grandpa = root->right;
+assume(grandpa->data > key);
+parent = grandpa->left;
+uncle = grandpa->right;
+assume(parent->data > key);
+cur = parent->left;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 1);
+ggrandpa = root;
+assume(root->data < key);
+grandpa = root->right;
+assume(grandpa->data > key);
+parent = grandpa->left;
+uncle = grandpa->right;
+assume(parent->data < key);
+cur = parent->right;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 1);
+ggrandpa = root;
+assume(root->data < key);
+grandpa = root->right;
+assume(grandpa->data < key);
+parent = grandpa->right;
+uncle = grandpa->left;
+assume(parent->data > key);
+cur = parent->left;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+{
+assume(parent != root);
+assume(is_even == 1);
+ggrandpa = root;
+assume(root->data < key);
+grandpa = root->right;
+assume(grandpa->data < key);
+parent = grandpa->right;
+uncle = grandpa->left;
+assume(parent->data < key);
+cur = parent->right;
+cusnode = grandpa;
+cusparent = ggrandpa;
+}
+
+// the blocks for the second while loop
+
+// determine the cusnode
+// is_even = 0 is taken as the initial condition
+
+Pre1: cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, parent1),(right, uncle1),(data,d2),(color,c2)) * rbt(uncle1,M4,N4,C4) * parent1 |-> ((left,cur1),(right,V),(data,d3),(color,c3)) * rbt(V,M5,N5,C5) * rbthole(cur1,parent0,M6,N6,C6,M7,N7,C7) * parent0 |-> ((left,x),(right,Z),(data,d4),(color,c4)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M8,N8,C8) 
+& key < d4 < M8 & N8=1 & 0<=c4 <= 1 & c4=0 => C8 = 1 & M7 = {d4} cup {key} cup M8 & N7=ite(c4=0,N8,N8+1) & C7=c4 & M7 < d3 < M5 & N6 = N5 & 0<=c3 <= 1 & (c3 =0 => C6 =1 & C5 = 1) & {d3} cup M6 cup M5 < d2 < M4 & n3=ite(c3=0, N5,N5+1) & n3 = N4 & 0<=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & {d3} cup M7 cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 = 0 => c2 =1 & C3 = 1) & M0 cup {key} = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & cusparent1 = root & cusparent1 = ggrandpa1 & cusnode1 = grandpa1 & is_even = 0 & (c3 = 1 | C4 = 1)
+
+Post1: cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left, grandpa2),(right, uncle1),(data,d2),(color,c2)) * rbt(uncle1,M4,N4,C4) * grandpa2 |-> ((left,parent2),(right,uncle2),(data,d3),(color,c3)) * rbt(uncle2,M5,N5,C5) * parent2 |-> ((left,cur2),(right,U),(data,d5),(color,c5)) * rbthole(cur2,parent0,M9,N9,C9,M7,N7,C7) * rbt(U,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d4),(color,c4)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M8,N8,C8)
+& M9 < d5 < M10 & N9 = N10 & 0 <=c5 <=1 & (c5=0 => C9=1 & C10 = 1) & key < d4 < M8 & N8=1 & 0<=c4 <= 1 & c4=0 => C8 = 1 & M7 = {d4} cup {key} cup M8 & N7=ite(c4=0,N8,N8+1) & C7=c4 & M9 cup {d5} cup M10 < d3 < M5 & n5=ite(c5=0, N10, N10+1) & n5 = N5 & 0<=c3 <= 1 & (c3 =0 => c5 =1 & C5 = 1) & M9 cup {d5} cup M10 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0, N5,N5+1) & n3 = N4 & 0<=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M9 cup {d5} cup M10 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 = 0 => c2 =1 & C3 = 1) & M0 cup {key} = M9 cup {d5} cup M10 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & cusparent2 = root & cusnode2 = ggrandpa2 & is_even = 1
+
+VC04: cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, parent1),(right, uncle1),(data,d2),(color,c2)) * rbt(uncle1,M4,N4,C4) * parent1 |-> ((left,cur1),(right,V),(data,d3),(color,c3)) * rbt(V,M5,N5,C5) * cur1 |-> ((left,U1),(right,U),(data,d5),(color,c5)) * rbt(U,M10,N10,C10) * rbthole(U1,parent0,M9,N9,C9,M7,N7,C7) * parent0 |-> ((left,x),(right,Z),(data,d4),(color,c4)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M8,N8,C8) 
+& M9 < d5 < M10 & N9 = N10 & 0 <=c5 <=1 & (c5=0 => C9=1 & C10 = 1) & M6= {d5} cup M9 cup M10 & N6 = ite(c5=0,N10,N10+1) & C6 = c5 & key < d4 < M8 & N8=1 & 0<=c4 <= 1 & c4=0 => C8 = 1 & M7 = {d4} cup {key} cup M8 & N7=ite(c4=0,N8,N8+1) & C7=c4 & M7 < d3 < M5 & N6 = N5 & 0<=c3 <= 1 & (c3 =0 => C6 =1 & C5 = 1) & {d3} cup M6 cup M5 < d2 < M4 & n3=ite(c3=0, N5,N5+1) & n3 = N4 & 0<=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 = 0 => c2 =1 & C3 = 1) & M0 cup {key} = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & cusparent1 = root & cusparent1 = ggrandpa1 & cusnode1 = grandpa1 & is_even = 1 & (c3 = 1 | C4 = 1) & parent2 = cur1 & cur2 = U1
+|-
+cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left, grandpa2),(right, uncle1),(data,d2),(color,c2)) * rbt(uncle1,M4,N4,C4) * grandpa2 |-> ((left,parent2),(right,uncle2),(data,d3),(color,c3)) * rbt(uncle2,M5,N5,C5) * parent2 |-> ((left,cur2),(right,U),(data,d5),(color,c5)) * rbthole(cur2,parent0,M9,N9,C9,M7,N7,C7) * rbt(U,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d4),(color,c4)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M8,N8,C8)
+& M9 < d5 < M10 & N9 = N10 & 0 <=c5 <=1 & (c5=0 => C9=1 & C10 = 1) & key < d4 < M8 & N8=1 & 0<=c4 <= 1 & c4=0 => C8 = 1 & M7 = {d4} cup {key} cup M8 & N7=ite(c4=0,N8,N8+1) & C7=c4 & M9 cup {d5} cup M10 < d3 < M5 & n5=ite(c5=0, N10, N10+1) & n5 = N5 & 0<=c3 <= 1 & (c3 =0 => c5 =1 & C5 = 1) & M9 cup {d5} cup M10 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0, N5,N5+1) & n3 = N4 & 0<=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M9 cup {d5} cup M10 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 = 0 => c2 =1 & C3 = 1) & M0 cup {key} = M9 cup {d5} cup M10 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & cusparent2 = root & cusnode2 = ggrandpa2 & is_even = 1
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+Pre2-1: rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left,grandpa1),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * grandpa1 |-> ((left,parent1),(right, uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent1|->((left,cur1),(right,V),(data,d5),(color,c5)) * rbt(V,M7,N7,C7) * rbthole(cur1,parent0,M8,N8,C8,M9,N9,C9) * parent0 |-> ((left,x),(right,Z),(data,d6),(color,c6)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M10,N10,C10)
+& key < d6 < M10 & N10=1 & 0<=c6<=1 & c6=0 => C10 = 1 & M9 = {d6} cup {key} cup M10 & N9=ite(c6=0,N10,N10+1) & C9=c6 & M8 < d5 < M7 & N8 = N7 & 0<=c5 <= 1 & (c5 =0 => C8 = 1 & C7 = 1) & M8 cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & (c5 = 1 | C5 = 1)
+
+Post2-1: rbthole(root,cusparent2,M1,N1,C1,M11,N11,C11) * cusparent2 |-> ((left,cusnode2),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * ggrandpa2 |-> ((left,grandpa2),(right, uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * grandpa2|->((left,parent2),(right,uncle2),(data,d5),(color,c5)) * rbt(uncle2,M7,N7,C7) * parent2|-> ((left,cur2),(right,V1),(data,d7),(color,C8)) * rbthole(cur2,parent0,M12,N12,C12,M9,N9,C9) * rbt(V1,M13,N13,C13) * parent0 |-> ((left,x),(right,Z),(data,d6),(color,c6)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M10,N10,C10)
+& M12 < d7 < M13 & N12 = N13 & 0<= C8 <= 1 & (C8=0 => C12=1 & C13=1) & key < d6 < M10 & N10=1 & 0<=c6<=1 & c6=0 => C10 = 1 & M9 = {d6} cup {key} cup M10 & N9=ite(c6=0,N10,N10+1) & C9=c6 & M12 cup {d7} cup M13 < d5 < M7 & n7 = N7 & n7=ite(C8=0,N13,N13+1) & 0<=c5 <= 1 & (c5 =0 => C8 = 1 & C7 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & cusnode2 = ggrandpa2 & is_even = 1
+
+VC05:
+rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left,grandpa1),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * grandpa1 |-> ((left,parent1),(right, uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent1|->((left,cur1),(right,V),(data,d5),(color,c5)) * rbt(V,M7,N7,C7) * cur1|-> ((left,U1),(right,V1),(data,d7),(color,C8)) * rbthole(U1,parent0,M12,N12,C12,M9,N9,C9) * rbt(V1,M13,N13,C13) * parent0 |-> ((left,x),(right,Z),(data,d6),(color,c6)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M10,N10,C10)
+& M12 < d7 < M13 & N12 = N13 & 0<= C8 <= 1 & (C8=0 => C12=1 & C13=1) & M8 =  M12 cup d7 cup M13 & N8 = ite(C8=0,N13,N13+1) & key < d6 < M10 & N10=1 & 0<=c6<=1 & c6=0 => C10 = 1 & M9 = {d6} cup {key} cup M10 & N9=ite(c6=0,N10,N10+1) & C9=c6 & M8 < d5 < M7 & N8 = N7 & 0<=c5 <= 1 & (c5 =0 => C8 = 1 & C7 = 1) & M8 cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & (c5 = 1 | C5 = 1) & parent2=cur1 & cur2 = U1 & cusparent2 = ggrandpa1 & cusnode2 = grandpa1 & ggrandpa2 = grandpa1 & grandpa2 = parent1 & uncle2 = V
+|-
+rbthole(root,cusparent2,M1,N1,C1,M11,N11,C11) * cusparent2 |-> ((left,cusnode2),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * ggrandpa2 |-> ((left,grandpa2),(right, uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * grandpa2|->((left,parent2),(right,uncle2),(data,d5),(color,c5)) * rbt(uncle2,M7,N7,C7) * parent2|-> ((left,cur2),(right,V1),(data,d7),(color,C8)) * rbthole(cur2,parent0,M12,N12,C12,M9,N9,C9) * rbt(V1,M13,N13,C13) * parent0 |-> ((left,x),(right,Z),(data,d6),(color,c6)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M10,N10,C10)
+& 
+M12 < d7 < M13 & N12 = N13 & 0<= C8 <= 1 & (C8=0 => C12=1 & C13=1) & key < d6 < M10 & N10=1 & 0<=c6<=1 & c6=0 => C10 = 1 & M9 = {d6} cup {key} cup M10 & N9=ite(c6=0,N10,N10+1) & C9=c6 & M12 cup {d7} cup M13 < d5 < M7 & n7 = N7 & n7=ite(C8=0,N13,N13+1) & 0<=c5 <= 1 & (c5 =0 => C8 = 1 & C7 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & cusnode2 = ggrandpa2 & is_even = 1
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+Pre2-2: rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d3),(color,c3)) * rbt(V,M5,N5,C5) * grandpa1 |-> ((left,parent0),(right, uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent0 |-> ((left,x),(right,Z),(data,d5),(color,c5)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M7,N7,C7)
+& key < d5 < M7 & N7=1 & 0<=c5<=1 & c5=0 => C7 = 1 & {key} cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & (c5 = 1 | C7 = 1) & parent1 = parent0 & cur1 = x
+
+Post2-2: rbthole(root,cusparent2,M1,N1,C1,M8,N8,C8) * cusparent2 |-> ((left,cusnode2),(right,Z),(data,d3),(color,c3)) * rbt(V,M5,N5,C5) * cusnode2 |-> ((left,parent0),(right, uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent0 |-> ((left,x),(right,Z),(data,d5),(color,c5)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M7,N7,C7)
+& key < d5 < M7 & N7=1 & 0<=c5<=1 & c5=0 => C7 = 1 & {key} cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M8 = {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 & N8 = ite(c3=0,N5,N5+1) & C8 c3 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & is_even = 1 & cusnode2 = ggrandpa2 & grandpa2 = parent0 & parent2 = x & cur2 = nil & uncle1 = Z
+
+VC06:
+rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d3),(color,c3)) * rbt(V,M5,N5,C5) * grandpa1 |-> ((left,parent0),(right, uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent0 |-> ((left,x),(right,Z),(data,d5),(color,c5)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M7,N7,C7)
+& key < d5 < M7 & N7=1 & 0<=c5<=1 & c5=0 => C7 = 1 & {key} cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & (c5 = 1 | C7 = 1) & parent1 = parent0 & cur1 = x & cusnode2= grandpa1 & cusparent2=ggrandpa1 & ggrandpa2 = grandpa1 & grandpa2=parent1 & parent2 = cur1 & cur2 = nil & uncle2 = Z 
+|-
+rbthole(root,cusparent2,M1,N1,C1,M8,N8,C8) * cusparent2 |-> ((left,cusnode2),(right,Z),(data,d3),(color,c3)) * rbt(V,M5,N5,C5) * cusnode2 |-> ((left,parent0),(right, uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent0 |-> ((left,x),(right,Z),(data,d5),(color,c5)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M7,N7,C7)
+& key < d5 < M7 & N7=1 & 0<=c5<=1 & c5=0 => C7 = 1 & {key} cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M8 = {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 & N8 = ite(c3=0,N5,N5+1) & C8 c3 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & is_even = 1 & cusnode2 = ggrandpa2 & grandpa2 = parent0 & parent2 = x & cur2 = nil & uncle2 = Z
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+
+Pre3-1: rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,Z),(data,d3),(color,c3)) * rbt(Z,M5,N5,C5) * brrbthole(cu1,cu2,M6,N6,C6,M7,N7,C7) * cu2 |-> ((left,ggrandpa1),(right,U),(data,d4),(color,c4)) * rbt(U,M8,N8,C8) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * grandpa1 |-> ((left,parent1),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent1 |-> ((left,cur1),(right,W),(data,d7),(color,c7)) * rbt(W,M11,N11,C11) * rbthole(cur1,parent0,M12,N12,C12,M13,N13,C13) * parent0 |-> ((left,x),(right,Z),(data,d8),(color,c8)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M14,N14,C14) 
+& key < d8 < M14 & N14 = 1 & 0<=c8<=1 & (c8 = 0 => C14 = 1) & M13 = {d8} cup {key} cup M14 & N13 = ite(c8=0,N14,N14+1) & C13= c8 & M12 < d7 < M11 & N12 = N11 & 0<=c7<=1 & (c7=0 => C12 = 1 & C11 = 1) & M12 cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M12 cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M12 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 < d4 < M8 & n5 = ite(c5=0,N9,N9+1) & n5=N8 & 0<=c4 <=1 & (c4 =0 => c5 = 1 & C8 =1) & M7 = M12 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 cup {d4} cup M8 & N7 = ite(c4=0,N8,N8+1) & C7 = c4 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & !key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & (c7 = 1 | C10 = 1)
+
+Post3-1: rbthole(root,cusparent2,M1,N1,C1,M15,N15,C15) * cusparent2 |-> ((left,cusnode2),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * cusnode2 |-> ((left,grandpa2),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * grandpa2 |-> ((left,parent2),(right,uncle2),(data,d7),(color,c7)) * rbt(uncle2,M11,N11,C11) * parent2|-> ((left,cur2),(right,V1),(data,d9),(color,C12)) * rbthole(cur2,parent0,M16,N16,C16,M13,N13,C13) * rbt(V1,M17,N17,C17) * parent0 |-> ((left,x),(right,Z),(data,d8),(color,c8)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M14,N14,C14)
+& M16 < d9 < M17 & N16 = N17 & 0<= C12 <= 1 & (C12 =0=> C16 =1 & C17 = 1) & key < d8 < M14 & N14 = 1 & 0<=c8<=1 & (c8 = 0 => C14 = 1) & M13 = {d8} cup {key} cup M14 & N13 = ite(c8=0,N14,N14+1) & C13= c8 & M16 cup {d9} cup M17 < d7 < M11 & n9 = N11 & n9 = ite(C12=0,N17,N17+1) & 0<=c7<=1 & (c7=0 => C12 = 1 & C11 = 1) & M16 cup {d9} cup M17 cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M16 cup {d9} cup M17 cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M15 = M16 cup {d9} cup M17 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 & N15 = ite(c5=0,N9,N9+1) & C15=c5 & M1 = M0 cup {key} & !key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & cusnode2 = ggrandpa2 & is_even = 1
+
+VC07:
+
+rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,Z),(data,d3),(color,c3)) * rbt(Z,M5,N5,C5) * brrbthole(cu1,cu2,M6,N6,C6,M7,N7,C7) * cu2 |-> ((left,ggrandpa1),(right,U),(data,d4),(color,c4)) * rbt(U,M8,N8,C8) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * grandpa1 |-> ((left,parent1),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent1 |-> ((left,cur1),(right,W),(data,d7),(color,c7)) * rbt(W,M11,N11,C11) * cur1|-> ((left,U1),(right,V1),(data,d9),(color,C12)) * rbthole(U1,parent0,M16,N16,C16,M13,N13,C13) * rbt(V1,M17,N17,C17) * parent0 |-> ((left,x),(right,Z),(data,d8),(color,c8)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M14,N14,C14) 
+& 
+M16 < d9 < M17 & N16 = N17 & 0<= C12 <= 1 & (C12 =0=> C16 =1 & C17 = 1) & M12 = M16 cup {d9} cup M17 & N12=ite(C12=0,N17,N17+1) & key < d8 < M14 & N14 = 1 & 0<=c8<=1 & (c8 = 0 => C14 = 1) & M13 = {d8} cup {key} cup M14 & N13 = ite(c8=0,N14,N14+1) & C13= c8 & M12 < d7 < M11 & N12 = N11 & 0<=c7<=1 & (c7=0 => C12 = 1 & C11 = 1) & M12 cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M12 cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M12 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 < d4 < M8 & n5 = ite(c5=0,N9,N9+1) & n5=N8 & 0<=c4 <=1 & (c4 =0 => c5 = 1 & C8 =1) & M7 = M12 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 cup {d4} cup M8 & N7 = ite(c4=0,N8,N8+1) & C7 = c4 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & !key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & (c7 = 1 | C10 = 1) & cusnode2 = grandpa1 & cusparent2 = ggrandpa1 & ggrandpa2 = grandpa1 & grandpa2 = parent1 & uncle2 = W & parent2 = cur1 & cur2 = U1
+|-
+rbthole(root,cusparent2,M1,N1,C1,M15,N15,C15) * cusparent2 |-> ((left,cusnode2),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * cusnode2 |-> ((left,grandpa2),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * grandpa2 |-> ((left,parent2),(right,uncle2),(data,d7),(color,c7)) * rbt(uncle2,M11,N11,C11) * parent2|-> ((left,cur2),(right,V1),(data,d9),(color,C12)) * rbthole(cur2,parent0,M16,N16,C16,M13,N13,C13) * rbt(V1,M17,N17,C17) * parent0 |-> ((left,x),(right,Z),(data,d8),(color,c8)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M14,N14,C14)
+& M16 < d9 < M17 & N16 = N17 & 0<= C12 <= 1 & (C12 =0=> C16 =1 & C17 = 1) & key < d8 < M14 & N14 = 1 & 0<=c8<=1 & (c8 = 0 => C14 = 1) & M13 = {d8} cup {key} cup M14 & N13 = ite(c8=0,N14,N14+1) & C13= c8 & M16 cup {d9} cup M17 < d7 < M11 & n9 = N11 & n9 = ite(C12=0,N17,N17+1) & 0<=c7<=1 & (c7=0 => C12 = 1 & C11 = 1) & M16 cup {d9} cup M17 cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M16 cup {d9} cup M17 cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M15 = M16 cup {d9} cup M17 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 & N15 = ite(c5=0,N9,N9+1) & C15=c5 & M1 = M0 cup {key} & !key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & cusnode2 = ggrandpa2 & is_even = 1
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+
+
+Pre3-2: rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1,cu2,M6,N6,C6,M7,N7,C7) * cu2 |-> ((left,ggrandpa1),(right,U),(data,d4),(color,c4)) * rbt(U,M8,N8,C8) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * grandpa1 |-> ((left,parent0),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d7),(color,c7)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M11,N11,C11) 
+& key < d7 < M11 & N11 = 1 & 0<=c7<=1 & (c7 = 0 => C11 = 1) & {key} cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 < d4 < M8 & n5 = ite(c5=0,N9,N9+1) & n5=N8 & 0<=c4 <=1 & (c4 =0 => c5 = 1 & C8 =1) & M7 = {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 cup {d4} cup M8 & N7 = ite(c4=0,N8,N8+1) & C7 = c4 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & !key in M0 &  ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & c5 = 0 & C8 =0 & (c7 = 1 | C10 = 1) & parent1=parent0 & cur1 = x
+
+Post3-2: rbthole(root,cusparent2,M1,N1,C1,M12,N12,C12) * cusparent2 |-> ((left,cusnode2),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * cusnode2 |-> ((left,parent0),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d7),(color,c7)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M11,N11,C11) 
+& key < d7 < M11 & N11 = 1 & 0<=c7<=1 & (c7 = 0 => C11 = 1) & {key} cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M12 = {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 & N12 = ite(c5=0,N9,N9+1) & C12=c5 & M1 = M0 cup {key} & !key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & is_even = 1 & (c7 = 1 | C10 = 1) & grandpa2=parent0 & parent2 = x & uncle2 = Z & cur2 = nil
+
+VC08:
+rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1,cu2,M6,N6,C6,M7,N7,C7) * cu2 |-> ((left,ggrandpa1),(right,U),(data,d4),(color,c4)) * rbt(U,M8,N8,C8) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * grandpa1 |-> ((left,parent0),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d7),(color,c7)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M11,N11,C11) 
+& key < d7 < M11 & N11 = 1 & 0<=c7<=1 & (c7 = 0 => C11 = 1) & {key} cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 < d4 < M8 & n5 = ite(c5=0,N9,N9+1) & n5=N8 & 0<=c4 <=1 & (c4 =0 => c5 = 1 & C8 =1) & M7 = {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 cup {d4} cup M8 & N7 = ite(c4=0,N8,N8+1) & C7 = c4 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & !key in M0 &  ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & c5 = 1 & C8 =0 & (c7 = 1 | C10 = 1) & parent1=parent0 & cur1 = x & cusnode2 = grandpa1 & cusparent2 = ggrandpa1 & ggrandpa2 = grandpa1 & grandpa2 = parent1 & uncle2 = Z & parent2 = cur1 & cur2 = nil
+|-
+rbthole(root,cusparent2,M1,N1,C1,M12,N12,C12) * cusparent2 |-> ((left,cusnode2),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * cusnode2 |-> ((left,parent0),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d7),(color,c7)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M11,N11,C11) 
+& key < d7 < M11 & N11 = 1 & 0<=c7<=1 & (c7 = 0 => C11 = 1) & {key} cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M12 = {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 & N12 = ite(c5=0,N9,N9+1) & C12=c5 & M1 = M0 cup {key} & !key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & is_even = 1 & (c7 = 1 | C10 = 1) & grandpa2=parent0 & parent2 = x & uncle2 = Z & cur2 = nil
+
+**********************************************
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 1);
+is_even = 0;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data < key);
+cur = parent->right;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data < key);
+cur = parent->right;
+assume(is_even == 1);
+is_even = 0;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data < key);
+uncle = grandpa->left;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data < key);
+uncle = grandpa->left;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 1);
+is_even = 0;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data < key);
+uncle = grandpa->left;
+parent = cur;
+assume(parent->data < key);
+cur = parent->right;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(parent->color == 1 || uncle == NULL || uncle->color == 1);
+cusnode = grandpa;
+cusparent = ggrandpa;
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data < key);
+uncle = grandpa->left;
+parent = cur;
+assume(parent->data < key);
+cur = parent->right;
+assume(is_even == 1);
+is_even = 0;
+}
+
+
+///////////////////////////
+
+Pre1: cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, parent1),(right,uncle1),(data,d2),(color,c2)) * rbt(uncle1,M4,N4,C4) * parent1 |-> ((left,cur1),(right,Z),(data,d3),(color,c3)) * rbt(Z,M5,N5,C5) * rbthole(cur1,parent0,M6,N6,C6,M7,N7,C7) * parent0 |-> ((left,x),(right,Z),(data,d4),(color,c4)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M8,N8,C8)
+& key < d4 < M8 & N8=1 & 0<=c4 <= 1 & c4=0 => C8 = 1 & M7 = {d4} cup {key} cup M8 & N7=ite(c4=0,N8,N8+1) & C7=c4 & M6 < d3 < M5 & N6 = N5 & 0<=c3 <= 1 & (c3 =0 => C6 =1 & C5 = 1) & {d3} cup M6 cup M5 < d2 < M4 & n3=ite(c3=0, N5,N5+1) & n3 = N4 & 0<=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 = 0 => c2 =1 & C3 = 1) & M0 cup {key} = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & cusparent1 = root & cusparent1 = ggrandpa1 & cusnode1 = grandpa1 & is_even = 0 & c3 = 0 & C4 = 0
+
+Post1: cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left, grandpa2),(right,uncle1),(data,d2),(color,c2)) * rbt(uncle1,M4,N4,C4) * grandpa2 |-> ((left,parent2),(right,uncle2),(data,d3),(color,c3)) * rbt(uncle2,M5,N5,C5) * parent2 |-> ((left,cur2),(right,U),(data,d5),(color,c5)) * rbthole(cur2,parent0,M9,N9,C9,M7,N7,C7) * rbt(U,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d4),(color,c4)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M8,N8,C8)
+& M9 < d5 < M10 & N9 = N10 & 0 <=c5 <=1 & (c5=0 => C9=1 & C10 = 1) & key < d4 < M8 & N8=1 & 0<=c4 <= 1 & c4=0 => C8 = 1 & M7 = {d4} cup {key} cup M8 & N7=ite(c4=0,N8,N8+1) & C7=c4 & M9 cup {d5} cup M10 < d3 < M5 & n5=ite(c5=0, N10, N10+1) & n5 = N5 & 0<=c3 <= 1 & (c3 =0 => c5 =1 & C5 = 1) & M9 cup {d5} cup M10 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0, N5,N5+1) & n3 = N4 & 0<=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M9 cup {d5} cup M10 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 = 0 => c2 =1 & C3 = 1) & M0 cup {key} = M9 cup {d5} cup M10 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & cusparent2 = root & cusnode2 = ggrandpa2 & is_even = 1
+
+VC09: 
+cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, parent1),(right,uncle1),(data,d2),(color,c2)) * rbt(uncle1,M4,N4,C4) * parent1 |-> ((left,cur1),(right,Z),(data,d3),(color,c3)) * rbt(Z,M5,N5,C5) * cur1 |-> ((left,V),(right,U),(data,d5),(color,c5)) * rbthole(V,parent0,M9,N9,C9,M7,N7,C7) * rbt(U,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d4),(color,c4)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M8,N8,C8)
+&
+M9 < d5 < M10 & N9 = N10 & 0 <=c5 <=1 & (c5=0 => C9=1 & C10 = 1) & M6=M9 cup {d5} cup M10 & N6= ite(c5=0,N9,N9+1) & C6=c5 & key < d4 < M8 & N8=1 & 0<=c4 <= 1 & c4=0 => C8 = 1 & M7 = {d4} cup {key} cup M8 & N7=ite(c4=0,N8,N8+1) & C7=c4 & M7 < d3 < M5 & N6 = N5 & 0<=c3 <= 1 & (c3 =0 => C6 =1 & C5 = 1) & {d3} cup M6 cup M5 < d2 < M4 & n3=ite(c3=0, N5,N5+1) & n3 = N4 & 0<=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 = 0 => c2 =1 & C3 = 1) & M0 cup {key} = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & cusparent1 = root & cusparent1 = ggrandpa1 & cusnode1 = grandpa1 & is_even = 1 & c3 = 0 & C4 = 0 & ggrandpa2 = grandpa1 & grandpa2 = parent1 & uncle2 = Z & parent2 = cur1 & cur2 = V
+|-
+cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left, grandpa2),(right,uncle1),(data,d2),(color,c2)) * rbt(uncle1,M4,N4,C4) * grandpa2 |-> ((left,parent2),(right,uncle2),(data,d3),(color,c3)) * rbt(uncle2,M5,N5,C5) * parent2 |-> ((left,cur2),(right,U),(data,d5),(color,c5)) * rbthole(cur2,parent0,M9,N9,C9,M7,N7,C7) * rbt(U,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d4),(color,c4)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M8,N8,C8)
+& M9 < d5 < M10 & N9 = N10 & 0 <=c5 <=1 & (c5=0 => C9=1 & C10 = 1) & key < d4 < M8 & N8=1 & 0<=c4 <= 1 & c4=0 => C8 = 1 & M7 = {d4} cup {key} cup M8 & N7=ite(c4=0,N8,N8+1) & C7=c4 & M9 cup {d5} cup M10 < d3 < M5 & n5=ite(c5=0, N10, N10+1) & n5 = N5 & 0<=c3 <= 1 & (c3 =0 => c5 =1 & C5 = 1) & M9 cup {d5} cup M10 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0, N5,N5+1) & n3 = N4 & 0<=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M9 cup {d5} cup M10 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 = 0 => c2 =1 & C3 = 1) & M0 cup {key} = M9 cup {d5} cup M10 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & ! key in M0 & ! parent0 = nil & ! parent0 = root & cusparent2 = root & cusnode2 = ggrandpa2 & is_even = 1
+
+{
+assume(cur!=NULL);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+Pre2-1: rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left,grandpa1),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * grandpa1 |-> ((left,parent1),(right,uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent1|->((left,cur1),(right,V),(data,d5),(color,c5)) * rbt(V,M7,N7,C7) * rbthole(cur1,parent0,M8,N8,C8,M9,N9,C9) * parent0 |-> ((left,x),(right,Z),(data,d6),(color,c6)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M10,N10,C10)
+& key < d6 < M10 & N10=1 & 0<=c6<=1 & c6=0 => C10 = 1 & M9 = {d6} cup {key} cup M10 & N9=ite(c6=0,N10,N10+1) & C9=c6 & M8 < d5 < M7 & N8 = N7 & 0<=c5 <= 1 & (c5 =0 => C8 = 1 & C7 = 1) & M8 cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & c5 = 0 & C5 = 0
+
+Post2-1: rbthole(root,cusparent2,M1,N1,C1,M2,N2,C2) * cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left, ggra),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggra |-> ((left,ggrandpa2),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * ggrandpa2 |-> ((left,grandpa2),(right,U),(data,d4),(color,c4)) * rbt(U,M6,N6,C6) * grandpa2|->((left,parent2),(right,uncle2),(data,d5),(color,c5)) * rbt(uncle2,M7,N7,C7) * parent2|-> ((left,cur2),(right,V),(data,d7),(color,C8)) * rbthole(cur2,parent0,M12,N12,C12,M9,N9,C9) * rbt(V,M13,N13,C13) * parent0 |-> ((left,x),(right,Z),(data,d6),(color,c6)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M10,N10,C10)
+& M12 < d7 < M13 & N12 = N13 & 0<= C8 <= 1 & (C8=0 => C12=1 & C13=1) & key < d6 < M10 & N10=1 & 0<=c6<=1 & c6=0 => C10 = 1 & M9 = {d6} cup {key} cup M10 & N9=ite(c6=0,N10,N10+1) & C9=c6 & M12 cup {d7} cup M13 < d5 < M7 & n7 = N7 & n7 = ite(C8=0,N13,N13+1) & 0<=c5 <= 1 & (c5 =0 => C8 = 1 & C7 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1
+
+VC10: 
+rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left,grandpa1),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * grandpa1 |-> ((left,parent1),(right,uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent1|->((left,cur1),(right,V),(data,d5),(color,c5)) * rbt(V,M7,N7,C7) * parent2|-> ((left,U1),(right,V),(data,d7),(color,C8)) * rbthole(U1,parent0,M12,N12,C12,M9,N9,C9) * rbt(V,M13,N13,C13) * parent0 |-> ((left,x),(right,Z),(data,d6),(color,c6)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M10,N10,C10)
+& M12 < d7 < M13 & N12 = N13 & 0<= C8 <= 1 & (C8=0 => C12=1 & C13=1) & M8 = M12 cup {d7} cup M13 & N8 =ite(C8=0,N13,N13+1) & key < d6 < M10 & N10=1 & 0<=c6<=1 & c6=0 => C10 = 1 & M9 = {d6} cup {key} cup M10 & N9=ite(c6=0,N10,N10+1) & C9=c6 & M8 < d5 < M7 & N8 = N7 & 0<=c5 <= 1 & (c5 =0 => C8 = 1 & C7 = 1) & M8 cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M8 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & c5 = 0 & C5 = 0 & ggrandpa2 = grandpa1 & grandpa2 = parent1 & uncle2=V & parent2=cur1 & cur2 = U1
+|-
+rbthole(root,cusparent2,M1,N1,C1,M2,N2,C2) * cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left, ggra),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggra |-> ((left,ggrandpa2),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * ggrandpa2 |-> ((left,grandpa2),(right,U),(data,d4),(color,c4)) * rbt(U,M6,N6,C6) * grandpa2|->((left,parent2),(right,uncle2),(data,d5),(color,c5)) * rbt(uncle2,M7,N7,C7) * parent2|-> ((left,cur2),(right,V),(data,d7),(color,C8)) * rbthole(cur2,parent0,M12,N12,C12,M9,N9,C9) * rbt(V,M13,N13,C13) * parent0 |-> ((left,x),(right,Z),(data,d6),(color,c6)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M10,N10,C10)
+& M12 < d7 < M13 & N12 = N13 & 0<= C8 <= 1 & (C8=0 => C12=1 & C13=1) & key < d6 < M10 & N10=1 & 0<=c6<=1 & c6=0 => C10 = 1 & M9 = {d6} cup {key} cup M10 & N9=ite(c6=0,N10,N10+1) & C9=c6 & M12 cup {d7} cup M13 < d5 < M7 & n7 = N7 & n7 = ite(C8=0,N13,N13+1) & 0<=c5 <= 1 & (c5 =0 => C8 = 1 & C7 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M12 cup {d7} cup M13 cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1
+
+{
+assume(cur!=NULL);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+
+Pre2-2: rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left,grandpa1),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * grandpa1 |-> ((left,parent0),(right,uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent0 |-> ((left,x),(right,Z),(data,d5),(color,c5)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M7,N7,C7)
+& key < d5 < M7 & N7=1 & 0<=c5<=1 & c5=0 => C7 = 1 & {key} cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & c5 =0 & C6 = 0 parent1 = parent0 & cur1 = x
+
+Post2-2: rbthole(root,cusparent2,M1,N1,C1,M2,N2,C2) * cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left, ggrandpa2),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * brrbthole(ggrandpa2,x,M8,N8,C8,M9,N9,C9) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M7,N7,C7)
+& key < d5 < M7 & N7=1 & 0<=c5<=1 & c5=0 => C7 = 1 &  M9 = {key} & N9 = 1 & C9=0 & M8 < d3 < M5 & N8=N5 & 0 <=c3 <= 1 & (c3 =0 => C8 =1 & C5 = 1) & M8 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M8 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M8 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & grandpa2 = parent0 & parent2 = x & cur2 = nil & uncle2 = Z
+
+VC11:
+rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left,grandpa1),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * grandpa1 |-> ((left,parent0),(right,uncle1),(data,d4),(color,c4)) * rbt(uncle1,M6,N6,C6) * parent0 |-> ((left,x),(right,Z),(data,d5),(color,c5)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M7,N7,C7)
+& key < d5 < M7 & N7=1 & 0<=c5<=1 & c5=0 => C7 = 1 & {key} cup {d5} cup M7 < d4 < M6 & n5=ite(c5=0, N7,N7+1) & n5 = N6 & 0<= c4 <= 1 & (c4=0 => c5 =1 & C6 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 < d3 < M5 & n4=ite(c4=0,N6,N6+1) & n4=N5 & 0 <=c3 <= 1 & (c3 =0 => c4 =1 & C5 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = {key} cup {d5} cup M7 cup {d4} cup M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & c5 =0 & C6 = 0 parent1 = parent0 & cur1 = x & ggrandpa2 = grandpa1 & grandpa2 = parent1 & uncle2 = Z & parent2 = cur1 & cur2 = nil
+|-
+rbthole(root,cusparent2,M1,N1,C1,M2,N2,C2) * cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left, ggrandpa1),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * ggrandpa1 |-> ((left, ggrandpa2),(right,U),(data,d3),(color,c3)) * rbt(U,M5,N5,C5) * brrbthole(ggrandpa2,x,M8,N8,C8,M9,N9,C9) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M7,N7,C7)
+& key < d5 < M7 & N7=1 & 0<=c5<=1 & c5=0 => C7 = 1 &  M9 = {key} & N9 = 1 & C9=0 & M8 < d3 < M5 & N8=N5 & 0 <=c3 <= 1 & (c3 =0 => C8 =1 & C5 = 1) & M8 cup {d3} cup M5 < d2 < M4 & n3=ite(c3=0,N5,N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2 =0 => c3 =1 & C4 = 1) & M8 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=ite(c2=0,N4,N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1 =0 => c2 =1 & C3 = 1) & M2 = M8 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2= c1 & M0 cup {key} = M1 & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & grandpa2 = parent0 & parent2 = x & cur2 = nil & uncle2 = Z
+
+Pre3-1: rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1,cu2,M6,N6,C6,M7,N7,C7) * cu2 |-> ((left,ggrandpa1),(right,U),(data,d4),(color,c4)) * rbt(U,M8,N8,C8) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * grandpa1 |-> ((left,parent1),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent1 |-> ((left,cur1),(right,W),(data,d7),(color,c7)) * rbt(W,M11,N11,C11) * rbthole(cur1,parent0,M12,N12,C12,M13,N13,C13) * parent0 |-> ((left,x),(right,Z),(data,d8),(color,c8)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M14,N14,C14)
+& key < d8 < M14 & N14 = 1 & 0<=c8<=1 & (c8 = 0 => C14 = 1) & M13 = {d8} cup {key} cup M14 & N13 = ite(c8=0,N14,N14+1) & C13= c8 & M12 < d7 < M11 & N12 = N11 & 0<=c7<=1 & (c7=0 => C12 = 1 & C11 = 1) & M12 cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M12 cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M12 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 < d4 < M8 & n5 = ite(c5=0,N9,N9+1) & n5=N8 & 0<=c4 <=1 & (c4 =0 => c5 = 1 & C8 =1) & M7 = M12 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 cup {d4} cup M8 & N7 = ite(c4=0,N8,N8+1) & C7 = c4 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & c5 = 0 & C8 = 0 & c7 = 0 &  C10 = 0 
+
+Post3-1: rbthole(root,cusparent2,M1,N1,C1,M2,N2,C2) * cusparent2 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1, ggrandpa1,M6,N6,C6,M15,N15,C15) * ggrandpa1 |-> ((left,ggrandpa2),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * ggrandpa2 |-> ((left,grandpa2),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * grandpa2 |-> ((left,parent2),(right,W),(data,d7),(color,c7)) * rbt(W,M11,N11,C11) * parent2|-> ((left,cur2),(right,V1),(data,d9),(color,C12)) * rbthole(cur2,parent0,M16,N16,C16,M13,N13,C13) * rbt(V1,M17,N17,C17) * parent0 |-> ((left,x),(right,Z),(data,d8),(color,c8)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M14,N14,C14)
+& M16 < d9 < M17 & N16 = N17 & 0<= C12 <= 1 & (C12 =0=> C16 =1 & C17 = 1) & key < d8 < M14 & N14 = 1 & 0<=c8<=1 & (c8 = 0 => C14 = 1) & M13 = {d8} cup {key} cup M14 & N13 = ite(c8=0,N14,N14+1) & C13= c8 & M16 cup {d9} cup M17 < d7 < M11 & n9 = N11 & n9 = ite(C12=0,N17,N17+1) & 0<=c7<=1 & (c7=0 => C12 = 1 & C11 = 1) & M16 cup {d9} cup M17 cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M16 cup {d9} cup M17 cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M15 = M16 cup {d9} cup M17 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 & N15 = ite(c5=0,N9,N9+1) & C15=c5 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & is_even = 1 & c7 = 0 &  C10 = 0
+
+VC12:
+rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1,cu2,M6,N6,C6,M7,N7,C7) * cu2 |-> ((left,ggrandpa1),(right,U),(data,d4),(color,c4)) * rbt(U,M8,N8,C8) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * grandpa1 |-> ((left,parent1),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent1 |-> ((left,cur1),(right,W),(data,d7),(color,c7)) * rbt(W,M11,N11,C11) * cur1|-> ((left,U2),(right,V1),(data,d9),(color,C12)) * rbthole(U2,parent0,M16,N16,C16,M13,N13,C13) * rbt(V1,M17,N17,C17) * parent0 |-> ((left,x),(right,Z),(data,d8),(color,c8)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M14,N14,C14)
+& M16 < d9 < M17 & N16 = N17 & 0<= C12 <= 1 & (C12 =0=> C16 =1 & C17 = 1) & M12 = M16 cup {d9} cup M17 & N12 = ite(C12=0,N17,N17+1) & key < d8 < M14 & N14 = 1 & 0<=c8<=1 & (c8 = 0 => C14 = 1) & M13 = {d8} cup {key} cup M14 & N13 = ite(c8=0,N14,N14+1) & C13= c8 & M12 < d7 < M11 & N12 = N11 & 0<=c7<=1 & (c7=0 => C12 = 1 & C11 = 1) & M12 cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M12 cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M12 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 < d4 < M8 & n5 = ite(c5=0,N9,N9+1) & n5=N8 & 0<=c4 <=1 & (c4 =0 => c5 = 1 & C8 =1) & M7 = M12 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 cup {d4} cup M8 & N7 = ite(c4=0,N8,N8+1) & C7 = c4 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & c5 = 0 & C8 = 0 & c7 = 0 &  C10 = 0 & ggrandpa2 = grandpa1 & grandpa2 = parent1 & uncle2 = W & parent2 = cur1 & cur2 = U2 
+|-
+rbthole(root,cusparent2,M1,N1,C1,M2,N2,C2) * cusparent2 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1, ggrandpa1,M6,N6,C6,M15,N15,C15) * ggrandpa1 |-> ((left,ggrandpa2),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * ggrandpa2 |-> ((left,grandpa2),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * grandpa2 |-> ((left,parent2),(right,W),(data,d7),(color,c7)) * rbt(W,M11,N11,C11) * parent2|-> ((left,cur2),(right,V1),(data,d9),(color,C12)) * rbthole(cur2,parent0,M16,N16, C16,M13, N13, C13) * rbt(V1,M17,N17,C17) * parent0 |-> ((left,x),(right,Z),(data,d8),(color,c8)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M14,N14,C14)
+& M16 < d9 < M17 & N16 = N17 & 0<= C12 <= 1 & (C12 =0=> C16 =1 & C17 = 1) & key < d8 < M14 & N14 = 1 & 0<=c8<=1 & (c8 = 0 => C14 = 1) & M13 = {d8} cup {key} cup M14 & N13 = ite(c8=0,N14,N14+1) & C13= c8 & M16 cup {d9} cup M17 < d7 < M11 & n9 = N11 & n9 = ite(C12=0,N17,N17+1) & 0<=c7<=1 & (c7=0 => C12 = 1 & C11 = 1) & M16 cup {d9} cup M17 cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M16 cup {d9} cup M17 cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & M15 = M16 cup {d9} cup M17 cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 & N15 = ite(c5=0,N9,N9+1) & C15=c5 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent2 = nil & is_even = 1 & c7 = 0 &  C10 = 0
+
+
+Pre3-2: rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1,cu2,M6,N6,C6,M7,N7,C7) * cu2 |-> ((left,ggrandpa1),(right,U),(data,d4),(color,c4)) * rbt(U,M8,N8,C8) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * grandpa1 |-> ((left,parent0),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d7),(color,c7)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M11,N11,C11)
+& key < d7 < M11 & N11 = 1 & 0<=c7<=1 & (c7 = 0 => C11 = 1) & {key} cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 < d4 < M8 & n5 = ite(c5=0,N9,N9+1) & n5=N8 & 0<=c4 <=1 & (c4 =0 => c5 = 1 & C8 =1) & M7 = {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 cup {d4} cup M8 & N7 = ite(c4=0,N8,N8+1) & C7 = c4 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & ! key in M0 &  ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 0 & c5 = 0 & C8 = 0 & c7 = 0 & C10 = 0 & parent1= parent0 & cur1 = x
+
+Post3-2: rbthole(root,cusparent2,M1,N1,C1,M2,N2,C2) * cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1, ggrandpa2,M6,N6,C6,M13,N13,C13) * ggrandpa2 |-> ((left,parent0),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d7),(color,c7)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M11,N11,C11)
+& key < d7 < M11 & N11 = 1 & 0<=c7<=1 & (c7 = 0 => C11 = 1) & {key} cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M13 = {key} cup {d7} cup M11 cup {d6} cup M10 & N13 = ite(c6=0,N10,N10+1) & C13=c6 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & c7 = 0 & C10 = 0 & grandpa2= parent0 & parent2 = x & cur2=nil & uncle2 = Z
+
+VC13:
+rbthole(root,cusparent1,M1,N1,C1,M2,N2,C2) * cusparent1 |-> ((left,cusnode1),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode1 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1,cu2,M6,N6,C6,M7,N7,C7) * cu2 |-> ((left,ggrandpa1),(right,U),(data,d4),(color,c4)) * rbt(U,M8,N8,C8) * ggrandpa1 |-> ((left,grandpa1),(right,V),(data,d5),(color,c5)) * rbt(V,M9,N9,C9) * grandpa1 |-> ((left,parent0),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d7),(color,c7)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M11,N11,C11)
+& key < d7 < M11 & N11 = 1 & 0<=c7<=1 & (c7 = 0 => C11 = 1) & {key} cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 < d5 < M9 & n6 = ite(c6=0,N10,N10+1) & n6=N9 & 0<=c5 <=1 & (c5 =0 => c6 = 1 & C9 =1) & {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 < d4 < M8 & n5 = ite(c5=0,N9,N9+1) & n5=N8 & 0<=c4 <=1 & (c4 =0 => c5 = 1 & C8 =1) & M7 = {key} cup {d7} cup M11 cup {d6} cup M10 cup {d5} cup M9 cup {d4} cup M8 & N7 = ite(c4=0,N8,N8+1) & C7 = c4 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & c5 = 0 & C8 = 0 & c7 = 0 & C10 = 0 & parent1= parent0 & cur1 = x & ggrandpa2 = grandpa1 & grandpa2 = parent1 & uncle2 = Z & parent2 = cur1 & cur2 = nil
+|-
+rbthole(root,cusparent2,M1,N1,C1,M2,N2,C2) * cusparent2 |-> ((left,cusnode2),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode2 |-> ((left,pa),(right,Y),(data,d2),(color,c2)) * rbt(Y,M4,N4,C4) * pa|-> ((left,cu1),(right,U1),(data,d3),(color,c3)) * rbt(U1,M5,N5,C5) * brrbthole(cu1, ggrandpa2,M6,N6,C6,M13,N13,C13) * ggrandpa2 |-> ((left,parent0),(right,uncle1),(data,d6),(color,c6)) * rbt(uncle1,M10,N10,C10) * parent0 |-> ((left,x),(right,Z),(data,d7),(color,c7)) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) * rbt(Z,M11,N11,C11)
+& key < d7 < M11 & N11 = 1 & 0<=c7<=1 & (c7 = 0 => C11 = 1) & {key} cup {d7} cup M11 < d6 < M10 & n7 = ite(c7=0,N11,N11+1) & n7=N10 & 0<=c6 <=1 & (c6 =0 => c7 = 1 & C10 =1) & M13 = {key} cup {d7} cup M11 cup {d6} cup M10 & N13 = ite(c6=0,N10,N10+1) & C13=c6 & M6 < d3 < M5 & N6=N5 & 0 <= c3 <= 1 & (c3=0=> C6=1 & C5=1) & M6 cup {d3} cup M5 < d2 < M4 & n3=N4 & n3 = ite(c3=0,N5,N5+1) & 0 <= c2 <= 1 & (c2=0=> c3=1 & C4=1) & M6 cup {d3} cup M5 cup {d2} cup M4 < d1 < M3 & n2=N3 & n3 = ite(c2=0,N4,N4+1) & 0 <= c1 <= 1 & (c1=0=> c2=1 & C3=1) & M2 = M6 cup {d3} cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0,N3,N3+1) & C2=c1 & M1 = M0 cup {key} & ! key in M0 & ! parent0 = nil & ! parent0 = root & ! cusparent1 = nil & is_even = 1 & c7 = 0 & C10 = 0 & grandpa2= parent0 & parent2 = x & cur2=nil & uncle2 = Z
+
+****************************************************
+{
+assume(cur!=NULL);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 1);
+is_even = 0;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data < key);
+cur = parent->right;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data > key);
+uncle = grandpa->right;
+parent = cur;
+assume(parent->data < key);
+cur = parent->right;
+assume(is_even == 1);
+is_even = 0;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data < key);
+uncle = grandpa->left;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data < key);
+uncle = grandpa->left;
+parent = cur;
+assume(parent->data > key);
+cur = parent->left;
+assume(is_even == 1);
+is_even = 0;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data < key);
+uncle = grandpa->left;
+parent = cur;
+assume(parent->data < key);
+cur = parent->right;
+assume(is_even == 0);
+is_even = 1;
+}
+
+{
+assume(cur!=NULL);
+assume(is_even == 0);
+assume(is_even == 1 || (parent->color == 0 && uncle != NULL && uncle->color == 0) );
+ggrandpa = grandpa;
+grandpa = parent;
+assume(grandpa->data < key);
+uncle = grandpa->left;
+parent = cur;
+assume(parent->data < key);
+cur = parent->right;
+assume(is_even == 1);
+is_even = 0;
+}
+
+
+// update the color top-down, starting from cusnode
+// in the original tree all the even-position nodes on the path from cusnode to the grandpa of x,
+// excluding cusnode, have the red color and their uncles are red
+
+{
+grandpa = cusnode;
+assume(grandpa->data > key);
+parent = grandpa->left;
+assume(parent->data > key);
+cur = parent->left;
+grandpa = cur;
+}
+
+{
+grandpa = cusnode;
+assume(grandpa->data > key);
+parent = grandpa->left;
+assume(parent->data < key);
+cur = parent->right;
+grandpa = cur;
+}
+
+{
+grandpa = cusnode;
+assume(grandpa->data < key);
+parent = grandpa->right;
+assume(parent->data > key);
+cur = parent->left;
+grandpa = cur;
+}
+
+{
+grandpa = cusnode;
+assume(grandpa->data < key);
+parent = grandpa->right;
+assume(parent->data < key);
+cur = parent->right;
+grandpa = cur;
+}
+
+// the blocks for the third while loop
+
+Pre1: cusnode |-> ((left,pa),(right,unc),(data,d1),(color,c1)) * rbt(unc,M2,N2,C2) * pa |-> ((left,gra),(right,X),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * rbrbthole(gra,grandpa1,M4,N4,0,M5,N5,0) * brrbthole(grandpa1,x,M5,N5,1,M6,N6,1) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M6 = {key} & N6 = 1 & M4 < d2 < M3 & N4 = N3 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil
+
+Post1: cusnode |-> ((left,pa),(right,unc),(data,d1),(color,c1)) * rbt(unc,M2,N2,C2) * pa |-> ((left,gra),(right,X),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * rbrbthole(gra,grandpa2,M4,N4,0,M7,N7,0) * brrbthole(grandpa2,x,M7,N7,1,M6,N6,1) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M6 = {key} & N6 = 1 & M4 < d2 < M3 & N4 = N3 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil
+
+VC14:
+cusnode |-> ((left,pa),(right,unc),(data,d1),(color,c1)) * rbt(unc,M2,N2,C2) * pa |-> ((left,gra),(right,X),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * rbrbthole(gra,grandpa1,M4,N4,0,M5,N5,0) * grandpa1|-> ((left,X),(right,Y),(data,d3),(color,0)) * rbt(Y,M8,N8,1)  * X|-> ((left,U),(right,V),(data,d4),(color,1)) * brrbthole(U,x,M7,N7,1,M6,N6,1) * rbt(V,M9,N9,1) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & 
+M7 < d4 < M9 & N7 = N9 & M7 cup {d4} cup M9 < d3 < M8 & N9 = N8 & M5 = M7 cup {d4} cup M9 cup {d3} cup M8 & N5 = N8+1 & M6 = {key} & N6 = 1 & M4 < d2 < M3 & N4 = N3 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil & grandpa2 = U
+|-
+cusnode |-> ((left,pa),(right,unc),(data,d1),(color,c1)) * rbt(unc,M2,N2,C2) * pa |-> ((left,gra),(right,X),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * rbrbthole(gra,grandpa2,M4,N4,0,M7,N7,0) * brrbthole(grandpa2,x,M7,N7,1,M6,N6,1) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M6 = {key} & N6 = 1 & M4 < d2 < M3 & N4 = N3 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil
+
+
+Pre2: rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, cusnode),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,pa),(right,unc),(data,d2),(color,c2)) * rbt(unc,M4,N4,C4) * pa |-> ((left,gra),(right,Y),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * rbrbthole(gra,grandpa1,M6,N6,0,M7,N7,0) * brrbthole(grandpa1,x,M7,N7,1,M9,N9,1) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M9 = {key} & N9 = 1 & M6 < d3 < M5 & N6 = N5 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 & ! cusparent = nil
+
+Post2: rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, cusnode),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,pa),(right,unc),(data,d2),(color,c2)) * rbt(unc,M4,N4,C4) * pa |-> ((left,gra),(right,Y),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * rbrbthole(gra,grandpa2,M6,N6,0,M10,N10,0) * brrbthole(grandpa2,x,M10,N10,1,M9,N9,1) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M9 = {key} & N9 = 1 & M6 < d3 < M5 & N6 = N5 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 & ! cusparent = nil 
+
+VC15:
+rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, cusnode),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,pa),(right,unc),(data,d2),(color,c2)) * rbt(unc,M4,N4,C4) * pa |-> ((left,gra),(right,Y),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * rbrbthole(gra,grandpa1,M6,N6,0,M7,N7,0) * grandpa1|-> ((left,X),(right,Y),(data,d4),(color,0)) * rbt(Y,M11,N11,1)  * X|-> ((left,U),(right,V),(data,d5),(color,1)) * brrbthole(U,x,M10,N10,1,M9,N9,1) * rbt(V,M12,N12,1) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & 
+M10 < d5 < M12 & N10 = N12 & M10 cup {d5} cup M12 < d4 < M11 & N12 = N11 & M7 = M10 cup {d5} cup M12 cup {d4} cup M11 & N7 = N11+1 & M9 = {key} & N9 = 1 & M6 < d3 < M5 & N6 = N5 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 & ! cusparent = nil & grandpa2 = U
+|-
+rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, cusnode),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,pa),(right,unc),(data,d2),(color,c2)) * rbt(unc,M4,N4,C4) * pa |-> ((left,gra),(right,Y),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * rbrbthole(gra,grandpa2,M6,N6,0,M10,N10,0) * brrbthole(grandpa2,x,M10,N10,1,M9,N9,1) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M9 = {key} & N9 = 1 & M6 < d3 < M5 & N6 = N5 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 &  ! cusparent = nil 
+
+**************************************
+{
+assume(grandpa->data != key);
+assume(grandpa->data > key);
+parent = grandpa->left;
+uncle = grandpa ->right;
+assume(parent->data > key);
+cur = parent->left;
+grandpa->color = 0; // red
+parent->color = 1; // black
+uncle->color = 1; // black
+grandpa = cur;
+}
+
+{
+assume(grandpa->data != key);
+assume(grandpa->data > key);
+parent = grandpa->left;
+uncle = grandpa ->right;
+assume(parent->data < key);
+cur = parent->right;
+grandpa->color = 0; // red
+parent->color = 1; // black
+uncle->color = 1; // black
+grandpa = cur;
+}
+
+{
+assume(grandpa->data != key);
+assume(grandpa->data < key);
+parent = grandpa->right;
+uncle = grandpa->left;
+assume(parent->data > key);
+cur = parent->left;
+grandpa->color = 0; // red
+parent->color = 1; // black
+uncle->color = 1; // black
+grandpa = cur;
+}
+
+{
+assume(grandpa->data != key);
+assume(grandpa->data < key);
+parent = grandpa->right;
+uncle = grandpa->left;
+assume(parent->data < key);
+cur = parent->right;
+grandpa->color = 0; // red
+parent->color = 1; // black
+uncle->color = 1; // black
+grandpa = cur;
+}
+
+// apply the rotations if necessary
+
+Pre2: rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, cusnode),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,pa),(right,unc),(data,d2),(color,c2)) * rbt(unc,M4,N4,C4) * pa |-> ((left,gra),(right,Y),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * rbrbthole(gra,x,M6,N6,0,M7,N7,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M9 = {key} & N9 = 1 & M6 < d3 < M5 & N6 = N5 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 & ! cusparent = nil & c3 = 0 & C4 = 0 
+
+Post2: rbt(ret,M1,N1,C1) & M1 = M0 cup {key} & ! key in M0
+
+VC16: 
+rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, cusnode),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,pa),(right,unc),(data,d2),(color,c2)) * rbt(unc,M4,N4,C4) * pa |-> ((left,gra),(right,Y),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * rbrbthole(gra,x,M6,N6,0,M7,N7,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M9 = {key} & N9 = 1 & M6 < d3 < M5 & N6 = N5 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 & ! cusparent = nil & c2=0 & c3 = 1 & C4 = 1 & ret = root
+|-
+rbt(ret,M1,N1,C1) & M1 = M0 cup {key} & ! key in M0
+
+*******************************************
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data > key);
+cur = parent->left;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && uncle != NULL && uncle->color == 0);
+assume(cusparent != NULL);
+cusnode->color = 0;
+parent->color = 1;
+uncle->color = 1;
+ret = root;
+}
+
+// apply the rotations if necessary
+
+Pre1: cusnode |-> ((left,pa),(right,unc),(data,d1),(color,c1)) * rbt(unc,M2,N2,C2) * pa |-> ((left,gra),(right,X),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * rbrbthole(gra,x,M4,N4,0,M5,N5,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M6 = {key} & N6 = 1 & M4 < d2 < M3 & N4 = N3 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil & c2=0 & C2=0
+
+Post1: rbt(ret,M7,N7,C7) & M7 = M0 cup {key} & ! key in M0
+
+VC17:
+cusnode |-> ((left,pa),(right,unc),(data,d1),(color,c1)) * rbt(unc,M2,N2,C2) * pa |-> ((left,gra),(right,X),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * rbrbthole(gra,x,M4,N4,0,M5,N5,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M6 = {key} & N6 = 1 & M4 < d2 < M3 & N4 = N3 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil & c1=1 & c2=1 & C2=1 & ret = root & M7 = {d2} cup M4 cup M3 cup {d1} cup M2 & N7 = N2+1 & C7 = 1
+|-
+rbt(ret,M7,N7,C7) & M7 = M0 cup {key} & ! key in M0
+
+*******************************************
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data > key);
+cur = parent->left;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && uncle != NULL && uncle->color == 0);
+assume(cusparent == NULL);
+cusnode->color = 1;
+parent->color = 1;
+uncle->color = 1;
+ret = root;
+}
+
+Pre2: rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, cusnode),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,pa),(right,unc),(data,d2),(color,c2)) * rbt(unc,M4,N4,C4) * pa |-> ((left,Y),(right,gra),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * rbrbthole(gra,x,M6,N6,0,M7,N7,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M7 = {key} & N7 = 1 & M5 < d3 < M6 & N5 = N6 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 &  ! cusparent = nil & c3 =0 & C4=1
+
+Post2: rbt(ret,M1,N1,C1) & M1 = M0 cup {key} & ! key in M0
+
+VC18: 
+rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, gra),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,V1),(right,unc),(data,d2),(color,0)) * rbt(unc,M4,N4,C4) * pa |-> ((left,Y),(right,U1),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * gra |-> ((left,pa),(right,cusnode),(data,d4),(color,1)) * rbt(V1,M8,N8,1) * U1|->((left,U2),(right,V2),(data,d5),(color,1)) * rbt(V2,M9,N9,C9) * rbrbthole(U2,x,M10,N10,0,M7,N7,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) 
+& M10 < d5 < M9 & N10 = N9 & M10 cup {d5} cup M9 < d4 < M8 & N9+1 = N8 & M6 = M10 cup {d5} cup M9 cup {d4} cup M8 & N6 = N8 & M7 = {key} & N7 = 1 & M5 < d3 < M6 & N5 = N6 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M5 cup M6 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 & ! cusparent = nil & c3 =0 & C4=1 & ret = root
+|-
+rbt(ret,M1,N1,C1) & M1 = M0 cup {key} & ! key in M0
+
+*******************************************
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data < key);
+cur = parent->right;
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1)) // in this case, uncle == NULL or uncle is black
+assume(parent->data < key);
+// rotate left around parent, then rotate right around cusnode
+parent->right = cur -> left;
+cur -> left = parent;
+cusnode->left = rgt->right;
+cur->right = cusnode;
+cur->color = 1;
+cusnode->color = 0;
+assume(cusparent != NULL);
+assume(cusparent->data > key);
+cusparent->left = cur;
+ret = root;
+}
+
+Pre1: cusnode |-> ((left,pa),(right,unc),(data,d1),(color,c1)) * rbt(unc,M2,N2,C2) * pa |-> ((left,X),(right,gra),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * rbrbthole(gra,x,M4,N4,0,M5,N5,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M5 = {key} & N5 = 1 & M3 < d2 < M4 & N3 = N4 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & cusparent = nil & c2 = 0  & C2 = 1
+
+Post1: rbt(ret,M7,N7,C7) & M7 = M0 cup {key} & ! key in M0
+
+VC19:
+cusnode |-> ((left,V1),(right,unc),(data,d1),(color,0)) * rbt(unc,M2,N2,C2) * pa |-> ((left,X),(right,U1),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * gra |-> ((left,pa),(right,cusnode),(data,d3),(color,1)) * rbt(V1,M8,N8,1) * U1|-> ((left,U2),(right,V2),(data,d4),(color,1)) * rbt(V2,M9,N9,C9) * rbrbthole(U2,x,M10,N10,0,M5,N5,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & 
+M10 < d4 < M9 & N10 = N9 & M10 cup {d4} cup M9 < d3 < M8 & N9+1 = N8 & M4 = M10 cup {d4} cup M9 cup {d3} cup M8 & N4 = N8 & M5 = {key} & N5 = 1 & M3 < d2 < M4 & N3 = N4 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil & c2 = 0  & C2 = 1 & root = gra & ret = root & M7 = {d2} cup M4 cup M3 cup {d1} cup M2 & N7 = N3+1 & C7=1
+|-
+rbt(ret,M7,N7,C7) & M7 = M0 cup {key} & ! key in M0
+
+*******************************************
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data < key);
+cur = parent->right;
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1)) // in this case, uncle == NULL or uncle is black
+assume(parent->data < key);
+// rotate left around parent, then rotate right around cusnode
+parent->right = cur -> left;
+cur -> left = parent;
+cusnode->left = cur->right;
+cur->right = cusnode;
+cur->color = 1;
+cusnode->color = 0;
+assume(cusparent == NULL);
+root = cur;
+ret = root;
+}
+
+Pre2: rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, cusnode),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,pa),(right,unc),(data,d2),(color,c2)) * rbt(unc,M4,N4,C4) * pa |-> ((left,gra),(right,Y),(data,d3),(color,c3)) * rbt(Y,M5,N5,C5) * rbrbthole(gra,x,M6,N6,0,M7,N7,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M7 = {key} & N7 = 1 & M6 < d3 < M5 & N6 = N5 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 &  ! cusparent = nil & c3 = 0 & C4 = 1
+
+Post2: rbt(ret,M1,N1,C1) & M1 = M0 cup {key} & ! key in M0
+
+VC20:
+rbthole(root,cusparent,M1,N1,C1,M2,N2,C2) * cusparent |-> ((left, pa),(right,X),(data,d1),(color,c1)) * rbt(X,M3,N3,C3) * cusnode |-> ((left,Y),(right,unc),(data,d2),(color,0)) * rbt(unc,M4,N4,C4) * pa |-> ((left,gra),(right,cusnode),(data,d3),(color,1)) * rbt(Y,M5,N5,C5) * gra |-> ((left,U1),(right,V1),(data,d4),(color,0)) * rbt(V1,M8,N8,1) * U1|-> ((left,U2),(right,V2),(data,d5),(color,1)) * rbt(V2,M9,N9,C9) * rbrbthole(U2,x,M10,N10,0,M7,N7,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & 
+M10 < d5 < M9 & N10 = N9 & M10 cup {d5} cup M9 < d4 < M8 & N9+1 = N8 & M6 = M10 cup {d5} cup M9 cup {d4} cup M8 & N6 =N8 & M7 = {key} & N7 = 1 & M6 < d3 < M5 & N6 = N5 & 0 <= c3 <= 1 & (c3 =0 => C5 =1) & {d3} cup M6 cup M5 < d2 < M4 & n3 = ite(c3 =0, N5, N5+1) & n3=N4 & 0 <=c2 <= 1 & (c2=0 => c3 = 1 & C4=1) & {d3} cup M6 cup M5 cup {d2} cup M4 < d1 < M3 & n2 = ite(c2 = 0, N4, N4+1) & n2=N3 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C3=1) & C2 = c1 & M2 = {d3} cup M6 cup M5 cup {d2} cup M4 cup {d1} cup M3 & N2 = ite(c1=0, N3, N3+1) & ! key in M0 & ! cusparent = nil & c3 = 0 & C4 = 1 & ret = root
+|-
+rbt(ret,M1,N1,C1) & M1 = M0 cup {key} & ! key in M0
+
+*******************************************
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data > key);
+cur = parent->left;
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1)) // in this case, uncle == NULL or uncle is black
+assume(parent->data > key)
+// rotate right around cusnode
+parent->color = 1;
+cusnode->color = 0;
+cusnode->left = parent->right;
+parent->right = cusnode;
+assume(cusparent != NULL);
+assume(cusparent->data > key);
+cusparent->left = parent;
+ret = root;
+}
+
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data > key);
+cur = parent->left;
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1)) // in this case, uncle == NULL or uncle is black
+assume(parent->data > key)
+// rotate right around cusnode
+parent->color = 1;
+cusnode->color = 0;
+cusnode->left = parent->right;
+parent->right = cusnode;
+assume(cusparent != NULL);
+assume(cusparent->data < key);
+cusparent->right = parent;
+ret = root;
+}
+
+Pre1: cusnode |-> ((left,pa),(right,unc),(data,d1),(color,c1)) * rbt(unc,M2,N2,C2) * pa |-> ((left,gra),(right,X),(data,d2),(color,c2)) * rbt(X,M3,N3,C3) * rbrbthole(gra,x,M4,N4,0,M5,N5,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) & M5 = {key} & N5 = 1 & M4 < d2 < M3 & N4 = N3 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil & c2 = 0 & C2 = 1
+
+Post1: rbt(M7,N7,C7) & M7 = M0 cup {key} & ! key in M0
+
+VC21: cusnode |-> ((left,X),(right,unc),(data,d1),(color,0)) * rbt(unc,M2,N2,C2) * pa |-> ((left,gra),(right,cusnode),(data,d2),(color,1)) * rbt(X,M3,N3,C3) * gra |-> ((left,U1),(right,V1),(data,d3),(color,0)) * rbt(V1,M7,N7,1) * U1|-> ((left,U2),(right,V2),(data,d4),(color,1)) * rbt(V2,M8,N8,C8) * rbrbthole(U2,x,M9,N9,0,M5,N5,0) * x |-> ((left,nil),(right,nil),(data,key),(color,0)) &  
+M9 < d4 < M8 & N9 = N8 & M9 cup {d5} cup M8 < d3 < M7 & N8+1 = N7 & M4 = M9 cup {d4} cup M8 cup {d3} cup M7 & N4 =N7
+& M5 = {key} & N5 = 1 & M4 < d2 < M3 & N4 = N3 & 0 <= c2 <= 1 & (c2 =0 => C3 =1) & {d2} cup M4 cup M3 < d1 < M2 & n2 = ite(c2 =0, N3, N3+1) & n2=N2 & 0 <=c1 <= 1 & (c1=0 => c2 = 1 & C2=1) & M0 cup {key} = {d2} cup M4 cup M3 cup {d1} cup M2 & ! key in M0 & cusparent = nil & c2 = 0 & C2 = 1 & root = pa & ret = root & M6 = {d2} cup M4 cup M3 cup {d1} cup M2 & N6 = N3+1 & C6=1
+|-
+rbt(M6,N6,C6) & M6 = M0 cup {key} & ! key in M0
+
+
+
+*******************************************
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data > key);
+cur = parent->left;
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1)) // in this case, uncle == NULL or uncle is black
+assume(parent->data > key)
+// rotate right around cusnode
+parent->color = 1;
+cusnode->color = 0;
+cusnode->left = parent->right;
+parent->right = cusnode;
+assume(cusparent == NULL);
+root = parent;
+ret = root;
+}
+
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data < key);
+cur = parent->right;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && uncle != NULL && uncle->color == 0);
+assume(cusparent != NULL);
+cusnode->color = 0;
+parent->color = 1;
+uncle->color = 1;
+ret = root;
+}
+
+{
+assume(cusnode->data > key);
+parent = cusnode->left;
+uncle = cusnode->right;
+assume(parent->data < key);
+cur = parent->right;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && uncle != NULL && uncle->color == 0);
+assume(cusparent == NULL);
+cusnode->color = 1;
+parent->color = 1;
+uncle->color = 1;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data > key);
+cur = parent->left;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && uncle != NULL && uncle->color == 0);
+assume(cusparent != NULL);
+cusnode->color = 0;
+parent->color = 1;
+uncle->color = 1;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data > key);
+cur = parent->left;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && uncle != NULL && uncle->color == 0);
+assume(cusparent == NULL);
+cusnode->color = 1;
+parent->color = 1;
+uncle->color = 1;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data > key);
+cur = parent->left;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1));
+assume(parent->data > key);
+// rotate right around parent, then rotate left around cusnode
+cusnode->right = cur->left;
+cur->left = cusnode;
+parent->left = cur->right;
+cur->right = parent;
+cur->color = 1;
+cusnode->color = 0;
+assume(cusparent != NULL);
+assume(cusparent->data > key);
+cusparent->left = cur;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data > key);
+cur = parent->left;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1));
+assume(parent->data > key);
+// rotate right around parent, then rotate left around cusnode
+cusnode->right = cur->left;
+cur->left = cusnode;
+parent->left = cur->right;
+cur->right = parent;
+cur->color = 1;
+cusnode->color = 0;
+assume(cusparent != NULL);
+assume(cusparent->data < key);
+cusparent->right = cur;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data > key);
+cur = parent->left;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1));
+assume(parent->data > key);
+// rotate right around parent, then rotate left around cusnode
+cusnode->right = cur->left;
+cur->left = cusnode;
+parent->left = cur->right;
+cur->right = parent;
+cur->color = 1;
+cusnode->color = 0;
+assume(cusparent == NULL);
+root = cur;
+ret = root;
+}
+
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data < key);
+cur = parent->right;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && uncle != NULL && uncle->color == 0);
+assume(cusparent != NULL);
+cusnode->color = 0;
+parent->color = 1;
+uncle->color = 1;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data < key);
+cur = parent->right;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && uncle != NULL && uncle->color == 0);
+assume(cusparent == NULL);
+cusnode->color = 1;
+parent->color = 1;
+uncle->color = 1;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data < key);
+cur = parent->right;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1));
+assume(parent->data < key);
+parent->color = 1;
+cusnode->color = 0;
+// rotate left around cusnode
+cusnode->right = parent->left;
+parent->left = cusnode;
+assume(cusparent != NULL);
+assume(cusparent->data > key);
+cusparent->left = parent;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data < key);
+cur = parent->right;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1));
+assume(parent->data < key);
+parent->color = 1;
+cusnode->color = 0;
+// rotate left around cusnode
+cusnode->right = parent->left;
+parent->left = cusnode;
+assume(cusparent != NULL);
+assume(cusparent->data < key);
+cusparent->right = parent;
+ret = root;
+}
+
+{
+assume(cusnode->data < key);
+parent = cusnode->right;
+uncle = cusnode->left;
+assume(parent->data < key);
+cur = parent->right;
+// this happens only if cusnode = root or cusparent = root
+assume(parent->color == 0 && (uncle == NULL || uncle->color == 1));
+assume(parent->data < key);
+parent->color = 1;
+cusnode->color = 0;
+// rotate left around cusnode
+cusnode->right = parent->left;
+parent->left = cusnode;
+assume(cusparent == NULL);
+root = parent;
+ret = root;
+}
