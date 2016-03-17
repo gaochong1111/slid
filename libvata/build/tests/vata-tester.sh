@@ -7,7 +7,7 @@ SELF="$0"
 # this makes 7x speedup (according to Kamil) in case 'grep' was compiled with multi-byte support
 export LC_ALL=C
 
-VATA=/home/guxc/Documents/workspace/spen/libvata/build/cli/vata
+VATA=/home/jack/space/slib/slid/libvata/build/cli/vata
 
 ################################# FUNCTIONS ##################################
 

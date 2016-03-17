@@ -156,15 +156,15 @@ cassert
 iostream
 -
 
-/home/guxc/Documents/workspace/spen/libvata/unit_tests/formula_parser.cc
+/home/jack/space/slib/slid/libvata/unit_tests/formula_parser.cc
 formula_parser.hh
-/home/guxc/Documents/workspace/spen/libvata/unit_tests/formula_parser.hh
+/home/jack/space/slib/slid/libvata/unit_tests/formula_parser.hh
 vata/util/convert.hh
 -
 vata/vata.hh
 -
 
-/home/guxc/Documents/workspace/spen/libvata/unit_tests/formula_parser.hh
+/home/jack/space/slib/slid/libvata/unit_tests/formula_parser.hh
 string
 -
 vector
@@ -172,7 +172,7 @@ vector
 boost/algorithm/string.hpp
 -
 
-/home/guxc/Documents/workspace/spen/libvata/unit_tests/log_fixture.cc
+/home/jack/space/slib/slid/libvata/unit_tests/log_fixture.cc
 vata/vata.hh
 -
 vata/util/util.hh
@@ -180,11 +180,11 @@ vata/util/util.hh
 boost/test/unit_test.hpp
 -
 log_fixture.hh
-/home/guxc/Documents/workspace/spen/libvata/unit_tests/log_fixture.hh
+/home/jack/space/slib/slid/libvata/unit_tests/log_fixture.hh
 boost/algorithm/string.hpp
 -
 
-/home/guxc/Documents/workspace/spen/libvata/unit_tests/log_fixture.hh
+/home/jack/space/slib/slid/libvata/unit_tests/log_fixture.hh
 boost/filesystem.hpp
 -
 
