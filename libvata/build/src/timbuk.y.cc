@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.2"
+#define YYBISON_VERSION "3.0.4"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -63,7 +63,7 @@
 
 /* Copy the first part of user declarations.  */
 
-#line 67 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:339  */
+#line 67 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -83,8 +83,8 @@
 
 /* In a future release of Bison, this section will be replaced
    by #include "timbuk.y.hh".  */
-#ifndef YY_YY_HOME_GUXC_DOCUMENTS_WORKSPACE_SPEN_LIBVATA_BUILD_SRC_TIMBUK_Y_HH_INCLUDED
-# define YY_YY_HOME_GUXC_DOCUMENTS_WORKSPACE_SPEN_LIBVATA_BUILD_SRC_TIMBUK_Y_HH_INCLUDED
+#ifndef YY_YY_HOME_JACK_SPACE_SLIB_SLID_LIBVATA_BUILD_SRC_TIMBUK_Y_HH_INCLUDED
+# define YY_YY_HOME_JACK_SPACE_SLIB_SLID_LIBVATA_BUILD_SRC_TIMBUK_Y_HH_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -121,7 +121,7 @@ inline void yyerror(AutDescription&, const char* msg)
 
 static AutDescription::StateTuple global_tuple;
 
-#line 125 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:355  */
+#line 125 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:355  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -146,15 +146,17 @@ static AutDescription::StateTuple global_tuple;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
+
 union YYSTYPE
 {
 #line 64 "timbuk.y" /* yacc.c:355  */
 
   char* svalue;
 
-#line 157 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:355  */
+#line 157 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:355  */
 };
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -178,11 +180,11 @@ extern YYSTYPE yylval;
 extern YYLTYPE yylloc;
 int yyparse (AutDescription& timbukParse);
 
-#endif /* !YY_YY_HOME_GUXC_DOCUMENTS_WORKSPACE_SPEN_LIBVATA_BUILD_SRC_TIMBUK_Y_HH_INCLUDED  */
+#endif /* !YY_YY_HOME_JACK_SPACE_SLIB_SLID_LIBVATA_BUILD_SRC_TIMBUK_Y_HH_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 186 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:358  */
+#line 188 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1376,7 +1378,7 @@ yyreduce:
     timbukParse.name = (yyvsp[-6].svalue);
 		free((yyvsp[-6].svalue));
   }
-#line 1380 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1382 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 3:
@@ -1388,7 +1390,7 @@ yyreduce:
 		free((yyvsp[-3].svalue));
 		free((yyvsp[-1].svalue));
 	}
-#line 1392 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1394 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 6:
@@ -1397,7 +1399,7 @@ yyreduce:
 		timbukParse.states.insert((yyvsp[0].svalue));
 		free((yyvsp[0].svalue));
 	}
-#line 1401 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1403 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 8:
@@ -1406,7 +1408,7 @@ yyreduce:
 		timbukParse.finalStates.insert((yyvsp[0].svalue));
 		free((yyvsp[0].svalue));
 	}
-#line 1410 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1412 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 10:
@@ -1414,7 +1416,7 @@ yyreduce:
     {
 		(yyval.svalue) = (yyvsp[-2].svalue);
 	}
-#line 1418 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1420 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 14:
@@ -1426,7 +1428,7 @@ yyreduce:
 		free((yyvsp[-5].svalue));
 		free((yyvsp[0].svalue));
 	}
-#line 1430 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1432 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 15:
@@ -1437,7 +1439,7 @@ yyreduce:
 		free((yyvsp[-2].svalue));
 		free((yyvsp[0].svalue));
 	}
-#line 1441 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1443 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 16:
@@ -1446,7 +1448,7 @@ yyreduce:
 		global_tuple.push_back((yyvsp[-2].svalue));
 		free((yyvsp[-2].svalue));
 	}
-#line 1450 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1452 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 17:
@@ -1456,7 +1458,7 @@ yyreduce:
 		global_tuple.push_back((yyvsp[0].svalue));
 		free((yyvsp[0].svalue));
 	}
-#line 1460 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1462 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
   case 18:
@@ -1464,11 +1466,11 @@ yyreduce:
     {
 		global_tuple.clear();
 	}
-#line 1468 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1470 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
     break;
 
 
-#line 1472 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
+#line 1474 "/home/jack/space/slib/slid/libvata/build/src/timbuk.y.cc" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

@@ -1,6 +1,6 @@
-#line 2 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.l.cc"
+#line 2 "/home/jack/space/slib/slid/libvata/build/src/timbuk.l.cc"
 
-#line 4 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.l.cc"
+#line 4 "/home/jack/space/slib/slid/libvata/build/src/timbuk.l.cc"
 
 #define  YY_INT_ALIGNED short int
 
@@ -9,7 +9,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 39
+#define YY_FLEX_SUBMINOR_VERSION 36
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -142,15 +142,7 @@ typedef unsigned int flex_uint32_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k.
- * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
- * Ditto for the __ia64__ case accordingly.
- */
-#define YY_BUF_SIZE 32768
-#else
 #define YY_BUF_SIZE 16384
-#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -187,13 +179,6 @@ extern FILE *yyin, *yyout;
                 int yyl;\
                 for ( yyl = n; yyl < yyleng; ++yyl )\
                     if ( yytext[yyl] == '\n' )\
-                        --yylineno;\
-            }while(0)
-    #define YY_LINENO_REWIND_TO(dst) \
-            do {\
-                const char *p;\
-                for ( p = yy_cp-1; p >= (dst); --p)\
-                    if ( *p == '\n' )\
                         --yylineno;\
             }while(0)
     
@@ -539,7 +524,7 @@ char *yytext;
 #include "timbuk.y.hh"
 
 GCC_DIAG_OFF(unused-function)
-#line 543 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.l.cc"
+#line 528 "/home/jack/space/slib/slid/libvata/build/src/timbuk.l.cc"
 
 #define INITIAL 0
 
@@ -620,12 +605,7 @@ static int input (void );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k */
-#define YY_READ_BUF_SIZE 16384
-#else
 #define YY_READ_BUF_SIZE 8192
-#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -726,6 +706,11 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
+#line 33 "timbuk.l"
+
+
+#line 713 "/home/jack/space/slib/slid/libvata/build/src/timbuk.l.cc"
+
 	if ( !(yy_init) )
 		{
 		(yy_init) = 1;
@@ -752,12 +737,6 @@ YY_DECL
 		yy_load_buffer_state( );
 		}
 
-	{
-#line 33 "timbuk.l"
-
-
-#line 760 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.l.cc"
-
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = (yy_c_buf_p);
@@ -774,7 +753,7 @@ YY_DECL
 yy_match:
 		do
 			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)] ;
+			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
 			if ( yy_accept[yy_current_state] )
 				{
 				(yy_last_accepting_state) = yy_current_state;
@@ -804,7 +783,7 @@ yy_find_action:
 
 		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
 			{
-			yy_size_t yyl;
+			int yyl;
 			for ( yyl = 0; yyl < yyleng; ++yyl )
 				if ( yytext[yyl] == '\n' )
 					   
@@ -898,7 +877,7 @@ YY_RULE_SETUP
 #line 53 "timbuk.l"
 ECHO;
 	YY_BREAK
-#line 902 "/home/guxc/Documents/workspace/spen/libvata/build/src/timbuk.l.cc"
+#line 881 "/home/jack/space/slib/slid/libvata/build/src/timbuk.l.cc"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1027,7 +1006,6 @@ ECHO;
 			"fatal flex scanner internal error--no action found" );
 	} /* end of action switch */
 		} /* end of scanning one token */
-	} /* end of user's declarations */
 } /* end of yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -1670,7 +1648,7 @@ YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len 
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	yy_size_t i;
+	int i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
@@ -1903,7 +1881,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 52 "timbuk.l"
+#line 53 "timbuk.l"
 
 
 

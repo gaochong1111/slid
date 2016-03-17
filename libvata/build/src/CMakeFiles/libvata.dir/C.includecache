@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/guxc/Documents/workspace/spen/libvata/src/fmemopen.c
+/home/jack/space/slib/slid/libvata/src/fmemopen.c
 stdio.h
 -
 stdlib.h
@@ -16,9 +16,9 @@ string.h
 sys/mman.h
 -
 
-/home/guxc/Documents/workspace/spen/libvata/src/memstream.c
+/home/jack/space/slib/slid/libvata/src/memstream.c
 memstream.h
-/home/guxc/Documents/workspace/spen/libvata/src/memstream.h
+/home/jack/space/slib/slid/libvata/src/memstream.h
 stddef.h
 -
 stdlib.h
@@ -30,7 +30,7 @@ errno.h
 assert.h
 -
 
-/home/guxc/Documents/workspace/spen/libvata/src/memstream.h
+/home/jack/space/slib/slid/libvata/src/memstream.h
 features.h
 -
 stdio.h

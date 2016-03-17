@@ -1,4 +1,4 @@
-file(REMOVE_RECURSE
+FILE(REMOVE_RECURSE
   "CMakeFiles/vata.dir/vata.cc.o"
   "CMakeFiles/vata.dir/parse_args.cc.o"
   "vata.pdb"
@@ -6,6 +6,6 @@ file(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-foreach(lang CXX)
-  include(CMakeFiles/vata.dir/cmake_clean_${lang}.cmake OPTIONAL)
-endforeach()
+FOREACH(lang CXX)
+  INCLUDE(CMakeFiles/vata.dir/cmake_clean_${lang}.cmake OPTIONAL)
+ENDFOREACH(lang)
