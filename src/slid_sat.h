@@ -9,19 +9,24 @@
 #include "noll_form.h"
 #include "noll_preds.h"
 
+//slid formula sat, unsat or unknown
 typedef enum{
 	SLID_UNSAT = 0,
 	SLID_SAT,
 	SLID_UNDEF
 }slid_sat_t;
 
+//type of data constraint in the predicate recursive rule
 typedef enum{
-	SLID_DATA_CONSTR_CONST = 0,
-	SLID_DATA_CONSTR_STATIC,
-	SLID_DATA_CONSTR_TRANS,
-	SLID_DATA_CONSTR_UNDEF
+	SLID_DATA_CONSTR_CONST = 0,     //something like, a op c, c is constent
+	SLID_DATA_CONSTR_STATIC,        //a op e, e is static parameter
+	SLID_DATA_CONSTR_TRANS,         //a op y + c, y is transitive quantifier variable
+	SLID_DATA_CONSTR_UNDEF          //op can be =, <=, >=
 }slid_data_constr_t;
 
+//data struct descript the data constraint
+//of some(sid) source parameter of location
+//in the predicate recursive rule
 typedef struct{
 	int sid;
 	noll_dform_array *ce;
@@ -31,24 +36,29 @@ typedef struct{
 	noll_dform_array *trans;
 }slid_data_constr;
 
+//slid_data_constr_array declare
 NOLL_VECTOR_DECLARE(slid_data_constr_array, slid_data_constr *);
+
+//z3_ast_array declare
 NOLL_VECTOR_DECLARE(z3_ast_array, Z3_ast);
 
 //context of the noll formula to be transformed to Z3 formula
 typedef struct{
-	z3_ast_array *var;        //nil + variables in the formula
-	z3_ast_array *k;          //times unfolding the predicates
-	noll_space_array *space;  //spatial part of the formula
-	Z3_ast **m;               //matrix of bool variables
-	size_t row;               //size of space array
-	size_t column;            //size of var array
-	Z3_sort int_sort, bool_sort;
+	z3_ast_array *var;          //nil + variables in the formula
+	z3_ast_array *k;            //times unfolding the predicates
+	noll_space_array *space;    //spatial part of the formula
+	Z3_ast **m;                 //matrix of bool variables
+	size_t row;                 //size of space array
+	size_t column;              //size of var array
+	Z3_sort int_sort, bool_sort;//sort used
 }_slid_context;
 
 typedef _slid_context* slid_context;
 
 
-int slid_sat_check(noll_form_t *);
+//main procedure to check sat using z3 smt solver
+//require that the order of predicate parameter
+slid_sat_t slid_sat_check(noll_form_t *);
 
 slid_context slid_mk_context(Z3_context, noll_form_t *);
 void slid_del_context(slid_context);

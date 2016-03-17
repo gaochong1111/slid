@@ -16,7 +16,7 @@ NOLL_VECTOR_DEFINE(z3_ast_array, Z3_ast);
 
 extern noll_pred_array *preds_array;
 
-int slid_sat_check(noll_form_t *form)
+slid_sat_t slid_sat_check(noll_form_t *form)
 {
 	int ret;
 	Z3_solver s;
@@ -794,6 +794,7 @@ noll_dform_t *slid_get_pred_data_constr_clg(noll_pred_rule_t *r,int sid, noll_da
 					f = 1;
 					ret = df;
 					c = t2->p.value;
+					continue;
 				}
 				switch(op_t){
 				case NOLL_DATA_LE:
@@ -886,7 +887,7 @@ Z3_ast slid_mk_pred_data_constr_cst(Z3_context z3_ctx, slid_context slid_ctx, sl
 	int i;
 	noll_dform_t *df;
 	z3_ast_array *t;
-	Z3_ast t1, ret;
+	Z3_ast t1, ret = NULL;
 	
 	t = z3_ast_array_new();
 	if(dc->ce != NULL){
@@ -907,9 +908,7 @@ Z3_ast slid_mk_pred_data_constr_cst(Z3_context z3_ctx, slid_context slid_ctx, sl
 		if(t1 != NULL) z3_ast_array_push(t, t1);
 	}
 
-	if(noll_vector_empty(t))
-		ret = NULL;
-	else
+	if(!noll_vector_empty(t))
 		ret = Z3_mk_and(z3_ctx, noll_vector_size(t), noll_vector_array(t));
 	z3_ast_array_delete(t);
 
@@ -941,7 +940,7 @@ Z3_ast slid_mk_pred_data_constr_stc(Z3_context z3_ctx, slid_context slid_ctx,\
 	int i;
 	noll_dform_t *df;
 	z3_ast_array *t;
-	Z3_ast t1, ret;
+	Z3_ast t1, ret = NULL;
 	
 	if((dc->stc != NULL) && (!noll_vector_empty(dc->stc))){
 		t = z3_ast_array_new();
@@ -962,9 +961,7 @@ Z3_ast slid_mk_pred_data_constr_stc(Z3_context z3_ctx, slid_context slid_ctx,\
 				break;
 			}	
 		}
-		if(noll_vector_empty(t))
-			ret = NULL;
-		else
+		if(!noll_vector_empty(t))
 			ret = Z3_mk_and(z3_ctx, noll_vector_size(t), noll_vector_array(t));
 
 		z3_ast_array_delete(t);
@@ -1147,7 +1144,7 @@ Z3_ast slid_mk_assist_constr(Z3_context z3_ctx, slid_context slid_ctx,\
 		return _slid_mk_assist_constr(z3_ctx, slid_ctx, t5, p, c[0], a, Z3_mk_le);
 	case NOLL_DATA_GE:
 		t5 = noll_vector_at(dc->cg->p.targs, 1);
-		return _slid_mk_assist_constr(z3_ctx, slid_ctx, t1, p, c[0], a, Z3_mk_ge);
+		return _slid_mk_assist_constr(z3_ctx, slid_ctx, t5, p, c[0], a, Z3_mk_ge);
 	}
 }
 /*
