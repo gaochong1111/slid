@@ -544,6 +544,7 @@ noll_pred_type_args (noll_pred_t * p)
   uint_t nbLoc = 0;             /// number of location args, to fill p->typ->isUnaryLoc
   uint_t nbBag = 0;
   uint_t nbInt = 0;
+  uint_t bInt = 0;
   uint_t bLoc = p->typ->nDir;
   for (uint_t i = 0; i < p->def->fargs; i++)
     {
@@ -554,10 +555,11 @@ noll_pred_type_args (noll_pred_t * p)
           {
             if (nbLoc < bLoc)
               noll_uid_array_push (p->typ->argkind, NOLL_ATYP_LROOT);
-            else if ((nbLoc >= bLoc) && (nbLoc < 2*bLoc))
+            else if ((nbLoc >= bLoc) && (nbLoc < 2*bLoc)){
               // TODO: deal correctly with parent arguments
+	      bInt = nbInt;
               noll_uid_array_push (p->typ->argkind, NOLL_ATYP_LPENDING);
-            else
+            }else
               noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BORDER);
             nbLoc++;
             break;
@@ -576,10 +578,10 @@ noll_pred_type_args (noll_pred_t * p)
           }
         case NOLL_TYP_INT:
           {
-            if ((nbInt == 0) || (nbLoc == 1) || (nbBag == 1))
+            if (nbLoc == bLoc)
               /// no int seen before or still in the root part
               noll_uid_array_push (p->typ->argkind, NOLL_ATYP_IROOT);
-            else if ((nbInt >= 1) && (nbLoc == 2*bLoc))
+            else if ((nbLoc == 2*bLoc) && (nbInt < 2*bInt))
               noll_uid_array_push (p->typ->argkind, NOLL_ATYP_IPENDING);
             else
               noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BORDER);
