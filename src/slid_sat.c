@@ -12,6 +12,8 @@
 
 NOLL_VECTOR_DEFINE(slid_data_constr_array, slid_data_constr *);
 NOLL_VECTOR_DEFINE(z3_ast_array, Z3_ast);
+NOLL_VECTOR_DEFINE(slid_in_alloc_loc_array, slid_in_alloc_loc *);
+NOLL_VECTOR_DEFINE(slid_in_alloc_loc_arrays, slid_in_alloc_loc_array *);
 
 
 extern noll_pred_array *preds_array;
@@ -97,25 +99,20 @@ void slid_mk_space_array(noll_space_array **space_arr, noll_space_t *space)
 void slid_del_context(slid_context slid_ctx)
 {
 	unsigned int i;
-	for(i = 0; i < slid_ctx->nLoc; i++)
-		free(slid_ctx->m[i]);
+	for(i = 0; i < noll_vector_size(slid_ctx->m); i++)
+		slid_in_alloc_loc_array_delete(noll_vector_at(slid_ctx->m, i));
+
+	slid_in_alloc_loc_arrays_delete(slid_ctx->m);
 	
 	z3_ast_array_delete(slid_ctx->var);
 	noll_space_array_delete(slid_ctx->space);	
 }
 
-
-slid_context slid_mk_context(Z3_context z3_ctx, noll_form_t *form)
+slid_context slid_init_context(Z3_context z3_ctx)
 {
-	unsigned int i, j;
-	char *str;
-	noll_var_t *v;
-	Z3_ast tmp;
+	slid_context ret;
 
-	if((form->lvars == NULL) || (noll_vector_empty(form->lvars))) return NULL;
-
-
-	slid_context ret = (slid_context)malloc(sizeof(_slid_context));
+	ret = (slid_context)malloc(sizeof(_slid_context));
 	assert(ret != NULL);
 
 	ret->nLoc = 0;
@@ -127,6 +124,23 @@ slid_context slid_mk_context(Z3_context z3_ctx, noll_form_t *form)
 	ret->abstr = Z3_mk_true(z3_ctx);
 	ret->int_sort = Z3_mk_int_sort(z3_ctx);
 	ret->bool_sort = Z3_mk_bool_sort(z3_ctx);
+
+	return ret;
+}
+
+slid_context slid_mk_context(Z3_context z3_ctx, noll_form_t *form)
+{
+	unsigned int i, j;
+	char *str;
+	noll_var_t *v;
+	Z3_ast tmp;
+	noll_space_t *space;
+
+	if((form->lvars == NULL) || (noll_vector_empty(form->lvars))) return NULL;
+
+	slid_context ret;
+
+	ret = slid_init_context(z3_ctx);
 
 	ret->var = z3_ast_array_new();
 	v = noll_vector_at(form->lvars, 0);
@@ -143,28 +157,23 @@ slid_context slid_mk_context(Z3_context z3_ctx, noll_form_t *form)
 	if(form->space != NULL)
 		slid_mk_space_array(&ret->space, form->space);
 	if((ret->space != NULL) && (!noll_vector_empty(ret->space))){	
-		ret->m = (Z3_ast **)malloc(ret->nLoc * sizeof(Z3_ast *));
-		assert(ret->m != NULL);
-
-		for(i = 0; i < ret->nLoc; i++){
-			v = noll_vector_at(form->lvars, i+1);
-			ret->m[i] = (Z3_ast *)malloc(noll_vector_size(ret->space) * sizeof(Z3_ast));
-			assert(ret->m[i] != NULL);
-			for(j = 0; j < noll_vector_size(ret->space); j++){
-				str = (char *)malloc(sizeof(char)*(strlen(v->vname)+strlen("[,]")+3));
-				assert(str != NULL);
-				sprintf(str, "[%s, %d]", v->vname, j);
-				ret->m[i][j] = Z3_mk_const(z3_ctx, Z3_mk_string_symbol(z3_ctx, str), ret->bool_sort);
-			}
-		}
+		ret->m = slid_mk_in_alloc_loc_arrays(z3_ctx, ret->bool_sort, form->lvars, ret->space);
 
 		ret->k = z3_ast_array_new();
 
 		for(i = 0; i < noll_vector_size(ret->space); i++){
-			str = (char *)malloc(sizeof(char) * (strlen("slid_k_")+3));
-			assert(str != NULL);
-			sprintf(str, "slid_k_%d", i);
-			z3_ast_array_push(ret->k, Z3_mk_const(z3_ctx, Z3_mk_string_symbol(z3_ctx, str), ret->int_sort));
+			space = noll_vector_at(ret->space, i);
+			switch(space->kind){
+			case NOLL_SPACE_PTO:
+				z3_ast_array_push(ret->k, NULL);
+				break;
+			case NOLL_SPACE_LS:
+				str = (char *)malloc(sizeof(char) * (strlen("slid_k_")+3));
+				assert(str != NULL);
+				sprintf(str, "slid_k_%d", i);
+				z3_ast_array_push(ret->k, Z3_mk_const(z3_ctx, Z3_mk_string_symbol(z3_ctx, str), ret->int_sort));
+				break;
+			}
 			
 		}
 	}
@@ -172,6 +181,116 @@ slid_context slid_mk_context(Z3_context z3_ctx, noll_form_t *form)
 	return ret;
 }
 
+slid_in_alloc_loc_arrays* slid_mk_in_alloc_loc_arrays(Z3_context z3_ctx, Z3_sort bsort,\
+							noll_var_array* vars, noll_space_array* sa)
+{
+	unsigned int i;
+	noll_space_t *space;
+	slid_in_alloc_loc_arrays* ret = NULL;
+	slid_in_alloc_loc_array* t;
+	ret = slid_in_alloc_loc_arrays_new();
+	for(i = 0; i < noll_vector_size(sa); i++){
+		space = noll_vector_at(sa, i);
+		switch(space->kind){
+		case NOLL_SPACE_PTO:
+			t = slid_mk_in_alloc_loc_array_pto(z3_ctx, bsort, vars, space->m.pto.sid, i);
+			slid_in_alloc_loc_arrays_push(ret, t);
+			break;
+		case NOLL_SPACE_LS:
+			t = slid_mk_in_alloc_loc_array_ls(z3_ctx, bsort, vars, &space->m.ls, i);
+			slid_in_alloc_loc_arrays_push(ret, t);
+			break;
+		}
+	}
+
+	return ret;
+}
+slid_in_alloc_loc_array* slid_mk_in_alloc_loc_array_pto(Z3_context z3_ctx, Z3_sort bsort,\
+							noll_var_array* vars,\
+							unsigned int sid, unsigned int i)
+{
+	slid_in_alloc_loc_array* ret = NULL;
+	ret = slid_in_alloc_loc_array_new();
+	slid_in_alloc_loc *t;
+	t = slid_mk_in_alloc_loc(z3_ctx, bsort, vars, sid, i);
+	slid_in_alloc_loc_array_push(ret, t);
+	return ret;
+}
+slid_in_alloc_loc* slid_mk_in_alloc_loc(Z3_context z3_ctx, Z3_sort bsort,\
+					noll_var_array* vars,\
+					unsigned int sid, unsigned int i)
+{
+	char *str;
+	noll_var_t *var;
+	slid_in_alloc_loc *t;
+	t = (slid_in_alloc_loc *)malloc(sizeof(slid_in_alloc_loc));
+	assert(t != NULL);
+
+	var = noll_vector_at(vars, sid);
+	str = (char *)malloc(sizeof(char)*(strlen(var->vname)+strlen("[,]")+3));
+	assert(str != NULL);
+	sprintf(str, "[%s, %d]", var->vname, i);
+	t->sid = sid;
+	t->bvar = Z3_mk_const(z3_ctx, Z3_mk_string_symbol(z3_ctx, str), bsort);
+	return t;
+}
+void slid_get_in_alloc_loc_index(noll_uid_array *a, noll_ls_t *ls)
+{
+	int i, j, k;
+	noll_pred_t * pred;
+	noll_pred_rule_t *r;
+
+	noll_uid_array_push(a, noll_vector_at(ls->args, 0));
+
+	pred = noll_vector_at(preds_array, ls->pid);
+	r = noll_vector_at(pred->def->rec_rules, 0);
+	while((i = slid_get_trans_loc(r, 1)) > 0){
+		j = slid_get_hole(pred) + i;
+		k = noll_vector_at(ls->args, j);
+		noll_uid_array_push(a, k);
+	}
+}
+slid_in_alloc_loc_array* slid_mk_in_alloc_loc_array_ls(Z3_context z3_ctx, Z3_sort bsort,\
+							noll_var_array *vars, noll_ls_t* ls,\
+							unsigned int i)
+{
+	unsigned int k;
+	noll_uid_array *t;
+	slid_in_alloc_loc *t1;
+	slid_in_alloc_loc_array *t2;
+	t = noll_uid_array_new();
+	t2 = slid_in_alloc_loc_array_new();
+	slid_get_in_alloc_loc_index(t, ls);
+	for(k = 0; k < noll_vector_size(t); k++){
+		t1 = slid_mk_in_alloc_loc(z3_ctx, bsort, vars, noll_vector_at(t, k), i);
+		slid_in_alloc_loc_array_push(t2, t1);
+	}
+	noll_uid_array_delete(t);
+	return t2;
+}
+
+slid_in_alloc_loc *slid_in_alloc_loc_locate(slid_in_alloc_loc_arrays *m, unsigned int k, unsigned int i)
+{
+	slid_in_alloc_loc_array *t1;
+	slid_in_alloc_loc *t2;
+	t1 = noll_vector_at(m, k);
+	t2 = noll_vector_at(t1, i);
+	return t2;
+}
+
+Z3_ast slid_in_alloc_loc_find(slid_in_alloc_loc_arrays *m, unsigned int k, unsigned int sid)
+{
+	unsigned int i;
+	slid_in_alloc_loc_array *t;
+	slid_in_alloc_loc *t1;
+	t = noll_vector_at(m, k);
+	for(i = 0; i < noll_vector_size(t); i++){
+		t1 = noll_vector_at(t, i);
+		if(t1->sid == sid)
+			return t1->bvar;
+	}
+	return NULL;
+}
 
 void slid_mk_abstr(Z3_context z3_ctx, slid_context slid_ctx, noll_form_t *f)
 {
@@ -420,7 +539,8 @@ Z3_ast slid_mk_pto(Z3_context z3_ctx, slid_context slid_ctx, noll_pto_t *pto, in
 
 	Z3_ast ret, t1, t2;
 
-	t1 = slid_ctx->m[pto->sid-1][k];
+	t1 = slid_in_alloc_loc_find(slid_ctx->m, k, pto->sid);
+	assert(t1 != NULL);
 	t2 = Z3_mk_true(z3_ctx);
 	ret = Z3_mk_eq(z3_ctx, t1, t2);
 
@@ -431,29 +551,58 @@ Z3_ast slid_mk_pred(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, i
 {
 	assert(pred != NULL);
 
+	int n1, n2, n3;
 	z3_ast_array *t, *t1;
-	Z3_ast t2 = NULL, t3 = NULL, ret = NULL;
+	Z3_ast t2 = NULL, t3 = NULL, t4 = NULL,\
+	       t5 = NULL, t6 = NULL, t7 = NULL,\
+	       t8 = NULL, t9 = NULL, t10 = NULL, t11 = NULL, ret = NULL;
+	noll_pred_t *ppred;
+	noll_pred_rule_t *rr;
+
+	ppred = noll_vector_at(preds_array, pred->pid);
+	rr = noll_vector_at(ppred->def->rec_rules, 0);
 
 	t = z3_ast_array_new();
 	t1 = z3_ast_array_new();
+	t10 = slid_in_alloc_loc_find(slid_ctx->m, k, noll_vector_at(pred->args, 0));
+	assert(t10 != NULL);
+	t11 = Z3_mk_false(z3_ctx);
+	z3_ast_array_push(t, Z3_mk_eq(z3_ctx, t10, t11));
+	
+	if(ppred->typ->nDir >= 2){
+		while((n1 = slid_get_trans_loc(rr, 1)) > 0){
+			n2 = slid_get_hole(ppred) + n1;
+			n3 = noll_vector_at(pred->args, n2);
+			t8 = slid_in_alloc_loc_find(slid_ctx->m, k, n3);
+			assert(t8 != NULL);
+			t9 = Z3_mk_false(z3_ctx);
+			z3_ast_array_push(t, Z3_mk_eq(z3_ctx, t8, t9));
+		}
+	}
+
 
 	t2 = slid_mk_unfold(z3_ctx, slid_ctx, pred, k);
-	if(t1 != NULL) z3_ast_array_push(t, t2);
+	if(t2 != NULL) z3_ast_array_push(t, t2);
 
-	t2 = slid_mk_fir_unfold(z3_ctx, slid_ctx, pred, k);
-	if(t1 != NULL) z3_ast_array_push(t1, t2);
+	t2 = Z3_mk_and(z3_ctx, noll_vector_size(t), noll_vector_array(t));
+	z3_ast_array_clear(t);
+	z3_ast_array_push(t, t2);
 
-	t2 = slid_mk_sec_unfold(z3_ctx, slid_ctx, pred, k);
-	if(t1 != NULL) z3_ast_array_push(t1, t2);
+	t3 = slid_mk_fir_unfold(z3_ctx, slid_ctx, pred, k);
+	if(t3 != NULL) z3_ast_array_push(t1, t3);
 
-	t2 = Z3_mk_or(z3_ctx, noll_vector_size(t1), noll_vector_array(t1));
+	t4 = slid_mk_sec_unfold(z3_ctx, slid_ctx, pred, k);
+	if(t4 != NULL) z3_ast_array_push(t1, t4);
+
+	t5 = Z3_mk_or(z3_ctx, noll_vector_size(t1), noll_vector_array(t1));
 	z3_ast_array_clear(t1);
-	if(t2 != NULL) z3_ast_array_push(t1, t2);
-	t2 = slid_ctx->m[noll_vector_at(pred->args, 0)-1][k];
+	if(t5 != NULL) z3_ast_array_push(t1, t5);
+	t6 = slid_in_alloc_loc_find(slid_ctx->m, k, noll_vector_at(pred->args, 0));
+	assert(t6 != NULL);
 	t3 = Z3_mk_true(z3_ctx);
-	z3_ast_array_push(t1, Z3_mk_eq(z3_ctx, t2, t3));
-	t2 = slid_mk_closures(z3_ctx, slid_ctx, pred, k);
-	if(t2 != NULL) z3_ast_array_push(t1, t2);
+	z3_ast_array_push(t1, Z3_mk_eq(z3_ctx, t6, t3));
+	t7 = slid_mk_closures(z3_ctx, slid_ctx, pred, k);
+	if(t7 != NULL) z3_ast_array_push(t1, t7);
 	t3 = Z3_mk_and(z3_ctx, noll_vector_size(t1), noll_vector_array(t1));
 	if(t3 != NULL) z3_ast_array_push(t, t3);
 
@@ -520,25 +669,6 @@ Z3_ast slid_mk_unfold(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred,
 
 	return ret;
 }
-/*
-int pred_has_data_constr(noll_pred_t *pred)
-{
-	int i;
-	noll_pred_rule_t *rr;
-	noll_pred_rule_array *rrs;
-
-	rrs = pred->def->rec_rules;
-
-	for(i=0; i<noll_vector_size(rrs); i++){
-		rr = noll_vector_at(rrs, i);
-
-		if((rr->pure->data != NULL)\
-		&& (!noll_vector_empty(rr->pure->data)))
-			return 1;
-	}
-	return 0;
-}
-*/
 Z3_ast slid_mk_fir_unfold(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, int k)
 {
 	assert(pred->pid >= 0);
@@ -556,17 +686,20 @@ Z3_ast slid_mk_fir_unfold(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *p
 
 	r = noll_vector_at(ppred->def->rec_rules, 0);
 	
-	if((ppred->typ->nDir >= 2) && ((n1 = slid_get_trans_loc(r, 1)) >= 0)){
-		n2 = slid_get_hole(ppred) + n1;
-		t1 = slid_ctx_var_at(noll_vector_at(pred->args, 0));
-		t2 = slid_ctx_var_at(noll_vector_at(pred->args, n2));
-		z3_ast_array_push(t, Z3_mk_eq(z3_ctx, t1, t2));
+	if(ppred->typ->nDir >= 2){
+		while((n1 = slid_get_trans_loc(r, 1)) > 0){
+			n2 = slid_get_hole(ppred) + n1;
+			t1 = slid_ctx_var_at(noll_vector_at(pred->args, 0));
+			t2 = slid_ctx_var_at(noll_vector_at(pred->args, n2));
+			z3_ast_array_push(t, Z3_mk_eq(z3_ctx, t1, t2));
 
-		i = noll_vector_at(pred->args, n2);
+			i = noll_vector_at(pred->args, n2);
 
-		t1 = slid_ctx->m[i-1][k];
-		t2 = Z3_mk_true(z3_ctx);
-		z3_ast_array_push(t, Z3_mk_eq(z3_ctx, t1, t2));
+			t1 = slid_in_alloc_loc_find(slid_ctx->m, k, i);
+			assert(t1 != NULL);
+			t2 = Z3_mk_true(z3_ctx);
+			z3_ast_array_push(t, Z3_mk_eq(z3_ctx, t1, t2));
+		}
 	}
 	
 	t1 = noll_vector_at(slid_ctx->k, k);
@@ -595,18 +728,21 @@ Z3_ast slid_mk_sec_unfold(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *p
 	ppred = noll_vector_at(preds_array, pred->pid);
 	r = noll_vector_at(ppred->def->rec_rules, 0);
 	
-	if((ppred->typ->nDir >= 2) && ((n1 = slid_get_trans_loc(r, 1)) >= 0)){
-		n2 = slid_get_hole(ppred) + n1;
-		t1 = slid_ctx_var_at(noll_vector_at(pred->args, 0));
-		t2 = slid_ctx_var_at(noll_vector_at(pred->args, n2));
-		t3 = Z3_mk_eq(z3_ctx, t1, t2);
-		z3_ast_array_push(t, Z3_mk_not(z3_ctx, t3));
+	if(ppred->typ->nDir >= 2){
+		while((n1 = slid_get_trans_loc(r, 1)) > 0){
+			n2 = slid_get_hole(ppred) + n1;
+			t1 = slid_ctx_var_at(noll_vector_at(pred->args, 0));
+			t2 = slid_ctx_var_at(noll_vector_at(pred->args, n2));
+			t3 = Z3_mk_eq(z3_ctx, t1, t2);
+			z3_ast_array_push(t, Z3_mk_not(z3_ctx, t3));
 
-		i = noll_vector_at(pred->args, n2);
+			i = noll_vector_at(pred->args, n2);
 
-		t1 = slid_ctx->m[i-1][k];
-		t2 = Z3_mk_true(z3_ctx);
-		z3_ast_array_push(t, Z3_mk_eq(z3_ctx, t1, t2));
+			t1 = slid_in_alloc_loc_find(slid_ctx->m, k, i);
+			assert(t1 != NULL);
+			t2 = Z3_mk_true(z3_ctx);
+			z3_ast_array_push(t, Z3_mk_eq(z3_ctx, t1, t2));
+		}
 	}
 
 	t1 = noll_vector_at(slid_ctx->k, k);
@@ -737,17 +873,18 @@ noll_ls_t *slid_get_rule_pred(noll_space_t *s)
 }
 int slid_get_trans_loc(noll_pred_rule_t *r, unsigned int sid)
 {
-	unsigned int i;
+	static unsigned int i;
 	noll_ls_t *p;
 
 	p = slid_get_rule_pred(r->rec);
 
-	for(i = 0; i < noll_vector_size(p->args); i++){
+	for(++i; i < noll_vector_size(p->args); i++){
 		if(noll_vector_at(p->args, i) == sid)
 			return i;
 	}
 
-	return -1;
+	i = 0;
+	return 0;
 }
 
 bool slid_is_trans_para(unsigned int sid0, unsigned int sid1, noll_pred_rule_t *r)
@@ -1120,6 +1257,8 @@ Z3_ast _slid_mk_pred_data_constr_trans(Z3_context z3_ctx, slid_context slid_ctx,
 	Z3_ast c[2];
 	Z3_ast d[2];
 	int n, hole;
+	unsigned int i;
+	noll_dform_t *df1;
 
 	t1 = noll_vector_at(df->p.targs, 0);
 	t2 = noll_vector_at(df->p.targs, 1);
@@ -1145,13 +1284,43 @@ Z3_ast _slid_mk_pred_data_constr_trans(Z3_context z3_ctx, slid_context slid_ctx,
 		b = Z3_mk_add(z3_ctx, 2, d);
 		z3_ast_array_push(t, op_func(z3_ctx, a, b));
 
-		if(((t4->p.value < 0)\
+		/*if(((t4->p.value < 0)\
 		&& ((df->kind == NOLL_DATA_LE) && (dc->cl != NULL)))\
 		|| ((t4->p.value >0)\
 		&& (df->kind == NOLL_DATA_GE) && (dc->cg != NULL))){
 			e = slid_mk_assist_constr(z3_ctx, slid_ctx, dc, df, p, k);
 			if(e != NULL) z3_ast_array_push(t, e);
+		}*/
+		if(((t4->p.value < 0) && ((df->kind == NOLL_DATA_LE) && (dc->cl != NULL)))){
+			e = slid_mk_assist_constr(z3_ctx, slid_ctx, noll_vector_at(dc->cl->p.targs, 1), df, p, k);
+			if(e != NULL) z3_ast_array_push(t, e);
 		}
+
+		if (((t4->p.value >0) && (df->kind == NOLL_DATA_GE) && (dc->cg != NULL))) {
+			e = slid_mk_assist_constr(z3_ctx, slid_ctx, noll_vector_at(dc->cg->p.targs, 1), df, p, k);
+			if(e != NULL) z3_ast_array_push(t, e);
+		}
+
+		if((dc->stc != NULL) && (!noll_vector_empty(dc->stc))){
+				for(i = 0; i < noll_vector_size(dc->stc); i++){
+					df1 = noll_vector_at(dc->stc, i);
+					switch(df1->kind){
+					case NOLL_DATA_LE:
+						if (((t4->p.value < 0) && ((df->kind == NOLL_DATA_LE) ))) {
+							e = slid_mk_assist_constr(z3_ctx, slid_ctx, noll_vector_at(df1->p.targs, 1), df, p, k);
+							if(e != NULL) z3_ast_array_push(t, e);
+						}
+						break;
+					case NOLL_DATA_GE:
+						if (((t4->p.value >0)\
+								&& (df->kind == NOLL_DATA_GE))) {
+							e = slid_mk_assist_constr(z3_ctx, slid_ctx, noll_vector_at(df1->p.targs, 1), df, p, k);
+							if(e != NULL) z3_ast_array_push(t, e);
+						}
+						break;
+					}
+				}
+			}
 		ret =  Z3_mk_and(z3_ctx, noll_vector_size(t), noll_vector_array(t));
 
 		z3_ast_array_delete(t);
@@ -1176,6 +1345,9 @@ Z3_ast _slid_mk_assist_constr(Z3_context z3_ctx, slid_context slid_ctx,\
 	case NOLL_DATA_INT:
 		c[1] = Z3_mk_int(z3_ctx, t->p.value, slid_ctx->int_sort);
 		break;
+	case NOLL_DATA_VAR:
+		c[1] = slid_ctx_var_at(noll_vector_at(p->args, t->p.sid-1));
+		break;
 	case NOLL_DATA_PLUS:
 		t1 = noll_vector_at(t->args, 0);
 		t2 = noll_vector_at(t->args, 1);
@@ -1189,9 +1361,9 @@ Z3_ast _slid_mk_assist_constr(Z3_context z3_ctx, slid_context slid_ctx,\
 }
 
 Z3_ast slid_mk_assist_constr(Z3_context z3_ctx, slid_context slid_ctx,\
-			     slid_data_constr *dc, noll_dform_t *df, noll_ls_t *p, int k)
+			     noll_dterm_t *dt, noll_dform_t *df, noll_ls_t *p, int k)
 {
-	noll_dterm_t *t1, *t2, *t3, *t4, *t5;
+	noll_dterm_t *t1, *t2, *t3, *t4;
 	Z3_ast a, b;
 	Z3_ast c[2];
 	Z3_ast d[2];
@@ -1210,11 +1382,9 @@ Z3_ast slid_mk_assist_constr(Z3_context z3_ctx, slid_context slid_ctx,\
 
 	switch(df->kind){
 	case NOLL_DATA_LE:
-		t5 = noll_vector_at(dc->cl->p.targs, 1);
-		return _slid_mk_assist_constr(z3_ctx, slid_ctx, t5, p, c[0], a, Z3_mk_le);
+		return _slid_mk_assist_constr(z3_ctx, slid_ctx, dt, p, a, c[0], Z3_mk_le);
 	case NOLL_DATA_GE:
-		t5 = noll_vector_at(dc->cg->p.targs, 1);
-		return _slid_mk_assist_constr(z3_ctx, slid_ctx, t5, p, c[0], a, Z3_mk_ge);
+		return _slid_mk_assist_constr(z3_ctx, slid_ctx, dt, p, a, c[0], Z3_mk_ge);
 	}
 
 	return NULL;
@@ -1222,32 +1392,41 @@ Z3_ast slid_mk_assist_constr(Z3_context z3_ctx, slid_context slid_ctx,\
 
 Z3_ast slid_mk_sep_constr(Z3_context z3_ctx, slid_context slid_ctx)
 {
-	unsigned int i, j, num;
-	unsigned int k, l, m, n;
-	unsigned int n1, n2;
+	unsigned int i, j, k, l;
+	unsigned int n1, n2, n3;
+	slid_in_alloc_loc_array *t1, *t2;
+	slid_in_alloc_loc *t3, *t4;
+	unsigned int s1, s2;
 
 	Z3_ast a[2];
 	Z3_ast b, c, ret = NULL;
 	z3_ast_array *t;
 
+
 	if((slid_ctx->space == NULL) || (noll_vector_empty(slid_ctx->space))) return NULL;
 
-	n1 = slid_ctx->nLoc;
-	n2 = noll_vector_size(slid_ctx->space);
-	num = n1 * n2;
+	n1 = noll_vector_size(slid_ctx->m);
 	t = z3_ast_array_new();
-	for(i = 0; i < num; i++){
-		for(j = 0; j < num; j++){
-			k = i/n2;
-			l = i - k*n2;
-			m = j/n2;
-			n = j - m*n2;
-			if(l != n){
-				a[0] = Z3_mk_eq(z3_ctx, slid_ctx_var_at(k+1), slid_ctx_var_at(m+1));
-				a[1] = Z3_mk_eq(z3_ctx, slid_ctx->m[k][l], Z3_mk_true(z3_ctx));
-				b = Z3_mk_and(z3_ctx, 2, a);
-				c = Z3_mk_eq(z3_ctx, slid_ctx->m[m][n], Z3_mk_false(z3_ctx));
-				z3_ast_array_push(t, Z3_mk_implies(z3_ctx, b, c));
+	for(i = 0; i < n1; i++){
+		t1 = noll_vector_at(slid_ctx->m, i);
+		n2 = noll_vector_size(t1);
+		for(j = 0; j < n2; j++){
+			for(k = 0; k < n1; k++){
+				t2 = noll_vector_at(slid_ctx->m, k);
+				n3 = noll_vector_size(t2);
+				for(l = 0; l < n3; l++){
+					if(i != k){
+						t3 = slid_in_alloc_loc_locate(slid_ctx->m, i, j);
+						t4 = slid_in_alloc_loc_locate(slid_ctx->m, k, l);
+						s1 = t3->sid;
+						s2 = t4->sid;
+						a[0] = Z3_mk_eq(z3_ctx, slid_ctx_var_at(s1), slid_ctx_var_at(s2));
+						a[1] = Z3_mk_eq(z3_ctx, t3->bvar, Z3_mk_true(z3_ctx));
+						b = Z3_mk_and(z3_ctx, 2, a);
+						c = Z3_mk_eq(z3_ctx, t4->bvar, Z3_mk_false(z3_ctx));
+						z3_ast_array_push(t, Z3_mk_implies(z3_ctx, b, c));
+					}
+				}
 			}
 		}
 	}
