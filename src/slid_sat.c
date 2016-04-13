@@ -122,8 +122,6 @@ slid_context slid_init_context(Z3_context z3_ctx)
 	ret->m = NULL;
 	ret->sat_type = SLID_SAT;
 	ret->abstr = Z3_mk_true(z3_ctx);
-	ret->int_sort = Z3_mk_int_sort(z3_ctx);
-	ret->bool_sort = Z3_mk_bool_sort(z3_ctx);
 
 	return ret;
 }
@@ -141,6 +139,9 @@ slid_context slid_mk_context(Z3_context z3_ctx, noll_form_t *form)
 	slid_context ret;
 
 	ret = slid_init_context(z3_ctx);
+
+	ret->int_sort = Z3_mk_int_sort(z3_ctx);
+	ret->bool_sort = Z3_mk_bool_sort(z3_ctx);
 
 	ret->var = z3_ast_array_new();
 	v = noll_vector_at(form->lvars, 0);
@@ -537,14 +538,18 @@ Z3_ast slid_mk_pto(Z3_context z3_ctx, slid_context slid_ctx, noll_pto_t *pto, in
 {
 	assert(pto != NULL);
 
-	Z3_ast ret, t1, t2;
+	Z3_ast r1, r2, t1, t2;
+	Z3_ast ki, one;
+	one = Z3_mk_int(z3_ctx, 1);
+	ki = noll_vector_at(slid_ctx->k, k);
+	r1 = Z3_mk_eq(z3_ctx, ki, one);
 
 	t1 = slid_in_alloc_loc_find(slid_ctx->m, k, pto->sid);
 	assert(t1 != NULL);
 	t2 = Z3_mk_true(z3_ctx);
-	ret = Z3_mk_eq(z3_ctx, t1, t2);
+	r2 = Z3_mk_eq(z3_ctx, t1, t2);
 
-	return ret;
+	return Z3_mk_and(z3_ctx, r1, r2);
 }
 
 Z3_ast slid_mk_pred(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, int k)

@@ -24,7 +24,8 @@
 #include "noll_option.h"
 #include "noll2graph.h"
 
-#include "slid_sat.h"
+//#include "slid_sat.h"
+extern void test_check_sat(noll_form_t*);
 
 /* ====================================================================== */
 /* Utilities */
@@ -283,7 +284,8 @@ noll_sat_solve (noll_form_t * form)
 #endif
 
   //noll_prob->pabstr = noll_normalize (form, "f-out.txt", true, false);
-  slid_sat_check(form);
+  //slid_sat_check(form);
+  test_check_sat(form);
 
   /*
    * FIN
