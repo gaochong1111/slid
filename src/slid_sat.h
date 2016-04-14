@@ -42,6 +42,9 @@ typedef struct{
 	Z3_ast bvar;   //boolean variable
 }slid_in_alloc_loc;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 //in_alloc_loc_array declare
 NOLL_VECTOR_DECLARE(slid_in_alloc_loc_array, slid_in_alloc_loc *);
 
@@ -54,6 +57,9 @@ NOLL_VECTOR_DECLARE(slid_data_constr_array, slid_data_constr *);
 //z3_ast_array declare
 NOLL_VECTOR_DECLARE(z3_ast_array, Z3_ast);
 
+#ifdef __cplusplus
+}
+#endif
 
 //context of the noll formula to be transformed to Z3 formula
 typedef struct{
@@ -74,6 +80,9 @@ typedef _slid_context* slid_context;
 //require that the order of predicate parameter
 void slid_sat_check(noll_form_t *);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 slid_context slid_init_context(Z3_context);
 slid_context slid_mk_context(Z3_context, noll_form_t *);
 slid_in_alloc_loc_arrays *slid_mk_in_alloc_loc_arrays(Z3_context, Z3_sort, noll_var_array *,\
@@ -117,7 +126,6 @@ Z3_ast slid_mk_fir_unfold(Z3_context, slid_context, noll_ls_t *, int);
 Z3_ast slid_mk_sec_unfold(Z3_context, slid_context, noll_ls_t *, int);
 Z3_ast slid_mk_closures(Z3_context, slid_context, noll_ls_t *, int);
 Z3_ast slid_mk_closure(Z3_context, slid_context, slid_data_constr *,  noll_ls_t *, int);
-//Z3_ast _slid_mk_closure(Z3_context, slid_context, noll_ls_t *, int, Z3_ast, noll_dterm_t *, Z3_ast (*)(Z3_context, Z3_ast, Z3_ast));
 //int slid_get_counterpart(noll_pred_t *, int);
 //int slid_get_src_para_num(noll_pred_t *);
 
@@ -155,5 +163,8 @@ Z3_ast _slid_mk_assist_constr(Z3_context, slid_context, noll_dterm_t *, noll_ls_
 //make the separation constraint of the abstraction
 Z3_ast slid_mk_sep_constr(Z3_context, slid_context);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif //slid_sat.h
