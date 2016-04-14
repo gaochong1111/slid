@@ -1,0 +1,1322 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CCINC	Makefile	/^CCINC = noll_vector.h \\$/;"	m
+CCSRC	Makefile	/^CCSRC = noll_types.c \\$/;"	m
+CXXSRC	Makefile	/^CXXSRC = libvata_noll_iface.cc$/;"	m
+ICFLAGS	Makefile	/^ICFLAGS = -I. \\$/;"	m
+ICXXFLAGS	Makefile	/^ICXXFLAGS = \\$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS = \\$/;"	m
+LIBVATA_NOLL_IFACE_H_	libvata_noll_iface.h	29;"	d
+MAX_PRED	noll2bool.c	7;"	d	file:
+MAX_PTO	noll2bool.c	8;"	d	file:
+MIN	noll_graph2ta.c	45;"	d	file:
+NOLL2SAT_H_	noll2sat.h	20;"	d
+NOLL_ALIAS_MARKING_REL_UP	noll_ta_symbols.c	/^  NOLL_ALIAS_MARKING_REL_UP,    \/\/\/< the alias UP relation$/;"	e	enum:noll_alias_marking_rel_t	file:
+NOLL_ALIAS_MARKING_REL_UP_DOWN_FIRST	noll_ta_symbols.c	/^  NOLL_ALIAS_MARKING_REL_UP_DOWN_FIRST  \/\/\/< the alias UP DOWN relation$/;"	e	enum:noll_alias_marking_rel_t	file:
+NOLL_ALIAS_MARKING_REL_UP_UP	noll_ta_symbols.c	/^  NOLL_ALIAS_MARKING_REL_UP_UP, \/\/\/< the alias UP UP relation$/;"	e	enum:noll_alias_marking_rel_t	file:
+NOLL_ATYP_BORDER	noll_preds.h	/^    NOLL_ATYP_BORDER,$/;"	e	enum:__anon17
+NOLL_ATYP_BPENDING	noll_preds.h	/^    NOLL_ATYP_BPENDING,$/;"	e	enum:__anon17
+NOLL_ATYP_BROOT	noll_preds.h	/^    NOLL_ATYP_BROOT,$/;"	e	enum:__anon17
+NOLL_ATYP_IPENDING	noll_preds.h	/^    NOLL_ATYP_IPENDING,$/;"	e	enum:__anon17
+NOLL_ATYP_IROOT	noll_preds.h	/^    NOLL_ATYP_IROOT,$/;"	e	enum:__anon17
+NOLL_ATYP_LLST	noll_preds.h	/^    NOLL_ATYP_LLST,$/;"	e	enum:__anon17
+NOLL_ATYP_LPAR	noll_preds.h	/^    NOLL_ATYP_LPAR,$/;"	e	enum:__anon17
+NOLL_ATYP_LPENDING	noll_preds.h	/^    NOLL_ATYP_LPENDING,$/;"	e	enum:__anon17
+NOLL_ATYP_LROOT	noll_preds.h	/^    NOLL_ATYP_LROOT = 0,$/;"	e	enum:__anon17
+NOLL_ATYP_OTHER	noll_preds.h	/^    NOLL_ATYP_OTHER$/;"	e	enum:__anon17
+NOLL_DATA_BAG	noll_form.h	/^    NOLL_DATA_BAG,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_BAGMINUS	noll_form.h	/^    NOLL_DATA_BAGMINUS,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_BAGUNION	noll_form.h	/^    NOLL_DATA_BAGUNION,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_EMPTYBAG	noll_form.h	/^    NOLL_DATA_EMPTYBAG,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_EQ	noll_form.h	/^    NOLL_DATA_EQ = 0,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_FIELD	noll_form.h	/^    NOLL_DATA_FIELD,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_GE	noll_form.h	/^    NOLL_DATA_GE,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_GT	noll_form.h	/^    NOLL_DATA_GT,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_IMPLIES	noll_form.h	/^    NOLL_DATA_IMPLIES,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_INT	noll_form.h	/^    NOLL_DATA_INT,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_ITE	noll_form.h	/^    NOLL_DATA_ITE,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_LE	noll_form.h	/^    NOLL_DATA_LE,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_LT	noll_form.h	/^    NOLL_DATA_LT,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_MINUS	noll_form.h	/^    NOLL_DATA_MINUS,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_NEQ	noll_form.h	/^    NOLL_DATA_NEQ,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_OTHER	noll_form.h	/^    NOLL_DATA_OTHER             \/* NOT TO BE USED *\/$/;"	e	enum:noll_data_op_t
+NOLL_DATA_PLUS	noll_form.h	/^    NOLL_DATA_PLUS,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_SUBSET	noll_form.h	/^    NOLL_DATA_SUBSET,$/;"	e	enum:noll_data_op_t
+NOLL_DATA_VAR	noll_form.h	/^    NOLL_DATA_VAR,$/;"	e	enum:noll_data_op_t
+NOLL_DEBUG	noll.h	327;"	d
+NOLL_DEBUG	noll.h	334;"	d
+NOLL_EDGE_DIFF	noll_graph.h	/^  NOLL_EDGE_DIFF = 0, NOLL_EDGE_PTO, NOLL_EDGE_PRED, NOLL_EDGE_OTHER$/;"	e	enum:__anon3
+NOLL_EDGE_OTHER	noll_graph.h	/^  NOLL_EDGE_DIFF = 0, NOLL_EDGE_PTO, NOLL_EDGE_PRED, NOLL_EDGE_OTHER$/;"	e	enum:__anon3
+NOLL_EDGE_PRED	noll_graph.h	/^  NOLL_EDGE_DIFF = 0, NOLL_EDGE_PTO, NOLL_EDGE_PRED, NOLL_EDGE_OTHER$/;"	e	enum:__anon3
+NOLL_EDGE_PTO	noll_graph.h	/^  NOLL_EDGE_DIFF = 0, NOLL_EDGE_PTO, NOLL_EDGE_PRED, NOLL_EDGE_OTHER$/;"	e	enum:__anon3
+NOLL_ENTL_H_	noll_entl.h	24;"	d
+NOLL_FORM_OTHER	noll_form.h	/^    NOLL_FORM_UNSAT = 0, NOLL_FORM_SAT, NOLL_FORM_VALID, NOLL_FORM_OTHER$/;"	e	enum:noll_form_kind_t
+NOLL_FORM_SAT	noll_form.h	/^    NOLL_FORM_UNSAT = 0, NOLL_FORM_SAT, NOLL_FORM_VALID, NOLL_FORM_OTHER$/;"	e	enum:noll_form_kind_t
+NOLL_FORM_UNSAT	noll_form.h	/^    NOLL_FORM_UNSAT = 0, NOLL_FORM_SAT, NOLL_FORM_VALID, NOLL_FORM_OTHER$/;"	e	enum:noll_form_kind_t
+NOLL_FORM_VALID	noll_form.h	/^    NOLL_FORM_UNSAT = 0, NOLL_FORM_SAT, NOLL_FORM_VALID, NOLL_FORM_OTHER$/;"	e	enum:noll_form_kind_t
+NOLL_F_AND	noll.h	/^    NOLL_F_AND,$/;"	e	enum:__anon26
+NOLL_F_BAG	noll.h	/^    NOLL_F_BAG,                 \/* Bag_of_Int theory *\/$/;"	e	enum:__anon26
+NOLL_F_BAGMINUS	noll.h	/^    NOLL_F_BAGMINUS,$/;"	e	enum:__anon26
+NOLL_F_BAGUNION	noll.h	/^    NOLL_F_BAGUNION,$/;"	e	enum:__anon26
+NOLL_F_DFIELD	noll.h	/^    NOLL_F_DFIELD,              \/* integer field selection *\/$/;"	e	enum:__anon26
+NOLL_F_DISTINCT	noll.h	/^    NOLL_F_DISTINCT,$/;"	e	enum:__anon26
+NOLL_F_EMP	noll.h	/^    NOLL_F_EMP,                 \/* space operators *\/$/;"	e	enum:__anon26
+NOLL_F_EMPTYBAG	noll.h	/^    NOLL_F_EMPTYBAG,$/;"	e	enum:__anon26
+NOLL_F_EQ	noll.h	/^    NOLL_F_EQ,                  \/* pure operators *\/$/;"	e	enum:__anon26
+NOLL_F_EQLOC	noll.h	/^    NOLL_F_EQLOC,$/;"	e	enum:__anon26
+NOLL_F_EXISTS	noll.h	/^    NOLL_F_EXISTS,$/;"	e	enum:__anon26
+NOLL_F_FALSE	noll.h	/^    NOLL_F_FALSE = 0,           \/* boolean operators *\/$/;"	e	enum:__anon26
+NOLL_F_FIELD	noll.h	/^    NOLL_F_FIELD,$/;"	e	enum:__anon26
+NOLL_F_FORALL	noll.h	/^    NOLL_F_FORALL,$/;"	e	enum:__anon26
+NOLL_F_GE	noll.h	/^    NOLL_F_GE,$/;"	e	enum:__anon26
+NOLL_F_GT	noll.h	/^    NOLL_F_GT,$/;"	e	enum:__anon26
+NOLL_F_IMPLIES	noll.h	/^    NOLL_F_IMPLIES,$/;"	e	enum:__anon26
+NOLL_F_INDEX	noll.h	/^    NOLL_F_INDEX,$/;"	e	enum:__anon26
+NOLL_F_INLOC	noll.h	/^    NOLL_F_INLOC,$/;"	e	enum:__anon26
+NOLL_F_INT	noll.h	/^    NOLL_F_INT,                 \/* integer constant *\/$/;"	e	enum:__anon26
+NOLL_F_ITE	noll.h	/^    NOLL_F_ITE,$/;"	e	enum:__anon26
+NOLL_F_JUNK	noll.h	/^    NOLL_F_JUNK,$/;"	e	enum:__anon26
+NOLL_F_LE	noll.h	/^    NOLL_F_LE,$/;"	e	enum:__anon26
+NOLL_F_LELOC	noll.h	/^    NOLL_F_LELOC,$/;"	e	enum:__anon26
+NOLL_F_LOOP	noll.h	/^    NOLL_F_LOOP,                \/* loop of length at least one *\/$/;"	e	enum:__anon26
+NOLL_F_LT	noll.h	/^    NOLL_F_LT,                  \/* Integer theory *\/$/;"	e	enum:__anon26
+NOLL_F_LVAR	noll.h	/^    NOLL_F_LVAR,                \/* variable, field, or predicate *\/$/;"	e	enum:__anon26
+NOLL_F_MINUS	noll.h	/^    NOLL_F_MINUS,$/;"	e	enum:__anon26
+NOLL_F_NILOC	noll.h	/^    NOLL_F_NILOC,               \/* not in *\/$/;"	e	enum:__anon26
+NOLL_F_NOT	noll.h	/^    NOLL_F_NOT,$/;"	e	enum:__anon26
+NOLL_F_OR	noll.h	/^    NOLL_F_OR,$/;"	e	enum:__anon26
+NOLL_F_OTHER	noll.h	/^    NOLL_F_OTHER$/;"	e	enum:__anon26
+NOLL_F_PLUS	noll.h	/^    NOLL_F_PLUS,$/;"	e	enum:__anon26
+NOLL_F_PRED	noll.h	/^    NOLL_F_PRED,$/;"	e	enum:__anon26
+NOLL_F_PTO	noll.h	/^    NOLL_F_PTO,$/;"	e	enum:__anon26
+NOLL_F_REF	noll.h	/^    NOLL_F_REF,$/;"	e	enum:__anon26
+NOLL_F_SELOC	noll.h	/^    NOLL_F_SELOC,$/;"	e	enum:__anon26
+NOLL_F_SLOC	noll.h	/^    NOLL_F_SLOC,                \/* share operators *\/$/;"	e	enum:__anon26
+NOLL_F_SREF	noll.h	/^    NOLL_F_SREF,$/;"	e	enum:__anon26
+NOLL_F_SSEP	noll.h	/^    NOLL_F_SSEP,$/;"	e	enum:__anon26
+NOLL_F_SUBSET	noll.h	/^    NOLL_F_SUBSET,$/;"	e	enum:__anon26
+NOLL_F_SVAR	noll.h	/^    NOLL_F_SVAR,$/;"	e	enum:__anon26
+NOLL_F_TOBOOL	noll.h	/^    NOLL_F_TOBOOL,              \/* conversion ops *\/$/;"	e	enum:__anon26
+NOLL_F_TOSPACE	noll.h	/^    NOLL_F_TOSPACE,$/;"	e	enum:__anon26
+NOLL_F_TRUE	noll.h	/^    NOLL_F_TRUE,$/;"	e	enum:__anon26
+NOLL_F_UNLOC	noll.h	/^    NOLL_F_UNLOC,$/;"	e	enum:__anon26
+NOLL_F_WSEP	noll.h	/^    NOLL_F_WSEP,$/;"	e	enum:__anon26
+NOLL_GRAPH2TA_H_	noll_graph2ta.h	28;"	d
+NOLL_HOM_H_	noll_hom.h	25;"	d
+NOLL_LEMMA_COMP_1	noll_lemma.h	/^    NOLL_LEMMA_COMP_1 = 0,      \/\/\/ P * P => P$/;"	e	enum:__anon25
+NOLL_LEMMA_COMP_1S	noll_lemma.h	/^    NOLL_LEMMA_COMP_1S,         \/\/\/ P' * P => P with P' stronger than P$/;"	e	enum:__anon25
+NOLL_LEMMA_COMP_2	noll_lemma.h	/^    NOLL_LEMMA_COMP_2,          \/\/\/ P' * P => P$/;"	e	enum:__anon25
+NOLL_LEMMA_COMP_2S	noll_lemma.h	/^    NOLL_LEMMA_COMP_2S,         \/\/\/ P'' * P => P with P' stronger than P'$/;"	e	enum:__anon25
+NOLL_LEMMA_H_	noll_lemma.h	24;"	d
+NOLL_LEMMA_INSTANCE	noll_lemma.h	/^    NOLL_LEMMA_INSTANCE,        \/\/\/ P'(E,cst) => P (E)$/;"	e	enum:__anon25
+NOLL_LEMMA_OTHER	noll_lemma.h	/^    NOLL_LEMMA_OTHER$/;"	e	enum:__anon25
+NOLL_LEMMA_STRONGER	noll_lemma.h	/^    NOLL_LEMMA_STRONGER,        \/\/\/ P' => P$/;"	e	enum:__anon25
+NOLL_LOGIC_NOLL	noll_form.h	/^    NOLL_LOGIC_NOLL,            \/* ESOP'13 *\/$/;"	e	enum:noll_logic_t
+NOLL_LOGIC_OTHER	noll_form.h	/^    NOLL_LOGIC_OTHER            \/* NOT SUPPORTED *\/$/;"	e	enum:noll_logic_t
+NOLL_LOGIC_SLL	noll_form.h	/^    NOLL_LOGIC_SLL,             \/* APLAS'14 *\/$/;"	e	enum:noll_logic_t
+NOLL_LOGIC_SLRD	noll_form.h	/^    NOLL_LOGIC_SLRD,            \/* SLCOMP'14 *\/$/;"	e	enum:noll_logic_t
+NOLL_LOGIC_SLRDI	noll_form.h	/^    NOLL_LOGIC_SLRDI,$/;"	e	enum:noll_logic_t
+NOLL_MARKINGS_EPSILON	noll_ta_symbols.h	44;"	d
+NOLL_NORM_H_	noll_norm.h	20;"	d
+NOLL_OPTION_H_	noll_option.h	24;"	d
+NOLL_PFLD_BCKBONE	noll_types.h	/^    NOLL_PFLD_BCKBONE,          \/* F^0 *\/$/;"	e	enum:__anon23
+NOLL_PFLD_BORDER	noll_types.h	/^    NOLL_PFLD_BORDER,           \/* F^2 *\/$/;"	e	enum:__anon23
+NOLL_PFLD_DATA	noll_types.h	/^    NOLL_PFLD_DATA$/;"	e	enum:__anon23
+NOLL_PFLD_INNER	noll_types.h	/^    NOLL_PFLD_INNER,            \/* F^1 *\/$/;"	e	enum:__anon23
+NOLL_PFLD_NESTED	noll_types.h	/^    NOLL_PFLD_NESTED,$/;"	e	enum:__anon23
+NOLL_PFLD_NONE	noll_types.h	/^    NOLL_PFLD_NONE = 0,$/;"	e	enum:__anon23
+NOLL_PFLD_NULL	noll_types.h	/^    NOLL_PFLD_NULL,             \/* F^2 needed? *\/$/;"	e	enum:__anon23
+NOLL_PRED2TA_H_	noll_pred2ta.h	23;"	d
+NOLL_PRED_COMP	noll_preds.h	/^    NOLL_PRED_COMP,             \/\/ compositional definition, one way$/;"	e	enum:__anon16
+NOLL_PRED_COMP_PAR	noll_preds.h	/^    NOLL_PRED_COMP_PAR,         \/\/ compositional definition, with parent$/;"	e	enum:__anon16
+NOLL_PRED_LST	noll_preds.h	/^    NOLL_PRED_LST,              \/\/ list-like definition, one way$/;"	e	enum:__anon16
+NOLL_PRED_LST_PAR	noll_preds.h	/^    NOLL_PRED_LST_PAR,          \/\/ list-like definition, with parent$/;"	e	enum:__anon16
+NOLL_PRED_OTHER	noll_preds.h	/^    NOLL_PRED_OTHER             \/\/ default$/;"	e	enum:__anon16
+NOLL_PRED_WS	noll_preds.h	/^    NOLL_PRED_WS,               \/\/ well structured definition$/;"	e	enum:__anon16
+NOLL_PURE_EQ	noll_form.h	/^    NOLL_PURE_EQ = 0, NOLL_PURE_NEQ, NOLL_PURE_OTHER$/;"	e	enum:noll_pure_op_t
+NOLL_PURE_NEQ	noll_form.h	/^    NOLL_PURE_EQ = 0, NOLL_PURE_NEQ, NOLL_PURE_OTHER$/;"	e	enum:noll_pure_op_t
+NOLL_PURE_OTHER	noll_form.h	/^    NOLL_PURE_EQ = 0, NOLL_PURE_NEQ, NOLL_PURE_OTHER$/;"	e	enum:noll_pure_op_t
+NOLL_SAT_H_	noll_sat.h	20;"	d
+NOLL_SCOPE_GLOBAL	noll_vars.h	/^    NOLL_SCOPE_LOCAL = 0, NOLL_SCOPE_GLOBAL, NOLL_SCOPE_OTHER$/;"	e	enum:__anon24
+NOLL_SCOPE_LOCAL	noll_vars.h	/^    NOLL_SCOPE_LOCAL = 0, NOLL_SCOPE_GLOBAL, NOLL_SCOPE_OTHER$/;"	e	enum:__anon24
+NOLL_SCOPE_OTHER	noll_vars.h	/^    NOLL_SCOPE_LOCAL = 0, NOLL_SCOPE_GLOBAL, NOLL_SCOPE_OTHER$/;"	e	enum:__anon24
+NOLL_SHARE_IN	noll_form.h	/^    NOLL_SHARE_IN = 0,          \/* \\in *\/$/;"	e	enum:noll_share_op_t
+NOLL_SHARE_NI	noll_form.h	/^    NOLL_SHARE_NI,              \/* \\not\\in *\/$/;"	e	enum:noll_share_op_t
+NOLL_SHARE_OTHER	noll_form.h	/^    NOLL_SHARE_OTHER$/;"	e	enum:noll_share_op_t
+NOLL_SHARE_SUBSET	noll_form.h	/^    NOLL_SHARE_SUBSET,          \/* \\subseteq *\/$/;"	e	enum:noll_share_op_t
+NOLL_SPACE_EMP	noll_form.h	/^    NOLL_SPACE_EMP = 0,$/;"	e	enum:noll_space_op_t
+NOLL_SPACE_JUNK	noll_form.h	/^    NOLL_SPACE_JUNK,$/;"	e	enum:noll_space_op_t
+NOLL_SPACE_LS	noll_form.h	/^    NOLL_SPACE_LS,$/;"	e	enum:noll_space_op_t
+NOLL_SPACE_OTHER	noll_form.h	/^    NOLL_SPACE_OTHER$/;"	e	enum:noll_space_op_t
+NOLL_SPACE_PTO	noll_form.h	/^    NOLL_SPACE_PTO,$/;"	e	enum:noll_space_op_t
+NOLL_SPACE_SSEP	noll_form.h	/^    NOLL_SPACE_SSEP,$/;"	e	enum:noll_space_op_t
+NOLL_SPACE_WSEP	noll_form.h	/^    NOLL_SPACE_WSEP,$/;"	e	enum:noll_space_op_t
+NOLL_STERM_LVAR	noll_form.h	/^    NOLL_STERM_LVAR = 0, NOLL_STERM_SVAR, NOLL_STERM_PRJ, NOLL_STERM_OTHER$/;"	e	enum:noll_sterm_kind_t
+NOLL_STERM_OTHER	noll_form.h	/^    NOLL_STERM_LVAR = 0, NOLL_STERM_SVAR, NOLL_STERM_PRJ, NOLL_STERM_OTHER$/;"	e	enum:noll_sterm_kind_t
+NOLL_STERM_PRJ	noll_form.h	/^    NOLL_STERM_LVAR = 0, NOLL_STERM_SVAR, NOLL_STERM_PRJ, NOLL_STERM_OTHER$/;"	e	enum:noll_sterm_kind_t
+NOLL_STERM_SVAR	noll_form.h	/^    NOLL_STERM_LVAR = 0, NOLL_STERM_SVAR, NOLL_STERM_PRJ, NOLL_STERM_OTHER$/;"	e	enum:noll_sterm_kind_t
+NOLL_TREE_LABEL_ALIASING_MARKING	noll_ta_symbols.c	/^  NOLL_TREE_LABEL_ALIASING_MARKING,     \/\/\/< marking is used as the relation$/;"	e	enum:noll_tree_label_type_t	file:
+NOLL_TREE_LABEL_ALIASING_VARIABLE	noll_ta_symbols.c	/^  NOLL_TREE_LABEL_ALIASING_VARIABLE,    \/\/\/< a node with a program variable is aliased$/;"	e	enum:noll_tree_label_type_t	file:
+NOLL_TREE_LABEL_ALLOCATED	noll_ta_symbols.c	/^  NOLL_TREE_LABEL_ALLOCATED,    \/\/\/< the node is allocated: no aliasing is used$/;"	e	enum:noll_tree_label_type_t	file:
+NOLL_TREE_LABEL_HIGHER_PRED	noll_ta_symbols.c	/^  NOLL_TREE_LABEL_HIGHER_PRED,  \/\/\/< higher-order predicate$/;"	e	enum:noll_tree_label_type_t	file:
+NOLL_TYP_BAGINT	noll_types.h	/^    NOLL_TYP_BAGINT,$/;"	e	enum:__anon22
+NOLL_TYP_BOOL	noll_types.h	/^    NOLL_TYP_BOOL = 0,$/;"	e	enum:__anon22
+NOLL_TYP_FIELD	noll_types.h	/^    NOLL_TYP_FIELD,$/;"	e	enum:__anon22
+NOLL_TYP_INT	noll_types.h	/^    NOLL_TYP_INT,$/;"	e	enum:__anon22
+NOLL_TYP_OTHER	noll_types.h	/^    NOLL_TYP_OTHER$/;"	e	enum:__anon22
+NOLL_TYP_RECORD	noll_types.h	/^    NOLL_TYP_RECORD,$/;"	e	enum:__anon22
+NOLL_TYP_SETLOC	noll_types.h	/^    NOLL_TYP_SETLOC,$/;"	e	enum:__anon22
+NOLL_TYP_SETREF	noll_types.h	/^    NOLL_TYP_SETREF,$/;"	e	enum:__anon22
+NOLL_TYP_SPACE	noll_types.h	/^    NOLL_TYP_SPACE,$/;"	e	enum:__anon22
+NOLL_TYP_VOID	noll_types.h	90;"	d
+NOLL_VECTOR_ARRAY	noll_vector.h	60;"	d
+NOLL_VECTOR_CAPACITY	noll_vector.h	59;"	d
+NOLL_VECTOR_DECLARE	noll_vector.h	39;"	d
+NOLL_VECTOR_DEFINE	noll_vector.h	70;"	d
+NOLL_VECTOR_H_	noll_vector.h	28;"	d
+NOLL_VECTOR_SIZE	noll_vector.h	58;"	d
+NollAlphabet	libvata_noll_iface.cc	/^class NollAlphabet : public TreeAut::AbstractAlphabet$/;"	c	file:
+SHARED_LIBS	Makefile	/^SHARED_LIBS = -lsmtlib2parser \\$/;"	m
+SLID_DATA_CONSTR_CONST	slid_sat.h	/^	SLID_DATA_CONSTR_CONST = 0,     \/\/something like, a op c, c is constent$/;"	e	enum:__anon5
+SLID_DATA_CONSTR_STATIC	slid_sat.h	/^	SLID_DATA_CONSTR_STATIC,        \/\/a op e, e is static parameter$/;"	e	enum:__anon5
+SLID_DATA_CONSTR_TRANS	slid_sat.h	/^	SLID_DATA_CONSTR_TRANS,         \/\/a op y + c, y is transitive quantifier variable$/;"	e	enum:__anon5
+SLID_DATA_CONSTR_UNDEF	slid_sat.h	/^	SLID_DATA_CONSTR_UNDEF          \/\/op can be =, <=, >=$/;"	e	enum:__anon5
+SLID_SAT	slid_sat.h	/^	SLID_SAT,$/;"	e	enum:__anon4
+SLID_SAT_H	slid_sat.h	4;"	d
+SLID_UNDEF	slid_sat.h	/^	SLID_UNDEF$/;"	e	enum:__anon4
+SLID_UNSAT	slid_sat.h	/^	SLID_UNSAT = 0,$/;"	e	enum:__anon4
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (and)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (bag)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (bagminus)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (bagunion)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (distinct)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (eq)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (eqloc)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (ge)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (gt)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (implies)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (index)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (inloc)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (ite)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (le)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (leloc)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (loop)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (lt)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (minus)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (not)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (or)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (plus)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (pto)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (ref)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (seloc)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (sloc)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (sref)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (ssep)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (subset)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (tobool)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (tospace)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (unloc)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (wsep)$/;"	f
+SMTLIB2_NOLL_DECLHANDLER	smtlib2noll.c	91;"	d	file:
+SMTLIB2_NOLL_SETHANDLER	smtlib2noll.c	134;"	d	file:
+UNDEFINED_ID	noll_types.h	46;"	d
+VID_FST_PARAM	noll.h	164;"	d
+VID_NIL	noll.h	163;"	d
+VID_SND_PARAM	noll.h	165;"	d
+VNIL_ID	noll_vars.h	40;"	d
+_NOLL2BOOL_H	noll2bool.h	24;"	d
+_NOLL2GRAPH_H_	noll2graph.h	20;"	d
+_NOLL_FORM_H_	noll_form.h	24;"	d
+_NOLL_GRAPH_H_	noll_graph.h	20;"	d
+_NOLL_H_	noll.h	24;"	d
+_NOLL_PREDS_H_	noll_preds.h	24;"	d
+_NOLL_TA_SYMBOLS_H_	noll_ta_symbols.h	20;"	d
+_NOLL_TREE_H_	noll_tree.h	25;"	d
+_NOLL_TYPES_H_	noll_types.h	24;"	d
+_NOLL_VARS_H_	noll_vars.h	24;"	d
+_SMTLIB2NOLL_H	smtlib2noll.h	24;"	d
+_slid_context	slid_sat.h	/^}_slid_context;$/;"	t	typeref:struct:__anon8
+_slid_mk_assist_constr	slid_sat.c	/^Z3_ast _slid_mk_assist_constr(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+_slid_mk_pred_data_constr_cst	slid_sat.c	/^Z3_ast _slid_mk_pred_data_constr_cst(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+_slid_mk_pred_data_constr_stc	slid_sat.c	/^Z3_ast _slid_mk_pred_data_constr_stc(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+_slid_mk_pred_data_constr_trans	slid_sat.c	/^Z3_ast _slid_mk_pred_data_constr_trans(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+_slid_mk_pure_data_constr1	slid_sat.c	/^Z3_ast _slid_mk_pure_data_constr1(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+_slid_mk_pure_data_constr2	slid_sat.c	/^Z3_ast _slid_mk_pure_data_constr2(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+abstr	slid_sat.h	/^	Z3_ast abstr;$/;"	m	struct:__anon8
+alias_marking	noll_ta_symbols.c	/^    } alias_marking;$/;"	m	union:noll_ta_symbol::__anon18	typeref:struct:noll_ta_symbol::__anon18::__anon20	file:
+alias_marking	printdterm.c	/^    } alias_marking;$/;"	m	union:noll_ta_symbol::__anon12	typeref:struct:noll_ta_symbol::__anon12::__anon14	file:
+alias_var	noll_ta_symbols.c	/^    uid_t alias_var;$/;"	m	union:noll_ta_symbol::__anon18	file:
+alias_var	printdterm.c	/^    uid_t alias_var;$/;"	m	union:noll_ta_symbol::__anon12	file:
+allocated	noll_ta_symbols.c	/^    } allocated;$/;"	m	union:noll_ta_symbol::__anon18	typeref:struct:noll_ta_symbol::__anon18::__anon19	file:
+allocated	printdterm.c	/^    } allocated;$/;"	m	union:noll_ta_symbol::__anon12	typeref:struct:noll_ta_symbol::__anon12::__anon13	file:
+alpha	noll2sat.h	/^  uid_t alpha;                  \/* position in slocs_array *\/$/;"	m	struct:noll_sat_in_s
+and	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (and);$/;"	v
+argkind	noll_preds.h	/^    noll_uid_array *argkind;    \/* for each argument, kind of it *\/$/;"	m	struct:noll_pred_typing_t
+args	noll.h	/^    struct noll_exp_t **args;   \/* array of expression args or NULL *\/$/;"	m	struct:noll_exp_t	typeref:struct:noll_exp_t::noll_exp_t
+args	noll_form.h	/^    noll_dterm_array *args;     \/\/ NULL for 0-arity terms$/;"	m	struct:noll_dterm_s
+args	noll_form.h	/^    noll_uid_array *args;       \/\/ arguments used$/;"	m	struct:noll_ls_t
+args	noll_graph.h	/^  noll_uid_array *args;         \/\/ array of nodes args[0] = src node, args[1] = dst node$/;"	m	struct:noll_edge_s
+args	noll_types.h	/^    noll_uid_array *args;       \/\/ type arguments, including the record index$/;"	m	struct:noll_type_t
+bag	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (bag);$/;"	v
+bagminus	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (bagminus);$/;"	v
+bagunion	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (bagunion);$/;"	v
+bargs	noll_form.h	/^      noll_dform_array *bargs;  \/\/ boolean arguments iff kind == NOLL_DATA_IMPLIES$/;"	m	union:noll_dform_s::__anon10
+base_rules	noll_preds.h	/^    noll_pred_rule_array *base_rules;   \/\/ set of base rules$/;"	m	struct:noll_pred_binding_t
+bool_abstr_det	noll2bool.c	/^bool_abstr_det (noll_form_t * form, FILE * out)$/;"	f
+bool_abstr_free	noll2bool.c	/^bool_abstr_free (noll_form_t * form)$/;"	f
+bool_abstr_init	noll2bool.c	/^bool_abstr_init (noll_form_t * form)$/;"	f
+bool_abstr_membership	noll2bool.c	/^bool_abstr_membership (noll_form_t * form, FILE * out)$/;"	f
+bool_abstr_pure	noll2bool.c	/^bool_abstr_pure (noll_form_t * form, FILE * out)$/;"	f
+bool_abstr_share	noll2bool.c	/^bool_abstr_share (noll_form_t * form, FILE * out)$/;"	f
+bool_abstr_share_var_in_sterm	noll2bool.c	/^bool_abstr_share_var_in_sterm (FILE * out, noll_form_t * form, uint_t vi,$/;"	f
+bool_abstr_space	noll2bool.c	/^bool_abstr_space (noll_form_t * form, FILE * out)$/;"	f
+bool_sort	slid_sat.h	/^	Z3_sort int_sort, bool_sort;\/\/sort used$/;"	m	struct:__anon8
+bound_svar	noll_graph.h	/^  uint_t bound_svar;            \/\/ index of the set variable in slocs_array bounded to the edge, or UNDEFINED_ID$/;"	m	struct:noll_edge_s
+bvar	slid_sat.h	/^	Z3_ast bvar;   \/\/boolean variable$/;"	m	struct:__anon7
+ce	slid_sat.h	/^	noll_dform_array *ce;$/;"	m	struct:__anon6
+cg	slid_sat.h	/^	noll_dform_t *cg;$/;"	m	struct:__anon6
+check_proc	noll_option.c	/^int check_proc = 1;$/;"	v
+children	noll_tree.h	/^  noll_uid_array *children;$/;"	m	struct:noll_tree_node_s
+cl	slid_sat.h	/^	noll_dform_t *cl;$/;"	m	struct:__anon6
+cmd	noll_entl.h	/^  noll_form_kind_t cmd;         \/\/ command given: check-sat (default),$/;"	m	struct:noll_entl_t
+compute_markings	noll_graph2ta.c	/^compute_markings (const noll_graph_t * graph,$/;"	f	file:
+compute_simple_paths	noll_graph2ta.c	/^compute_simple_paths (const noll_graph_t * graph,$/;"	f	file:
+cond	noll_form.h	/^      noll_dform_t *cond;       \/\/ simple condition for ite$/;"	m	union:noll_dterm_s::__anon9
+ctx_	smtlib2noll.h	/^  noll_context_t *ctx_;         \/\/ used for local variables and quantifiers $/;"	m	struct:smtlib2_noll_parser
+data	noll_form.h	/^    noll_dform_array *data;     \/\/ set (conjunction of) pure constraints on data$/;"	m	struct:noll_pure_t
+data	noll_graph.h	/^  noll_dform_array *data;       \/\/ data constraints over lvars$/;"	m	struct:noll_graph_t
+data	noll_hom.h	/^  noll_dform_array *data;       \/* data constraints generated *\/$/;"	m	struct:noll_shom_s
+def	noll_preds.h	/^    noll_pred_binding_t *def;   \/\/ predicate definition$/;"	m	struct:noll_pred_t
+dest	noll_form.h	/^    noll_uid_array *dest;       \/\/ array of destination locations$/;"	m	struct:noll_pto_t
+diff	noll_graph.h	/^  bool **diff;                  \/\/ low-diagonal matrix, diff[n1][n2] = true iff n1 != n2 and n1 > n2$/;"	m	struct:noll_graph_t
+discr	noll.h	/^    noll_expkind_t discr;$/;"	m	struct:noll_exp_t
+distinct	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (distinct);$/;"	v
+edges	noll_graph.h	/^  noll_edge_array *edges;       \/\/ the set of edges in the graph, excluding difference$/;"	m	struct:noll_graph_t
+encode_eq	noll2bool.c	/^encode_eq (int i, int j)$/;"	f
+encode_ls	noll2bool.c	/^encode_ls (struct noll_ls_t *pred)$/;"	f
+encode_member	noll2bool.c	/^encode_member (uint_t x, uint_t alpha)$/;"	f
+encode_pto	noll2bool.c	/^encode_pto (uint_t x, uint_t y, uint_t f)$/;"	f
+encode_pto_nodest	noll2bool.c	/^encode_pto_nodest (uint_t x, uint_t f, uint_t alpha)$/;"	f
+eq	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (eq);$/;"	v
+eqloc	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (eqloc);$/;"	v
+fargs	noll_preds.h	/^    uint_t fargs;               \/\/ limit of formal arguments$/;"	m	struct:noll_pred_rule_t
+fargs	noll_preds.h	/^    uint_t fargs;               \/\/ number of formal arguments in the array above$/;"	m	struct:noll_pred_binding_t
+fid	noll_types.h	/^    uid_t fid;                  \/\/ field identifier$/;"	m	struct:noll_field_t
+fields	noll_form.h	/^    noll_uid_array *fields;     \/\/ array of fields$/;"	m	struct:noll_pto_t
+fields_array	noll_types.c	/^noll_field_array *fields_array;$/;"	v
+file	noll2sat.h	/^  FILE *file;                   \/* if fname already open then != NULL, otherwise == NULL *\/$/;"	m	struct:noll_sat_s
+find_first_ancestor_with_marking	noll_graph2ta.c	/^find_first_ancestor_with_marking (uid_t node,$/;"	f	file:
+finfo	noll2sat.h	/^  noll_form_info_t *finfo;      \/* form information used in translation *\/$/;"	m	struct:noll_sat_s
+fld	noll2sat.h	/^      uid_t fld;$/;"	m	struct:noll_sat_space_s::__anon1::__anon2
+fld_size	noll2sat.h	/^  uint_t fld_size;              \/* number of used fields *\/$/;"	m	struct:noll_form_info_s
+flds	noll_types.h	/^    noll_uid_array *flds;       \/\/ fields of this record$/;"	m	struct:noll_record_t
+fname	noll2sat.h	/^  char *fname;                  \/* file name used to store the formula *\/$/;"	m	struct:noll_sat_s
+forig	noll2sat.h	/^  noll_space_t *forig;$/;"	m	struct:noll_sat_space_s
+form	noll2sat.h	/^  noll_form_t *form;            \/* formula for which the information is stored *\/$/;"	m	struct:noll_sat_s
+funs_	smtlib2noll.h	/^  smtlib2_hashtable *funs_;     \/\/ all the declared function symbols $/;"	m	struct:smtlib2_noll_parser
+g_ta_symbols	noll_ta_symbols.c	/^     static noll_ta_symbol_array *g_ta_symbols;$/;"	v	file:
+ge	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (ge);$/;"	v
+getEnumDataOp	printdterm.c	/^char* getEnumDataOp(int value) {$/;"	f
+getEnumEdgeKind	printdterm.c	/^char* getEnumEdgeKind(int value)  {$/;"	f
+getEnumExpKind	printdterm.c	/^char* getEnumExpKind(int value) {$/;"	f
+getEnumFieldKind	printdterm.c	/^  char* getEnumFieldKind(int value) {$/;"	f
+getEnumFormKind	printdterm.c	/^char* getEnumFormKind(int value) {$/;"	f
+getEnumLogic	printdterm.c	/^char* getEnumLogic(int value) {$/;"	f
+getEnumPredKind	printdterm.c	/^char* getEnumPredKind(int value) {$/;"	f
+getEnumPuerOp	printdterm.c	/^char* getEnumPuerOp(int value) {$/;"	f
+getEnumScope	printdterm.c	/^ char* getEnumScope(int value) {$/;"	f
+getEnumShareOp	printdterm.c	/^char* getEnumShareOp(int value) {$/;"	f
+getEnumSpaceOp	printdterm.c	/^char* getEnumSpaceOp(int value) {$/;"	f
+getEnumStermKind	printdterm.c	/^char* getEnumStermKind(int value) {$/;"	f
+getEnumTreeLabelType	printdterm.c	/^char* getEnumTreeLabelType( int value) {$/;"	f
+getEnumTyp	printdterm.c	/^char * getEnumTyp(int value) {$/;"	f
+get_ls_index_of_svar	noll2bool.c	/^get_ls_index_of_svar (uint_t svar)$/;"	f
+get_marking_symbol_of_node_wrt_base	noll_graph2ta.c	/^get_marking_symbol_of_node_wrt_base (uint_t node,$/;"	f	file:
+get_pred_num_dir	noll_preds.c	/^int get_pred_num_dir(noll_pred_t *p)$/;"	f
+get_pred_of_svar	noll2bool.c	/^get_pred_of_svar (uint_t svar)$/;"	f
+gt	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (gt);$/;"	v
+higher_pred	noll_ta_symbols.c	/^    } higher_pred;$/;"	m	union:noll_ta_symbol::__anon18	typeref:struct:noll_ta_symbol::__anon18::__anon21	file:
+higher_pred	printdterm.c	/^    } higher_pred;$/;"	m	union:noll_ta_symbol::__anon12	typeref:struct:noll_ta_symbol::__anon12::__anon15	file:
+hom	noll_entl.h	/^  noll_hom_t *hom;              \/\/ homomorphism found$/;"	m	struct:noll_entl_t
+id	noll_graph.h	/^  uint_t id;                    \/\/ TODO: id of this edge$/;"	m	struct:noll_edge_s
+id_relation	noll_ta_symbols.c	/^      unsigned char id_relation;$/;"	m	struct:noll_ta_symbol::__anon18::__anon20	file:
+id_relation	printdterm.c	/^      unsigned char id_relation;$/;"	m	struct:noll_ta_symbol::__anon12::__anon14	file:
+idx	noll2sat.h	/^    uint_t idx;                 \/\/ for forig == pto$/;"	m	union:noll_sat_space_s::__anon1
+impl	noll_graph.h	/^  noll_uid_array *impl;         \/\/ array of edges implying this one or NULL (related to overlapping)$/;"	m	struct:noll_edge_s
+implies	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (implies);$/;"	v
+index	noll2bool.c	/^  int index;                    \/\/ the index of the boolean variable associated to the predicate$/;"	m	struct:noll_ls_indexed_t	file:
+index	noll2bool.c	/^  int index;                    \/\/ the index of the boolean variable associated to the predicate$/;"	m	struct:noll_pto_indexed_t	file:
+index	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (index);$/;"	v
+index_ls	noll2bool.c	/^int index_ls = 0;               \/\/counts the number of variables of the form [x,y,f] (gives the size of var_pto)$/;"	v
+index_member	noll2bool.c	/^int index_member = 0;           \/\/counts the number of variables of the form [x\\in\\alpha] (gives the size of var_member)$/;"	v
+index_pto	noll2bool.c	/^int index_pto = 0;              \/\/counts the number of variables of the form [P(x,y,z)] (gives the size of var_ls)$/;"	v
+index_pto_nodest	noll2bool.c	/^int index_pto_nodest = 0;       \/\/counts the number of variables of the form [x,_,f,alpha] (gives the size of var_pto_nodest)$/;"	v
+inloc	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (inloc);$/;"	v
+int_sort	slid_sat.h	/^	Z3_sort int_sort, bool_sort;\/\/sort used$/;"	m	struct:__anon8
+isComplete	noll_graph.h	/^  bool isComplete;              \/\/ if all implicit constraints have been computed$/;"	m	struct:noll_graph_t
+isDataComplete	noll_graph.h	/^  bool isDataComplete;          \/\/ all diff and quality constraints are pushed in data ?$/;"	m	struct:noll_graph_t
+isTwoDir	noll_preds.h	/^    bool isTwoDir;              \/* the predicate is a two direction *\/$/;"	m	struct:noll_pred_typing_t
+isUnaryLoc	noll_preds.h	/^    bool isUnaryLoc;            \/* the predicate has only source *\/$/;"	m	struct:noll_pred_typing_t
+is_empty	noll_hom.h	/^  bool is_empty;                \/* true if hom is not found *\/$/;"	m	struct:noll_hom_s
+is_empty	noll_hom.h	/^  bool is_empty;                \/* true if no hom found *\/$/;"	m	struct:noll_shom_s
+is_loop	noll_form.h	/^    bool is_loop;               \/\/ set if it is a loop instance$/;"	m	struct:noll_ls_t
+is_precise	noll_form.h	/^    bool is_precise;$/;"	m	struct:noll_space_s
+is_precise	noll_graph.h	/^  bool is_precise;              \/\/ if graph is precise$/;"	m	struct:noll_graph_t
+is_the_first_successor_of_with_marking	noll_graph2ta.c	/^is_the_first_successor_of_with_marking (uid_t dst,$/;"	f	file:
+is_the_last_successor_of_with_marking	noll_graph2ta.c	/^is_the_last_successor_of_with_marking (uid_t dst,$/;"	f	file:
+ite	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (ite);$/;"	v
+k	slid_sat.h	/^	z3_ast_array *k;            \/\/times unfolding the predicates$/;"	m	struct:__anon8
+kind	noll_form.h	/^    noll_data_op_t kind;        \/\/ only data formulas$/;"	m	struct:noll_dform_s
+kind	noll_form.h	/^    noll_data_op_t kind;        \/\/ only data terms$/;"	m	struct:noll_dterm_s
+kind	noll_form.h	/^    noll_form_kind_t kind;      \/\/ kind of formula$/;"	m	struct:noll_form_t
+kind	noll_form.h	/^    noll_share_op_t kind;       \/\/ kind of constraint$/;"	m	struct:noll_atom_share_t
+kind	noll_form.h	/^    noll_space_op_t kind;$/;"	m	struct:noll_space_s
+kind	noll_form.h	/^    noll_sterm_kind_t kind;$/;"	m	struct:noll_sterm_t
+kind	noll_graph.h	/^  noll_edge_e kind;             \/\/ kind of edge$/;"	m	struct:noll_edge_s
+kind	noll_lemma.h	/^    noll_lemma_e kind;$/;"	m	struct:noll_lemma_s
+kind	noll_types.h	/^    noll_field_e kind;          \/\/ kind of the field wrt predicate pid$/;"	m	struct:noll_field_t
+kind	noll_types.h	/^    noll_typ_t kind;$/;"	m	struct:noll_type_t
+label	noll_graph.h	/^  uint_t label;                 \/\/ index of the field or of the predicate$/;"	m	struct:noll_edge_s
+label_type	noll_ta_symbols.c	/^  unsigned char label_type;$/;"	m	struct:noll_ta_symbol	file:
+label_type	printdterm.c	/^  unsigned char label_type;$/;"	m	struct:noll_ta_symbol	file:
+le	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (le);$/;"	v
+leloc	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (leloc);$/;"	v
+lemma_array	noll_lemma.c	/^noll_lemma_array **lemma_array;$/;"	v
+lend	noll.h	/^        uint_t lend;            \/* index ending the location quantified variables *\/$/;"	m	struct:noll_exp_t::__anon27::__anon28
+logic	noll_entl.h	/^  noll_logic_t logic;           \/\/ theory used in formulas$/;"	m	struct:noll_entl_t
+loop	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (loop);$/;"	v
+ls	noll_form.h	/^      noll_ls_t ls;             \/\/ list segment constraint$/;"	m	union:noll_space_s::__anon11
+ls_hom	noll_hom.h	/^  noll_graph_array *ls_hom;     \/* list segment (predicate) edge mapping *\/$/;"	m	struct:noll_shom_s
+ls_in	noll2bool.c	/^ls_in (noll_ls_t * pred, noll_space_t * form)$/;"	f
+ls_size	noll2sat.h	/^  uint_t ls_size;               \/* number of pred atoms *\/$/;"	m	struct:noll_form_info_s
+lstart	noll.h	/^        uint_t lstart;          \/* index starting the location quantified variables *\/$/;"	m	struct:noll_exp_t::__anon27::__anon28
+lt	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (lt);$/;"	v
+lvar	noll_form.h	/^    uid_t lvar;                 \/\/ location variable, UNDEFINED_ID if kind == NOLL_STERM_SVAR$/;"	m	struct:noll_sterm_t
+lvar_env	noll.h	/^    noll_var_array *lvar_env;$/;"	m	struct:noll_context_t
+lvar_size	noll2sat.h	/^  uint_t lvar_size;             \/* number of used lvar *\/$/;"	m	struct:noll_form_info_s
+lvar_stack	noll.h	/^    noll_uint_array *lvar_stack;$/;"	m	struct:noll_context_t
+lvars	noll.h	/^        noll_var_array *lvars;  \/* location vars *\/$/;"	m	struct:noll_exp_t::__anon27::__anon28
+lvars	noll_form.h	/^    noll_var_array *lvars;      \/\/ local variables$/;"	m	struct:noll_form_t
+lvars	noll_graph.h	/^  noll_var_array *lvars;        \/\/ graph environment$/;"	m	struct:noll_graph_t
+m	noll2sat.h	/^  } m;$/;"	m	struct:noll_sat_space_s	typeref:union:noll_sat_space_s::__anon1
+m	noll_form.h	/^    noll_pure_op_t **m;         \/\/ matrix of equality and inequality constraints$/;"	m	struct:noll_pure_t
+m	noll_form.h	/^    } m;$/;"	m	struct:noll_space_s	typeref:union:noll_space_s::__anon11
+m	slid_sat.h	/^	slid_in_alloc_loc_arrays *m;     \/\/matrix of bool variables$/;"	m	struct:__anon8
+main	noll-dp.c	/^main (int argc, char **argv)$/;"	f
+marking	noll_ta_symbols.c	/^      noll_uid_array *marking;$/;"	m	struct:noll_ta_symbol::__anon18::__anon19	file:
+marking	noll_ta_symbols.c	/^      noll_uid_array *marking;$/;"	m	struct:noll_ta_symbol::__anon18::__anon20	file:
+marking	noll_ta_symbols.c	/^      noll_uid_array *marking;$/;"	m	struct:noll_ta_symbol::__anon18::__anon21	file:
+marking	printdterm.c	/^      noll_uid_array *marking;$/;"	m	struct:noll_ta_symbol::__anon12::__anon13	file:
+marking	printdterm.c	/^      noll_uid_array *marking;$/;"	m	struct:noll_ta_symbol::__anon12::__anon14	file:
+marking	printdterm.c	/^      noll_uid_array *marking;$/;"	m	struct:noll_ta_symbol::__anon12::__anon15	file:
+mat	noll_graph.h	/^  noll_uid_array **mat;         \/\/ adjacency matrix, mat[i] is the list of edge identifiers from node i$/;"	m	struct:noll_graph_t
+max	noll2bool.c	/^int max = 1;                    \/\/used to define a correspondence between boolean variables and integers (needed for DIMACS format)$/;"	v
+minus	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (minus);$/;"	v
+nDir	noll_preds.h	/^    int nDir;$/;"	m	struct:noll_pred_typing_t
+nLoc	slid_sat.h	/^	unsigned int nLoc;$/;"	m	struct:__anon8
+nabstr	noll_entl.h	/^  noll_sat_array *nabstr;       \/\/ abstraction of the negative formulae$/;"	m	struct:noll_entl_t
+name	noll_types.h	/^    char *name;                 \/\/ declaration name$/;"	m	struct:noll_field_t
+name	noll_types.h	/^    char *name;                 \/\/ declaration name$/;"	m	struct:noll_record_t
+ndform	noll_form.c	/^uint ndform = 0;$/;"	v
+nform	noll_entl.h	/^  noll_form_array *nform;       \/\/ array of negative formulae psi$/;"	m	struct:noll_entl_t
+ngraph	noll_entl.h	/^  noll_graph_array *ngraph;     \/\/ graphs for negative formulae$/;"	m	struct:noll_entl_t
+ngraph	noll_hom.h	/^  size_t ngraph;                \/* idx of the negative graph in prob *\/$/;"	m	struct:noll_shom_s
+no_clauses	noll2sat.h	/^  uint_t no_clauses;            \/* number of clauses put in the file for F_sat *\/$/;"	m	struct:noll_sat_s
+no_vars	noll2sat.h	/^  uint_t no_vars;               \/* number of vars used *\/$/;"	m	struct:noll_sat_s
+node_hom	noll_hom.h	/^  uint_t *node_hom;             \/* node mapping *\/$/;"	m	struct:noll_shom_s
+nodes	noll_tree.h	/^       noll_tree_node_list *nodes;$/;"	m	struct:noll_tree_s
+nodes_size	noll_graph.h	/^  uint_t nodes_size;            \/\/ the number of nodes in the graph$/;"	m	struct:noll_graph_t
+noll2sat	noll2sat.c	/^noll2sat (noll_form_t * form, char *fname)$/;"	f
+noll2sat_det	noll2sat.c	/^noll2sat_det (noll_sat_t * fsat)$/;"	f
+noll2sat_det_apto_apto	noll2sat.c	/^noll2sat_det_apto_apto (noll_sat_t * fsat)$/;"	f
+noll2sat_det_apto_nil	noll2sat.c	/^noll2sat_det_apto_nil (noll_sat_t * fsat)$/;"	f
+noll2sat_det_pred_pred	noll2sat.c	/^noll2sat_det_pred_pred (noll_sat_t * fsat)$/;"	f
+noll2sat_det_pto_apto	noll2sat.c	/^noll2sat_det_pto_apto (noll_sat_t * fsat)$/;"	f
+noll2sat_det_pto_nil	noll2sat.c	/^noll2sat_det_pto_nil (noll_sat_t * fsat)$/;"	f
+noll2sat_det_pto_pred	noll2sat.c	/^noll2sat_det_pto_pred (noll_sat_t * fsat)$/;"	f
+noll2sat_det_pto_pto	noll2sat.c	/^noll2sat_det_pto_pto (noll_sat_t * fsat)$/;"	f
+noll2sat_fill_bvar	noll2sat.c	/^noll2sat_fill_bvar (noll_form_t * form, char *fname)$/;"	f
+noll2sat_get_bvar_apto	noll2sat.c	/^noll2sat_get_bvar_apto (noll_sat_t * fsat, uint_t x, uint_t f,$/;"	f
+noll2sat_get_bvar_eq	noll2sat.c	/^noll2sat_get_bvar_eq (noll_sat_t * fsat, uint_t vi, uint_t vj)$/;"	f
+noll2sat_get_bvar_in	noll2sat.c	/^noll2sat_get_bvar_in (noll_sat_t * fsat, uint_t x, uint_t alpha)$/;"	f
+noll2sat_get_bvar_pred	noll2sat.c	/^noll2sat_get_bvar_pred (noll_sat_t * fsat, noll_space_t * subform,$/;"	f
+noll2sat_get_bvar_pto	noll2sat.c	/^noll2sat_get_bvar_pto (noll_sat_t * fsat, noll_space_t * subform, uint_t i)$/;"	f
+noll2sat_get_sat_pure	noll2sat.c	/^noll2sat_get_sat_pure (noll_sat_t * fsat, uint_t bvar,$/;"	f
+noll2sat_get_sat_space	noll2sat.c	/^noll2sat_get_sat_space (noll_sat_t * fsat, uint_t bvar)$/;"	f
+noll2sat_info	noll2sat.c	/^noll2sat_info (noll_form_t * form, noll_sat_t * res)$/;"	f
+noll2sat_info_alloc	noll2sat.c	/^noll2sat_info_alloc (noll_form_t * form)$/;"	f
+noll2sat_info_pure	noll2sat.c	/^noll2sat_info_pure (noll_pure_t * f, noll_sat_t * res)$/;"	f
+noll2sat_info_share	noll2sat.c	/^noll2sat_info_share (noll_atom_share_t * f, noll_sat_t * res)$/;"	f
+noll2sat_info_space	noll2sat.c	/^noll2sat_info_space (noll_space_t * f, noll_sat_t * res)$/;"	f
+noll2sat_is_eq	noll2sat.c	/^noll2sat_is_eq (noll_sat_t * fsat, uid_t x, uid_t y, noll_pure_op_t oper)$/;"	f
+noll2sat_is_in	noll2sat.c	/^noll2sat_is_in (noll_sat_t * fsat, uid_t x, uid_t alpha)$/;"	f
+noll2sat_is_sat	noll2sat.c	/^noll2sat_is_sat (noll_sat_t * fsat)$/;"	f
+noll2sat_membership	noll2sat.c	/^noll2sat_membership (noll_sat_t * fsat)$/;"	f
+noll2sat_pure	noll2sat.c	/^noll2sat_pure (noll_sat_t * fsat)$/;"	f
+noll2sat_share	noll2sat.c	/^noll2sat_share (noll_sat_t * fsat)$/;"	f
+noll2sat_share_in	noll2sat.c	/^noll2sat_share_in (noll_sat_t * fsat, uid_t x, noll_sterm_array * t)$/;"	f
+noll2sat_space	noll2sat.c	/^noll2sat_space (noll_sat_t * fsat)$/;"	f
+noll2sat_space_aux	noll2sat.c	/^noll2sat_space_aux (noll_sat_t * fsat, noll_space_t * subform,$/;"	f
+noll2sat_space_sep	noll2sat.c	/^noll2sat_space_sep (noll_sat_t * fsat, noll_uint_array * bvars_subform,$/;"	f
+noll_alias_marking_rel_t	noll_ta_symbols.c	/^enum noll_alias_marking_rel_t$/;"	g	file:
+noll_assert	noll.c	/^noll_assert (noll_context_t * ctx, noll_exp_t * term)$/;"	f
+noll_atom_of_form	noll2graph.c	/^noll_atom_of_form (noll_space_t * phi, bool isMatrix,$/;"	f
+noll_atom_share_t	noll_form.h	/^  typedef struct noll_atom_share_t$/;"	s
+noll_atom_share_t	noll_form.h	/^  } noll_atom_share_t;$/;"	t	typeref:struct:noll_atom_share_t
+noll_atyp_e	noll_preds.h	/^  } noll_atyp_e;$/;"	t	typeref:enum:__anon17
+noll_check	noll.c	/^noll_check (noll_context_t * ctx)$/;"	f
+noll_context_fprint	noll.c	/^noll_context_fprint (FILE * f, noll_context_t * ctx)$/;"	f
+noll_context_restore_global	noll.c	/^noll_context_restore_global (noll_context_t * ctx)$/;"	f
+noll_context_t	noll.h	/^  typedef struct noll_context_t$/;"	s
+noll_context_t	noll.h	/^  } noll_context_t;$/;"	t	typeref:struct:noll_context_t
+noll_ctx	smtlib2noll.c	141;"	d	file:
+noll_data_op_t	noll_form.h	/^  typedef enum noll_data_op_t$/;"	g
+noll_data_op_t	noll_form.h	/^  } noll_data_op_t;$/;"	t	typeref:enum:noll_data_op_t
+noll_debug_print_markings	noll_graph2ta.c	/^noll_debug_print_markings (const noll_marking_list * markings)$/;"	f	file:
+noll_debug_print_one_mark	noll_graph2ta.c	/^noll_debug_print_one_mark (const noll_uid_array * mark)$/;"	f	file:
+noll_del_context	noll.c	/^noll_del_context (noll_context_t * ctx)$/;"	f
+noll_dform_apply	noll_form.c	/^noll_dform_apply (noll_dform_t * df, noll_uid_array * m)$/;"	f
+noll_dform_array_apply	noll_form.c	/^noll_dform_array_apply (noll_dform_array * df, noll_uid_array * m)$/;"	f
+noll_dform_array_check_entl	noll_form.c	/^noll_dform_array_check_entl (noll_var_array * lv1, noll_dform_array * df1,$/;"	f
+noll_dform_array_compose	noll_form.c	/^noll_dform_array_compose (noll_uid_array * mg2, noll_dform_array * f1,$/;"	f
+noll_dform_array_cup_all	noll_form.c	/^noll_dform_array_cup_all (noll_dform_array * dst, noll_dform_array * src)$/;"	f
+noll_dform_array_fprint	noll_form.c	/^noll_dform_array_fprint (FILE * f,$/;"	f
+noll_dform_fprint	noll_form.c	/^noll_dform_fprint (FILE * f, noll_var_array * lvars, noll_dform_t * df)$/;"	f
+noll_dform_free	noll_form.c	/^noll_dform_free (noll_dform_t * d)$/;"	f
+noll_dform_new	noll_form.c	/^noll_dform_new (void)$/;"	f
+noll_dform_new_eq	noll_form.c	/^noll_dform_new_eq (noll_dterm_t * t1, noll_dterm_t * t2)$/;"	f
+noll_dform_s	noll_form.h	/^  struct noll_dform_s$/;"	s
+noll_dform_t	noll_form.h	/^  typedef struct noll_dform_s noll_dform_t;     \/* forward definition *\/$/;"	t	typeref:struct:noll_dform_s
+noll_dterm_apply	noll_form.c	/^noll_dterm_apply (noll_dterm_t * dt, noll_uid_array * m)$/;"	f
+noll_dterm_fprint	noll_form.c	/^noll_dterm_fprint (FILE * f, noll_var_array * lvars, noll_dterm_t * dt)$/;"	f
+noll_dterm_free	noll_form.c	/^noll_dterm_free (noll_dterm_t * d)$/;"	f
+noll_dterm_new	noll_form.c	/^noll_dterm_new (void)$/;"	f
+noll_dterm_new_var	noll_form.c	/^noll_dterm_new_var (uint_t vid, noll_typ_t ty)$/;"	f
+noll_dterm_s	noll_form.h	/^  struct noll_dterm_s$/;"	s
+noll_dterm_t	noll_form.h	/^  typedef struct noll_dterm_s noll_dterm_t;     \/* forward definition *\/$/;"	t	typeref:struct:noll_dterm_s
+noll_edge2ta	noll_pred2ta.c	/^noll_edge2ta (const noll_edge_t * edge)$/;"	f
+noll_edge2ta_dll	noll_pred2ta.c	/^noll_edge2ta_dll (const noll_edge_t * edge)$/;"	f
+noll_edge2ta_gen	noll_pred2ta_gen.c	/^noll_edge2ta_gen (const noll_edge_t * edge)$/;"	f
+noll_edge2ta_gen_aux	noll_pred2ta_gen.c	/^noll_edge2ta_gen_aux (noll_ta_t * ta,$/;"	f
+noll_edge2ta_gen_param	noll_pred2ta_gen.c	/^noll_edge2ta_gen_param (noll_tree_t * tree,$/;"	f
+noll_edge2ta_ls	noll_pred2ta.c	/^noll_edge2ta_ls (const noll_edge_t * edge)$/;"	f
+noll_edge2ta_lss	noll_pred2ta.c	/^noll_edge2ta_lss (const noll_edge_t * edge)$/;"	f
+noll_edge2ta_nlcl	noll_pred2ta.c	/^noll_edge2ta_nlcl (const noll_edge_t * edge)$/;"	f
+noll_edge2ta_nll	noll_pred2ta.c	/^noll_edge2ta_nll (const noll_edge_t * edge)$/;"	f
+noll_edge2ta_skl	noll_pred2ta.c	/^noll_edge2ta_skl (const noll_edge_t * edge)$/;"	f
+noll_edge_alloc	noll_graph.c	/^noll_edge_alloc (noll_edge_e kind, uint_t src, uint_t dst, uint_t label)$/;"	f
+noll_edge_copy	noll_graph.c	/^noll_edge_copy (noll_edge_t * e)$/;"	f
+noll_edge_e	noll_graph.h	/^} noll_edge_e;$/;"	t	typeref:enum:__anon3
+noll_edge_fprint	noll_graph.c	/^noll_edge_fprint (FILE * f, noll_var_array * svars, noll_edge_t * e)$/;"	f
+noll_edge_fprint_dot	noll_graph.c	/^noll_edge_fprint_dot (FILE * f, noll_var_array * svars, noll_edge_t * e)$/;"	f
+noll_edge_free	noll_graph.c	/^noll_edge_free (noll_edge_t * e)$/;"	f
+noll_edge_in_label	noll_graph.c	/^noll_edge_in_label (noll_edge_t * e, uint_t pid)$/;"	f
+noll_edge_s	noll_graph.h	/^typedef struct noll_edge_s$/;"	s
+noll_edge_t	noll_graph.h	/^} noll_edge_t;$/;"	t	typeref:struct:noll_edge_s
+noll_entl_fprint	noll_entl.c	/^noll_entl_fprint (FILE * f)$/;"	f
+noll_entl_free	noll_entl.c	/^noll_entl_free (void)$/;"	f
+noll_entl_free_aux	noll_entl.c	/^noll_entl_free_aux (void)$/;"	f
+noll_entl_get_nform	noll_entl.c	/^noll_entl_get_nform ()$/;"	f
+noll_entl_get_nform_last	noll_entl.c	/^noll_entl_get_nform_last ()$/;"	f
+noll_entl_get_pform	noll_entl.c	/^noll_entl_get_pform ()$/;"	f
+noll_entl_init	noll_entl.c	/^noll_entl_init (void)$/;"	f
+noll_entl_is_sat	noll_entl.c	/^noll_entl_is_sat (void)$/;"	f
+noll_entl_normalize	noll_entl.c	/^noll_entl_normalize ()$/;"	f
+noll_entl_set_cmd	noll_entl.c	/^noll_entl_set_cmd (noll_form_kind_t pb)$/;"	f
+noll_entl_set_fname	noll_entl.c	/^noll_entl_set_fname (char *fname)$/;"	f
+noll_entl_set_foutput	noll_entl.c	/^noll_entl_set_foutput (char *fname)$/;"	f
+noll_entl_solve	noll_entl.c	/^noll_entl_solve (void)$/;"	f
+noll_entl_solve_special	noll_entl.c	/^noll_entl_solve_special (bool isSyn)$/;"	f
+noll_entl_t	noll_entl.h	/^typedef struct noll_entl_t$/;"	s
+noll_entl_t	noll_entl.h	/^} noll_entl_t;$/;"	t	typeref:struct:noll_entl_t
+noll_entl_to_graph	noll_entl.c	/^noll_entl_to_graph (void)$/;"	f
+noll_entl_to_hom	noll_entl.c	/^noll_entl_to_hom (void)$/;"	f
+noll_entl_type	noll_entl.c	/^noll_entl_type ()$/;"	f
+noll_error	noll.c	/^noll_error (int level, const char *fun, const char *msg)$/;"	f
+noll_error_args	noll.c	/^noll_error_args (int level, const char *fun, uint_t size, const char *expect)$/;"	f
+noll_error_id	noll.c	/^noll_error_id (int level, char *fun, const char *name)$/;"	f
+noll_error_parsing	noll.c	/^int noll_error_parsing = 0;$/;"	v
+noll_exp_printf	noll.c	/^noll_exp_printf (FILE * f, noll_context_t * ctx, noll_exp_t * e)$/;"	f
+noll_exp_push	noll.c	/^noll_exp_push (noll_context_t * ctx, noll_exp_t * e, int ispos)$/;"	f
+noll_exp_push_dform	noll.c	/^noll_exp_push_dform (noll_exp_t * e, noll_var_array * lenv, int level)$/;"	f
+noll_exp_push_dterm	noll.c	/^noll_exp_push_dterm (noll_exp_t * e, noll_var_array * lenv)$/;"	f
+noll_exp_push_pure	noll.c	/^noll_exp_push_pure (noll_form_t * form, noll_pure_t * pure,$/;"	f
+noll_exp_push_share	noll.c	/^noll_exp_push_share (noll_context_t * ctx, noll_exp_t * e, noll_form_t * form)$/;"	f
+noll_exp_push_space	noll.c	/^noll_exp_push_space (noll_context_t * ctx, noll_exp_t * e)$/;"	f
+noll_exp_push_sterm	noll.c	/^noll_exp_push_sterm (noll_exp_t * e, noll_sterm_array * a)$/;"	f
+noll_exp_push_top	noll.c	/^noll_exp_push_top (noll_context_t * ctx, noll_exp_t * e, noll_form_t * form)$/;"	f
+noll_exp_t	noll.h	/^  typedef struct noll_exp_t$/;"	s
+noll_exp_t	noll.h	/^  } noll_exp_t;$/;"	t	typeref:struct:noll_exp_t
+noll_exp_typecheck	noll.c	/^noll_exp_typecheck (noll_context_t * ctx, noll_exp_t * e)$/;"	f
+noll_exp_typecheck_and	noll.c	/^noll_exp_typecheck_and (noll_context_t * ctx, noll_exp_t * e)$/;"	f
+noll_exp_typecheck_exists	noll.c	/^noll_exp_typecheck_exists (noll_context_t * ctx, noll_exp_t * e)$/;"	f
+noll_expkind_t	noll.h	/^  } noll_expkind_t;$/;"	t	typeref:enum:__anon26
+noll_field_array_find	noll_types.c	/^noll_field_array_find (const char *name)$/;"	f
+noll_field_e	noll_types.h	/^  } noll_field_e;$/;"	t	typeref:enum:__anon23
+noll_field_init	noll_types.c	/^noll_field_init ()$/;"	f
+noll_field_lt	noll_types.c	/^noll_field_lt (uid_t lhs, uid_t rhs)$/;"	f
+noll_field_name	noll_types.c	/^noll_field_name (uid_t fid)$/;"	f
+noll_field_new	noll_types.c	/^noll_field_new (const char *name, uid_t ty_src, uid_t ty_dst)$/;"	f
+noll_field_order	noll_preds.c	/^noll_field_order ()$/;"	f
+noll_field_register	noll_types.c	/^noll_field_register (const char *name, noll_type_t * ty)$/;"	f
+noll_field_t	noll_types.h	/^  typedef struct noll_field_t$/;"	s
+noll_field_t	noll_types.h	/^  } noll_field_t;$/;"	t	typeref:struct:noll_field_t
+noll_fields_array_fprint	noll_types.c	/^noll_fields_array_fprint (FILE * f, const char *msg)$/;"	f
+noll_fields_is_main_backbone	noll_graph2ta.c	/^noll_fields_is_main_backbone (uid_t field)$/;"	f	file:
+noll_fields_order_lt	noll_graph2ta.c	/^noll_fields_order_lt (uid_t lhs, uid_t rhs)$/;"	f	file:
+noll_form_add_eq	noll_form.c	/^noll_form_add_eq (noll_form_t * f, uid_t v1, uid_t v2)$/;"	f
+noll_form_add_neq	noll_form.c	/^noll_form_add_neq (noll_form_t * f, uid_t v1, uid_t v2)$/;"	f
+noll_form_array_is_unsat	noll_form.c	/^noll_form_array_is_unsat (noll_form_array * phi1_phiN)$/;"	f
+noll_form_array_is_valid	noll_form.c	/^noll_form_array_is_valid (noll_form_array * phi1_phiN)$/;"	f
+noll_form_fprint	noll_form.c	/^noll_form_fprint (FILE * f, noll_form_t * phi)$/;"	f
+noll_form_free	noll_form.c	/^noll_form_free (noll_form_t * form)$/;"	f
+noll_form_info_s	noll2sat.h	/^typedef struct noll_form_info_s$/;"	s
+noll_form_info_t	noll2sat.h	/^} noll_form_info_t;$/;"	t	typeref:struct:noll_form_info_s
+noll_form_is_sat	noll_form.c	/^noll_form_is_sat (noll_form_t * phi)$/;"	f
+noll_form_is_unsat	noll_form.c	/^noll_form_is_unsat (noll_form_t * phi)$/;"	f
+noll_form_is_valid	noll_form.c	/^noll_form_is_valid (noll_form_t * phi)$/;"	f
+noll_form_kind_t	noll_form.h	/^  typedef enum noll_form_kind_t$/;"	g
+noll_form_kind_t	noll_form.h	/^  } noll_form_kind_t;$/;"	t	typeref:enum:noll_form_kind_t
+noll_form_logic	noll_form.c	/^noll_logic_t noll_form_logic;$/;"	v
+noll_form_new	noll_form.c	/^noll_form_new ()$/;"	f
+noll_form_set_unsat	noll_form.c	/^noll_form_set_unsat (noll_form_t * form)$/;"	f
+noll_form_t	noll_form.h	/^  typedef struct noll_form_t$/;"	s
+noll_form_t	noll_form.h	/^  } noll_form_t;$/;"	t	typeref:struct:noll_form_t
+noll_form_type	noll_form.c	/^noll_form_type (noll_form_t * form)$/;"	f
+noll_funs	smtlib2noll.c	143;"	d	file:
+noll_get_unique	noll_graph2ta.c	/^     static size_t noll_get_unique (void)$/;"	f	file:
+noll_graph2ta	noll_graph2ta.c	/^noll_graph2ta (const noll_graph_t * graph, const noll_uid_array * homo)$/;"	f
+noll_graph_alloc	noll_graph.c	/^noll_graph_alloc (noll_var_array * lvars, noll_var_array * svars,$/;"	f
+noll_graph_copy_nodes	noll_graph.c	/^noll_graph_copy_nodes (noll_graph_t * g)$/;"	f
+noll_graph_dll	noll_graph.c	/^noll_graph_dll (noll_graph_t * g, uid_t pid)$/;"	f
+noll_graph_fprint	noll_graph.c	/^noll_graph_fprint (FILE * f, noll_graph_t * g)$/;"	f
+noll_graph_fprint_dot	noll_graph.c	/^noll_graph_fprint_dot (char *fname, noll_graph_t * g)$/;"	f
+noll_graph_fprint_sl	noll_graph.c	/^noll_graph_fprint_sl (char *fname, noll_graph_t * g)$/;"	f
+noll_graph_free	noll_graph.c	/^noll_graph_free (noll_graph_t * g)$/;"	f
+noll_graph_get_edge	noll_graph.c	/^noll_graph_get_edge (noll_graph_t * g, noll_edge_e kind, uint_t label,$/;"	f
+noll_graph_get_node_type	noll_graph.c	/^noll_graph_get_node_type (noll_graph_t * g, uint_t n)$/;"	f
+noll_graph_get_var	noll_graph.c	/^noll_graph_get_var (const noll_graph_t * g, uint_t n)$/;"	f
+noll_graph_is_diff	noll_graph.c	/^noll_graph_is_diff (noll_graph_t * g, uint_t n1, uint_t n2)$/;"	f
+noll_graph_is_node_data	noll_graph.c	/^noll_graph_is_node_data (noll_graph_t * g, uint_t n)$/;"	f
+noll_graph_is_ptosrc	noll_graph.c	/^noll_graph_is_ptosrc (noll_graph_t * g, uint_t n)$/;"	f
+noll_graph_of_form	noll2graph.c	/^noll_graph_of_form (noll_form_t * phi, bool isMatrix)$/;"	f
+noll_graph_of_pure	noll2graph.c	/^noll_graph_of_pure (noll_pure_t * phi, noll_graph_t * g)$/;"	f
+noll_graph_of_space	noll2graph.c	/^noll_graph_of_space (noll_space_t * phi, bool isMatrix,$/;"	f
+noll_graph_sat_dform	noll_graph.c	/^noll_graph_sat_dform (noll_graph_t * g)$/;"	f
+noll_graph_t	noll_graph.h	/^typedef struct noll_graph_t$/;"	s
+noll_graph_t	noll_graph.h	/^} noll_graph_t;$/;"	t	typeref:struct:noll_graph_t
+noll_hom_alloc	noll_hom.c	/^noll_hom_alloc (void)$/;"	f
+noll_hom_build	noll_hom.c	/^noll_hom_build (void)$/;"	f
+noll_hom_build_1	noll_hom.c	/^noll_hom_build_1 (noll_hom_t * hs, size_t i)$/;"	f
+noll_hom_delete	noll_hom.c	/^noll_hom_delete (noll_hom_t * h)$/;"	f
+noll_hom_fprint	noll_hom.c	/^noll_hom_fprint (FILE * f, noll_hom_t * h)$/;"	f
+noll_hom_s	noll_hom.h	/^typedef struct noll_hom_s$/;"	s
+noll_hom_t	noll_hom.h	/^} noll_hom_t;$/;"	t	typeref:struct:noll_hom_s
+noll_init	noll.c	/^noll_init ()$/;"	f
+noll_is_record	noll_types.c	/^noll_is_record (uid_t rid)$/;"	f
+noll_lemma_add_lvars	noll_lemma.c	/^noll_lemma_add_lvars (noll_lemma_t * lem,$/;"	f
+noll_lemma_array_fprint	noll_lemma.c	/^noll_lemma_array_fprint (FILE * f)$/;"	f
+noll_lemma_clone_pending	noll_lemma.c	/^noll_lemma_clone_pending (noll_lemma_t * lem, const noll_pred_t * pred)$/;"	f
+noll_lemma_e	noll_lemma.h	/^  } noll_lemma_e;$/;"	t	typeref:enum:__anon25
+noll_lemma_fprint	noll_lemma.c	/^noll_lemma_fprint (FILE * f, noll_lemma_t * l)$/;"	f
+noll_lemma_get_kind	noll_lemma.c	/^noll_lemma_get_kind (noll_lemma_t * l)$/;"	f
+noll_lemma_getpred	noll_lemma.c	/^noll_lemma_getpred (uid_t pid)$/;"	f
+noll_lemma_getspace	noll_lemma.c	/^noll_lemma_getspace (noll_lemma_t * l, uid_t n)$/;"	f
+noll_lemma_init	noll_lemma.c	/^noll_lemma_init (void)$/;"	f
+noll_lemma_init_avl	noll_lemma.c	/^noll_lemma_init_avl (uint_t pid)$/;"	f
+noll_lemma_init_avlhole	noll_lemma.c	/^noll_lemma_init_avlhole (uint_t pid)$/;"	f
+noll_lemma_init_bst	noll_lemma.c	/^noll_lemma_init_bst (uint_t pid)$/;"	f
+noll_lemma_init_bsthole	noll_lemma.c	/^noll_lemma_init_bsthole (uint_t pid)$/;"	f
+noll_lemma_init_list	noll_lemma.c	/^noll_lemma_init_list (uint_t pid)$/;"	f
+noll_lemma_init_lseg	noll_lemma.c	/^noll_lemma_init_lseg (uint_t pid)$/;"	f
+noll_lemma_init_pred	noll_lemma.c	/^noll_lemma_init_pred (uid_t pid)$/;"	f
+noll_lemma_init_rbt	noll_lemma.c	/^noll_lemma_init_rbt (uint_t pid)$/;"	f
+noll_lemma_init_rbthole	noll_lemma.c	/^noll_lemma_init_rbthole (uint_t pid)$/;"	f
+noll_lemma_init_slist	noll_lemma.c	/^noll_lemma_init_slist (uint_t pid)$/;"	f
+noll_lemma_init_slseg	noll_lemma.c	/^noll_lemma_init_slseg (uint_t pid)$/;"	f
+noll_lemma_kind_fprint	noll_lemma.c	/^noll_lemma_kind_fprint (FILE * f, noll_lemma_e kind)$/;"	f
+noll_lemma_new	noll_lemma.c	/^noll_lemma_new (uint_t pid)$/;"	f
+noll_lemma_new_comp_1	noll_lemma.c	/^noll_lemma_new_comp_1 (uid_t pid)$/;"	f
+noll_lemma_new_comp_2	noll_lemma.c	/^noll_lemma_new_comp_2 (uid_t pid_base, uid_t pid_part)$/;"	f
+noll_lemma_new_comp_3	noll_lemma.c	/^noll_lemma_new_comp_3 (uid_t pid_part_str, uid_t pid_part)$/;"	f
+noll_lemma_new_comp_4	noll_lemma.c	/^noll_lemma_new_comp_4 (uid_t pid_hole_strong, uid_t pid_hole)$/;"	f
+noll_lemma_new_spec_nil	noll_lemma.c	/^noll_lemma_new_spec_nil (uid_t pid_base, uid_t pid_part)$/;"	f
+noll_lemma_s	noll_lemma.h	/^  typedef struct noll_lemma_s$/;"	s
+noll_lemma_t	noll_lemma.h	/^  } noll_lemma_t;$/;"	t	typeref:struct:noll_lemma_s
+noll_logic_t	noll_form.h	/^  typedef enum noll_logic_t$/;"	g
+noll_logic_t	noll_form.h	/^  } noll_logic_t;$/;"	t	typeref:enum:noll_logic_t
+noll_longest_common_prefix	noll_graph2ta.c	/^noll_longest_common_prefix (const noll_uid_array * lhs,$/;"	f	file:
+noll_ls_indexed_t	noll2bool.c	/^typedef struct noll_ls_indexed_t$/;"	s	file:
+noll_ls_indexed_t	noll2bool.c	/^} noll_ls_indexed_t;$/;"	t	typeref:struct:noll_ls_indexed_t	file:
+noll_ls_t	noll_form.h	/^  typedef struct noll_ls_t$/;"	s
+noll_ls_t	noll_form.h	/^  } noll_ls_t;$/;"	t	typeref:struct:noll_ls_t
+noll_marking_is_prefix_or_equal	noll_graph2ta.c	/^noll_marking_is_prefix_or_equal (const noll_uid_array * pred,$/;"	f	file:
+noll_marking_is_succ_of_via	noll_graph2ta.c	/^noll_marking_is_succ_of_via (const noll_uid_array * node_marking,$/;"	f	file:
+noll_marking_lexico_lt	noll_graph2ta.c	/^noll_marking_lexico_lt (const noll_uid_array * lhs,$/;"	f	file:
+noll_marking_order_lt	noll_graph2ta.c	/^noll_marking_order_lt (const noll_uid_array * lhs, const noll_uid_array * rhs)$/;"	f	file:
+noll_marking_push	noll_pred2ta.c	/^noll_marking_push (noll_uid_array * mark, uid_t fid)$/;"	f
+noll_marking_tostring	noll_ta_symbols.c	/^     char *noll_marking_tostring (const noll_uid_array * marking)$/;"	f
+noll_mk_and	noll.c	/^noll_mk_and (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_app	noll.c	/^noll_mk_app (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_bag	noll.c	/^noll_mk_bag (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_bagminus	noll.c	/^noll_mk_bagminus (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_bagunion	noll.c	/^noll_mk_bagunion (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_context	noll.c	/^noll_mk_context (void)$/;"	f
+noll_mk_dfield	noll.c	/^noll_mk_dfield (noll_context_t * ctx, const char *name, noll_exp_t ** args,$/;"	f
+noll_mk_distinct	noll.c	/^noll_mk_distinct (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_emp	noll.c	/^noll_mk_emp (noll_context_t * ctx)$/;"	f
+noll_mk_emptybag	noll.c	/^noll_mk_emptybag (noll_context_t * ctx)$/;"	f
+noll_mk_eq	noll.c	/^noll_mk_eq (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_eqloc	noll.c	/^noll_mk_eqloc (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_exists	noll.c	/^noll_mk_exists (noll_context_t * ctx, noll_exp_t * term)$/;"	f
+noll_mk_false	noll.c	/^noll_mk_false (noll_context_t * ctx)$/;"	f
+noll_mk_form_emp	noll.c	/^noll_mk_form_emp (noll_exp_t * f)$/;"	f
+noll_mk_form_index	noll.c	/^noll_mk_form_index (noll_context_t * ctx, noll_exp_t * e)$/;"	f
+noll_mk_form_junk	noll.c	/^noll_mk_form_junk (noll_exp_t * f)$/;"	f
+noll_mk_form_loop	noll.c	/^noll_mk_form_loop (noll_context_t * ctx, noll_var_array * lenv,$/;"	f
+noll_mk_form_pred	noll.c	/^noll_mk_form_pred (noll_context_t * ctx, noll_var_array * lenv,$/;"	f
+noll_mk_form_pto	noll.c	/^noll_mk_form_pto (noll_context_t * ctx, noll_exp_t * f)$/;"	f
+noll_mk_form_sep	noll.c	/^noll_mk_form_sep (noll_context_t * ctx, noll_exp_t * e)$/;"	f
+noll_mk_fun_decl	noll.c	/^noll_mk_fun_decl (noll_context_t * ctx, const char *name, noll_type_t * rty)$/;"	f
+noll_mk_fun_def	noll.c	/^noll_mk_fun_def (noll_context_t * ctx, const char *name, uint_t npar,$/;"	f
+noll_mk_ge	noll.c	/^noll_mk_ge (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_gt	noll.c	/^noll_mk_gt (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_implies	noll.c	/^noll_mk_implies (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_index	noll.c	/^noll_mk_index (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_inloc	noll.c	/^noll_mk_inloc (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_ite	noll.c	/^noll_mk_ite (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_junk	noll.c	/^noll_mk_junk (noll_context_t * ctx)$/;"	f
+noll_mk_le	noll.c	/^noll_mk_le (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_leloc	noll.c	/^noll_mk_leloc (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_loop	noll.c	/^noll_mk_loop (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_lt	noll.c	/^noll_mk_lt (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_minus	noll.c	/^noll_mk_minus (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_not	noll.c	/^noll_mk_not (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_number	noll.c	/^noll_mk_number (noll_context_t * ctx, const char *str)$/;"	f
+noll_mk_op	noll.c	/^noll_mk_op (noll_expkind_t f, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_or	noll.c	/^noll_mk_or (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_plus	noll.c	/^noll_mk_plus (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_pred	noll.c	/^noll_mk_pred (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_exp2rule	noll.c	/^noll_mk_pred_exp2rule (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_exp2rule_pure	noll.c	/^noll_mk_pred_exp2rule_pure (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_exp2rule_space	noll.c	/^noll_mk_pred_exp2rule_space (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_predef	noll.c	/^noll_mk_pred_predef (noll_context_t * ctx, const char *name, uint_t npar,$/;"	f
+noll_mk_pred_rule	noll.c	/^noll_mk_pred_rule (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_rule_SL	noll.c	/^noll_mk_pred_rule_SL (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_rule_base	noll.c	/^noll_mk_pred_rule_base (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_rule_check_nst	noll.c	/^noll_mk_pred_rule_check_nst (const char *name,$/;"	f
+noll_mk_pred_rule_check_pto	noll.c	/^noll_mk_pred_rule_check_pto (const char *name,$/;"	f
+noll_mk_pred_rule_check_pure	noll.c	/^noll_mk_pred_rule_check_pure (const char *name,$/;"	f
+noll_mk_pred_rule_check_rec	noll.c	/^noll_mk_pred_rule_check_rec (const char *name,$/;"	f
+noll_mk_pred_rule_rec	noll.c	/^noll_mk_pred_rule_rec (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_rules	noll.c	/^noll_mk_pred_rules (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_typecheck	noll.c	/^noll_mk_pred_typecheck (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_typecheck_par_SL	noll.c	/^noll_mk_pred_typecheck_par_SL (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_typecheck_par_SLRDI	noll.c	/^noll_mk_pred_typecheck_par_SLRDI (noll_context_t * ctx, const char *name,$/;"	f
+noll_mk_pred_userdef	noll.c	/^noll_mk_pred_userdef (noll_context_t * ctx, const char *name, uint_t npar,$/;"	f
+noll_mk_pto	noll.c	/^noll_mk_pto (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_ref	noll.c	/^noll_mk_ref (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_seloc	noll.c	/^noll_mk_seloc (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_sloc	noll.c	/^noll_mk_sloc (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_sref	noll.c	/^noll_mk_sref (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_ssep	noll.c	/^noll_mk_ssep (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_subset	noll.c	/^noll_mk_subset (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_symbol	noll.c	/^noll_mk_symbol (noll_context_t * ctx, const char *name)$/;"	f
+noll_mk_tobool	noll.c	/^noll_mk_tobool (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_tospace	noll.c	/^noll_mk_tospace (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_true	noll.c	/^noll_mk_true (noll_context_t * ctx)$/;"	f
+noll_mk_type_bagint	noll_types.c	/^noll_mk_type_bagint ()$/;"	f
+noll_mk_type_bool	noll_types.c	/^noll_mk_type_bool ()$/;"	f
+noll_mk_type_field	noll_types.c	/^noll_mk_type_field (noll_type_t * src, noll_type_t * dst)$/;"	f
+noll_mk_type_int	noll_types.c	/^noll_mk_type_int ()$/;"	f
+noll_mk_type_record	noll_types.c	/^noll_mk_type_record (uid_t rid)$/;"	f
+noll_mk_type_setloc	noll_types.c	/^noll_mk_type_setloc ()$/;"	f
+noll_mk_type_setref	noll_types.c	/^noll_mk_type_setref (uid_t ty)$/;"	f
+noll_mk_type_space	noll_types.c	/^noll_mk_type_space ()$/;"	f
+noll_mk_unloc	noll.c	/^noll_mk_unloc (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_mk_wsep	noll.c	/^noll_mk_wsep (noll_context_t * ctx, noll_exp_t ** args, uint_t size)$/;"	f
+noll_nodes_of_form	noll2graph.c	/^noll_nodes_of_form (noll_form_t * phi, uint_t * vars)$/;"	f
+noll_normalize	noll_norm.c	/^noll_normalize (noll_form_t * form, char *fname, bool incr, bool destructive)$/;"	f
+noll_normalize_incr	noll_norm.c	/^noll_normalize_incr (noll_sat_t * fsat)$/;"	f
+noll_normalize_iter	noll_norm.c	/^noll_normalize_iter (noll_sat_t * fsat)$/;"	f
+noll_option_get_pred2ta_opt	noll_option.c	/^noll_option_get_pred2ta_opt (void)$/;"	f
+noll_option_get_verb	noll_option.c	/^noll_option_get_verb (void)$/;"	f
+noll_option_is_checkLS	noll_option.c	/^noll_option_is_checkLS (int version)$/;"	f
+noll_option_is_checkSY	noll_option.c	/^noll_option_is_checkSY (void)$/;"	f
+noll_option_is_checkTA	noll_option.c	/^noll_option_is_checkTA (void)$/;"	f
+noll_option_is_diag	noll_option.c	/^noll_option_is_diag (void)$/;"	f
+noll_option_is_preds_builtin	noll_option.c	/^noll_option_is_preds_builtin (void)$/;"	f
+noll_option_is_tosat	noll_option.c	/^noll_option_is_tosat (int version)$/;"	f
+noll_option_print	noll_option.c	/^noll_option_print (FILE * f)$/;"	f
+noll_option_set	noll_option.c	/^noll_option_set (char *option)$/;"	f
+noll_option_set_check	noll_option.c	/^noll_option_set_check (int version)$/;"	f
+noll_option_set_diag	noll_option.c	/^noll_option_set_diag (void)$/;"	f
+noll_option_set_pred2ta_opt	noll_option.c	/^noll_option_set_pred2ta_opt (int level)$/;"	f
+noll_option_set_preds	noll_option.c	/^noll_option_set_preds (bool isbuiltin)$/;"	f
+noll_option_set_tosat	noll_option.c	/^noll_option_set_tosat (int version)$/;"	f
+noll_option_set_verb	noll_option.c	/^noll_option_set_verb (int level)$/;"	f
+noll_pop_quant	noll.c	/^noll_pop_quant (noll_context_t * ctx)$/;"	f
+noll_pred2graph	noll_pred2ta_gen.c	/^noll_pred2graph (const noll_pred_t * pred)$/;"	f
+noll_pred2graph_init	noll_pred2ta.c	/^noll_pred2graph_init ()$/;"	f
+noll_pred2ta_ls	noll_pred2ta.c	/^noll_pred2ta_ls (noll_ta_t * ta,$/;"	f
+noll_pred2ta_nlcl	noll_pred2ta.c	/^noll_pred2ta_nlcl (noll_ta_t * ta,$/;"	f
+noll_pred2ta_nll	noll_pred2ta.c	/^noll_pred2ta_nll (noll_ta_t * ta,$/;"	f
+noll_pred2ta_skl	noll_pred2ta.c	/^noll_pred2ta_skl (noll_ta_t * ta,$/;"	f
+noll_pred2ta_skl1	noll_pred2ta.c	/^noll_pred2ta_skl1 (noll_ta_t * ta,$/;"	f
+noll_pred2ta_skl2	noll_pred2ta.c	/^noll_pred2ta_skl2 (noll_ta_t * ta,$/;"	f
+noll_pred2ta_skl3	noll_pred2ta.c	/^noll_pred2ta_skl3 (noll_ta_t * ta,$/;"	f
+noll_pred2tree	noll_pred2ta_gen.c	/^noll_pred2tree (const noll_pred_t * pred)$/;"	f
+noll_pred2tree_init	noll_pred2ta.c	/^noll_pred2tree_init ()$/;"	f
+noll_pred_array_find	noll_preds.c	/^noll_pred_array_find (const char *name)$/;"	f
+noll_pred_array_fprint	noll_preds.c	/^noll_pred_array_fprint (FILE * f, noll_pred_array * a, const char *msg)$/;"	f
+noll_pred_binding_delete	noll_preds.c	/^noll_pred_binding_delete (noll_pred_binding_t * pdef)$/;"	f
+noll_pred_binding_new	noll_preds.c	/^noll_pred_binding_new (void)$/;"	f
+noll_pred_binding_push_rule	noll_preds.c	/^noll_pred_binding_push_rule (noll_pred_binding_t * def, noll_pred_rule_t * r,$/;"	f
+noll_pred_binding_t	noll_preds.h	/^  typedef struct noll_pred_binding_t$/;"	s
+noll_pred_binding_t	noll_preds.h	/^  } noll_pred_binding_t;$/;"	t	typeref:struct:noll_pred_binding_t
+noll_pred_fprint	noll_preds.c	/^noll_pred_fprint (FILE * f, uid_t pid)$/;"	f
+noll_pred_get_matrix	noll_preds.c	/^noll_pred_get_matrix (uid_t pid)$/;"	f
+noll_pred_get_matrix1	noll_preds.c	/^noll_pred_get_matrix1 (uid_t pid)$/;"	f
+noll_pred_get_minfield	noll_preds.c	/^noll_pred_get_minfield (uid_t pid)$/;"	f
+noll_pred_getpred	noll_preds.c	/^noll_pred_getpred (uid_t pid)$/;"	f
+noll_pred_gettype	noll_preds.c	/^noll_pred_gettype (uid_t pid)$/;"	f
+noll_pred_init	noll_preds.c	/^noll_pred_init ()$/;"	f
+noll_pred_isUnaryLoc	noll_preds.c	/^noll_pred_isUnaryLoc (uid_t pid)$/;"	f
+noll_pred_is_backbone_field	noll_preds.c	/^noll_pred_is_backbone_field (uid_t fid)$/;"	f
+noll_pred_is_field	noll_preds.c	/^noll_pred_is_field (uid_t pid, uid_t fid, noll_field_e kind)$/;"	f
+noll_pred_is_main_backbone_field	noll_preds.c	/^noll_pred_is_main_backbone_field (uid_t fid)$/;"	f
+noll_pred_is_null_field	noll_preds.c	/^noll_pred_is_null_field (uid_t pid, uid_t fid)$/;"	f
+noll_pred_is_one_dir	noll_preds.c	/^noll_pred_is_one_dir (uid_t pid)$/;"	f
+noll_pred_kind_e	noll_preds.h	/^  } noll_pred_kind_e;$/;"	t	typeref:enum:__anon16
+noll_pred_name	noll_preds.c	/^noll_pred_name (uid_t pid)$/;"	f
+noll_pred_new	noll_preds.c	/^noll_pred_new (const char *name, uid_t pid, noll_pred_binding_t * def)$/;"	f
+noll_pred_order_lt	noll_preds.c	/^noll_pred_order_lt (uid_t lhs, uid_t rhs)$/;"	f
+noll_pred_register	noll_preds.c	/^noll_pred_register (const char *pname, noll_pred_binding_t * def)$/;"	f
+noll_pred_rule_delete	noll_preds.c	/^noll_pred_rule_delete (noll_pred_rule_t * r)$/;"	f
+noll_pred_rule_fprint	noll_preds.c	/^noll_pred_rule_fprint (FILE * f, noll_pred_rule_t * rule)$/;"	f
+noll_pred_rule_new	noll_preds.c	/^noll_pred_rule_new (void)$/;"	f
+noll_pred_rule_t	noll_preds.h	/^  typedef struct noll_pred_rule_t$/;"	s
+noll_pred_rule_t	noll_preds.h	/^  } noll_pred_rule_t;$/;"	t	typeref:struct:noll_pred_rule_t
+noll_pred_t	noll_preds.h	/^  typedef struct noll_pred_t$/;"	s
+noll_pred_t	noll_preds.h	/^  } noll_pred_t;$/;"	t	typeref:struct:noll_pred_t
+noll_pred_type	noll_preds.c	/^noll_pred_type ()$/;"	f
+noll_pred_type_args	noll_preds.c	/^noll_pred_type_args (noll_pred_t * p)$/;"	f
+noll_pred_type_fprint	noll_preds.c	/^noll_pred_type_fprint (FILE * f, noll_pred_typing_t * typ)$/;"	f
+noll_pred_type_init	noll_preds.c	/^noll_pred_type_init (noll_pred_t * p)$/;"	f
+noll_pred_type_rule	noll_preds.c	/^noll_pred_type_rule (noll_pred_t * p, uint_t level, noll_pred_rule_t * rule)$/;"	f
+noll_pred_type_rule_form	noll_preds.c	/^noll_pred_type_rule_form (noll_pred_t * p, uint_t level,$/;"	f
+noll_pred_type_rule_pure	noll_preds.c	/^noll_pred_type_rule_pure (noll_pred_t * p, uint_t level, noll_pure_t * form)$/;"	f
+noll_pred_typecheck_call	noll_preds.c	/^noll_pred_typecheck_call (uid_t pid, noll_type_array * actuals_ty)$/;"	f
+noll_pred_typing_t	noll_preds.h	/^  typedef struct noll_pred_typing_t$/;"	s
+noll_pred_typing_t	noll_preds.h	/^  } noll_pred_typing_t;$/;"	t	typeref:struct:noll_pred_typing_t
+noll_pred_use_nil	noll_preds.c	/^noll_pred_use_nil (uid_t pid)$/;"	f
+noll_prob	noll_entl.c	/^noll_entl_t *noll_prob;         \/\/ problem of entailment in noll$/;"	v
+noll_pto_indexed_t	noll2bool.c	/^typedef struct noll_pto_indexed_t$/;"	s	file:
+noll_pto_indexed_t	noll2bool.c	/^} noll_pto_indexed_t;$/;"	t	typeref:struct:noll_pto_indexed_t	file:
+noll_pto_t	noll_form.h	/^  typedef struct noll_pto_t$/;"	s
+noll_pto_t	noll_form.h	/^  } noll_pto_t;$/;"	t	typeref:struct:noll_pto_t
+noll_pure_add_dform	noll_form.c	/^noll_pure_add_dform (noll_pure_t * form, noll_dform_t * df)$/;"	f
+noll_pure_add_eq	noll_form.c	/^noll_pure_add_eq (noll_pure_t * f, uid_t v1, uid_t v2)$/;"	f
+noll_pure_add_neq	noll_form.c	/^noll_pure_add_neq (noll_pure_t * f, uid_t v1, uid_t v2)$/;"	f
+noll_pure_atom	noll2bool.c	/^typedef struct noll_pure_atom$/;"	s	file:
+noll_pure_atom	noll2bool.c	/^} noll_pure_atom;$/;"	t	typeref:struct:noll_pure_atom	file:
+noll_pure_check_entl	noll_form.c	/^noll_pure_check_entl (bool ** diff, uint_t dsize, noll_pure_t * f,$/;"	f
+noll_pure_close_eq	noll_form.c	/^noll_pure_close_eq (noll_pure_t * pure, uid_t l, uid_t c)$/;"	f
+noll_pure_close_neq	noll_form.c	/^noll_pure_close_neq (noll_pure_t * pure, uid_t l, uid_t c)$/;"	f
+noll_pure_fprint	noll_form.c	/^noll_pure_fprint (FILE * f, noll_var_array * lvars, noll_pure_t * phi)$/;"	f
+noll_pure_free	noll_form.c	/^noll_pure_free (noll_pure_t * p)$/;"	f
+noll_pure_matrix_at	noll_form.h	136;"	d
+noll_pure_new	noll_form.c	/^noll_pure_new (uint_t size)$/;"	f
+noll_pure_op_t	noll_form.h	/^  typedef enum noll_pure_op_t$/;"	g
+noll_pure_op_t	noll_form.h	/^  } noll_pure_op_t;$/;"	t	typeref:enum:noll_pure_op_t
+noll_pure_t	noll_form.h	/^  typedef struct noll_pure_t$/;"	s
+noll_pure_t	noll_form.h	/^  } noll_pure_t;$/;"	t	typeref:struct:noll_pure_t
+noll_pure_update_eq	noll_form.c	/^noll_pure_update_eq (noll_pure_t * f, uid_t l, uid_t c)$/;"	f
+noll_pure_update_neq	noll_form.c	/^noll_pure_update_neq (noll_pure_t * f, uid_t l, uid_t c)$/;"	f
+noll_push_quant	noll.c	/^noll_push_quant (noll_context_t * ctx)$/;"	f
+noll_push_var	noll.c	/^noll_push_var (noll_context_t * ctx, const char *name, noll_type_t * vty)$/;"	f
+noll_record_find	noll_types.c	/^noll_record_find (const char *name)$/;"	f
+noll_record_init	noll_types.c	/^noll_record_init ()$/;"	f
+noll_record_name	noll_types.c	/^noll_record_name (uid_t rid)$/;"	f
+noll_record_new	noll_types.c	/^noll_record_new (const char *name, noll_uid_array * flds)$/;"	f
+noll_record_register	noll_types.c	/^noll_record_register (const char *name)$/;"	f
+noll_record_t	noll_types.h	/^  typedef struct noll_record_t$/;"	s
+noll_record_t	noll_types.h	/^  } noll_record_t;$/;"	t	typeref:struct:noll_record_t
+noll_records_array_fprint	noll_types.c	/^noll_records_array_fprint (FILE * f, const char *msg)$/;"	f
+noll_sat_diag_sat	noll_sat.c	/^noll_sat_diag_sat (noll_form_t * form, noll_sat_t * fsat)$/;"	f
+noll_sat_diag_unsat	noll_sat.c	/^noll_sat_diag_unsat (noll_form_t * form, noll_sat_t * fsat)$/;"	f
+noll_sat_free	noll2sat.c	/^noll_sat_free (noll_sat_t * fsat)$/;"	f
+noll_sat_free_aux	noll_sat.c	/^noll_sat_free_aux (noll_form_t * form)$/;"	f
+noll_sat_in_array_bsearch	noll2sat.c	/^noll_sat_in_array_bsearch (noll_sat_in_array * a, uint_t x, uint_t alpha)$/;"	f
+noll_sat_in_s	noll2sat.h	/^typedef struct noll_sat_in_s$/;"	s
+noll_sat_in_t	noll2sat.h	/^} noll_sat_in_t;$/;"	t	typeref:struct:noll_sat_in_s
+noll_sat_new	noll2sat.c	/^noll_sat_new (noll_form_t * phi)$/;"	f
+noll_sat_pure_s	noll2sat.h	/^typedef struct noll_sat_pure_s$/;"	s
+noll_sat_pure_t	noll2sat.h	/^} noll_sat_pure_t;$/;"	t	typeref:struct:noll_sat_pure_s
+noll_sat_s	noll2sat.h	/^typedef struct noll_sat_s$/;"	s
+noll_sat_solve	noll_sat.c	/^noll_sat_solve (noll_form_t * form)$/;"	f
+noll_sat_space_array_bsearch	noll2sat.c	/^noll_sat_space_array_bsearch (noll_sat_space_array * a,$/;"	f
+noll_sat_space_array_quickSort	noll2sat.c	/^noll_sat_space_array_quickSort (noll_sat_space_array * a, int left, int right)$/;"	f
+noll_sat_space_array_sort	noll2sat.c	/^noll_sat_space_array_sort (noll_sat_space_array * a)$/;"	f
+noll_sat_space_array_swap_at	noll2sat.c	/^noll_sat_space_array_swap_at (noll_sat_space_array * a, uint_t i, uint_t j)$/;"	f
+noll_sat_space_cmp	noll2sat.c	/^noll_sat_space_cmp (noll_sat_space_t * a, noll_sat_space_t * b)$/;"	f
+noll_sat_space_s	noll2sat.h	/^typedef struct noll_sat_space_s$/;"	s
+noll_sat_space_t	noll2sat.h	/^} noll_sat_space_t;$/;"	t	typeref:struct:noll_sat_space_s
+noll_sat_t	noll2sat.h	/^} noll_sat_t;$/;"	t	typeref:struct:noll_sat_s
+noll_sat_type	noll_sat.c	/^noll_sat_type (void)$/;"	f
+noll_scope_e	noll_vars.h	/^  } noll_scope_e;$/;"	t	typeref:enum:__anon24
+noll_sels_to_string_symbol	noll_ta_symbols.c	/^noll_sels_to_string_symbol (const noll_uid_array * sels)$/;"	f	file:
+noll_set_logic	noll.c	/^noll_set_logic (noll_context_t * ctx, const char *logic)$/;"	f
+noll_share_atom_fprint	noll_form.c	/^noll_share_atom_fprint (FILE * f,$/;"	f
+noll_share_check	noll_entl.c	/^noll_share_check (noll_var_array * lvars, noll_var_array * svars,$/;"	f
+noll_share_check_euf_asserts	noll_entl.c	/^noll_share_check_euf_asserts (noll_var_array * lvars, noll_var_array * svars,$/;"	f
+noll_share_check_euf_decl	noll_entl.c	/^noll_share_check_euf_decl (noll_var_array * lvars, noll_var_array * svars,$/;"	f
+noll_share_fprint	noll_form.c	/^noll_share_fprint (FILE * f,$/;"	f
+noll_share_fprint_dot	noll_graph.c	/^noll_share_fprint_dot (FILE * f,$/;"	f
+noll_share_free	noll_form.c	/^noll_share_free (noll_share_array * s)$/;"	f
+noll_share_new	noll_form.c	/^noll_share_new ()$/;"	f
+noll_share_op_t	noll_form.h	/^  typedef enum noll_share_op_t$/;"	g
+noll_share_op_t	noll_form.h	/^  } noll_share_op_t;$/;"	t	typeref:enum:noll_share_op_t
+noll_share_sterm_array_fprint	noll_form.c	/^noll_share_sterm_array_fprint (FILE * f,$/;"	f
+noll_share_sterm_fprint	noll_form.c	/^noll_share_sterm_fprint (FILE * f,$/;"	f
+noll_shom_build_nodes	noll_hom.c	/^noll_shom_build_nodes (noll_graph_t * g1, noll_graph_t * g2)$/;"	f
+noll_shom_build_pto	noll_hom.c	/^noll_shom_build_pto (noll_graph_t * g1, noll_graph_t * g2,$/;"	f
+noll_shom_build_rd	noll_hom.c	/^noll_graph_array *noll_shom_build_rd$/;"	f
+noll_shom_check	noll_hom.c	/^noll_shom_check (noll_graph_t * g2, noll_edge_t * e1, noll_uid_array * h,$/;"	f
+noll_shom_check_TA	noll_hom.c	/^noll_shom_check_TA (noll_graph_t * g2, noll_edge_t * e1, noll_uid_array * h)$/;"	f
+noll_shom_check_syn	noll_hom.c	/^noll_shom_check_syn (noll_graph_t * g2,$/;"	f
+noll_shom_match_form_pto	noll_hom.c	/^noll_shom_match_form_pto (noll_graph_t * g2, uid_t eid1,$/;"	f
+noll_shom_match_form_pure	noll_hom.c	/^noll_shom_match_form_pure (noll_graph_t * g2, noll_pure_t * fpure,$/;"	f
+noll_shom_match_form_rd	noll_hom.c	/^noll_shom_match_form_rd (noll_graph_t * g2,$/;"	f
+noll_shom_match_form_rd_list	noll_hom.c	/^noll_shom_match_form_rd_list (noll_graph_t * g2,$/;"	f
+noll_shom_match_form_rd_list_1	noll_hom.c	/^noll_shom_match_form_rd_list_1 (noll_graph_t * g2,$/;"	f
+noll_shom_match_lemma	noll_hom.c	/^noll_shom_match_lemma (noll_graph_t * g2, uid_t eid1,$/;"	f
+noll_shom_match_rd	noll_hom.c	/^noll_shom_match_rd (noll_graph_t * g2, uid_t eid1,$/;"	f
+noll_shom_match_rule_base	noll_hom.c	/^noll_shom_match_rule_base (noll_graph_t * g2,$/;"	f
+noll_shom_match_rule_rec	noll_hom.c	/^noll_shom_match_rule_rec (noll_graph_t * g2, uid_t eid1,$/;"	f
+noll_shom_s	noll_hom.h	/^typedef struct noll_shom_s$/;"	s
+noll_shom_select_rd	noll_hom.c	/^noll_shom_select_rd (noll_graph_t * g, uint_t eid, uint_t label,$/;"	f
+noll_shom_select_wf	noll_hom.c	/^noll_shom_select_wf (noll_graph_t * g2, noll_graph_t * sg2,$/;"	f
+noll_shom_select_wf_0	noll_hom.c	/^noll_shom_select_wf_0 (noll_graph_t * g2, noll_graph_t * sg2,$/;"	f
+noll_shom_select_wf_1	noll_hom.c	/^noll_shom_select_wf_1 (noll_graph_t * g2, noll_graph_t * sg2,$/;"	f
+noll_shom_select_wf_2	noll_hom.c	/^noll_shom_select_wf_2 (noll_graph_t * g2, noll_graph_t * sg2,$/;"	f
+noll_shom_t	noll_hom.h	/^} noll_shom_t;$/;"	t	typeref:struct:noll_shom_s
+noll_sorts	smtlib2noll.c	142;"	d	file:
+noll_space_fprint	noll_form.c	/^noll_space_fprint (FILE * f,$/;"	f
+noll_space_free	noll_form.c	/^noll_space_free (noll_space_t * s)$/;"	f
+noll_space_new	noll_form.c	/^noll_space_new ()$/;"	f
+noll_space_op_t	noll_form.h	/^  typedef enum noll_space_op_t$/;"	g
+noll_space_op_t	noll_form.h	/^  } noll_space_op_t;$/;"	t	typeref:enum:noll_space_op_t
+noll_space_s	noll_form.h	/^  struct noll_space_s$/;"	s
+noll_space_sub	noll_form.c	/^noll_space_sub (noll_space_t * a, noll_uid_array * sub)$/;"	f
+noll_space_t	noll_form.h	/^  typedef struct noll_space_s noll_space_t;     \/* forward definition *\/$/;"	t	typeref:struct:noll_space_s
+noll_sterm_copy	noll_form.c	/^noll_sterm_copy (noll_sterm_t * a)$/;"	f
+noll_sterm_kind_t	noll_form.h	/^  typedef enum noll_sterm_kind_t$/;"	g
+noll_sterm_kind_t	noll_form.h	/^  } noll_sterm_kind_t;$/;"	t	typeref:enum:noll_sterm_kind_t
+noll_sterm_new_prj	noll_form.c	/^noll_sterm_new_prj (uid_t s, uid_t v)$/;"	f
+noll_sterm_new_var	noll_form.c	/^noll_sterm_new_var (uid_t v, noll_sterm_kind_t kind)$/;"	f
+noll_sterm_t	noll_form.h	/^  typedef struct noll_sterm_t$/;"	s
+noll_sterm_t	noll_form.h	/^  } noll_sterm_t;$/;"	t	typeref:struct:noll_sterm_t
+noll_symbol_spawn	noll_ta_symbols.c	/^noll_symbol_spawn (noll_ta_symbol_t * symb)$/;"	f	file:
+noll_ta_symbol	noll_ta_symbols.c	/^typedef struct noll_ta_symbol$/;"	s	file:
+noll_ta_symbol	printdterm.c	/^typedef struct noll_ta_symbol$/;"	s	file:
+noll_ta_symbol_alias_marking_str	noll_ta_symbols.c	/^noll_ta_symbol_alias_marking_str (const noll_ta_symbol_t * sym)$/;"	f	file:
+noll_ta_symbol_alias_var_str	noll_ta_symbols.c	/^noll_ta_symbol_alias_var_str (const noll_ta_symbol_t * sym)$/;"	f	file:
+noll_ta_symbol_alloc_str	noll_ta_symbols.c	/^noll_ta_symbol_alloc_str (const noll_ta_symbol_t * sym)$/;"	f	file:
+noll_ta_symbol_create	noll_ta_symbols.c	/^noll_ta_symbol_create (void)$/;"	f	file:
+noll_ta_symbol_destroy	noll_ta_symbols.c	/^noll_ta_symbol_destroy ()$/;"	f
+noll_ta_symbol_fill_str	noll_ta_symbols.c	/^noll_ta_symbol_fill_str (noll_ta_symbol_t * sym)$/;"	f	file:
+noll_ta_symbol_find	noll_ta_symbols.c	/^noll_ta_symbol_find (const noll_ta_symbol_t * symb)$/;"	f	file:
+noll_ta_symbol_get_marking	noll_ta_symbols.c	/^noll_ta_symbol_get_marking (const noll_ta_symbol_t * symb)$/;"	f
+noll_ta_symbol_get_pid	noll_ta_symbols.c	/^noll_ta_symbol_get_pid (const noll_ta_symbol_t * symb)$/;"	f
+noll_ta_symbol_get_str	noll_ta_symbols.c	/^noll_ta_symbol_get_str (const noll_ta_symbol_t * symb)$/;"	f
+noll_ta_symbol_get_unique_aliased_marking	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_aliased_marking (unsigned char id_rel,$/;"	f
+noll_ta_symbol_get_unique_aliased_marking_up	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_aliased_marking_up (const noll_uid_array *$/;"	f
+noll_ta_symbol_get_unique_aliased_marking_up_down_fst	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_aliased_marking_up_down_fst (const noll_uid_array *$/;"	f
+noll_ta_symbol_get_unique_aliased_marking_up_up	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_aliased_marking_up_up (const noll_uid_array *$/;"	f
+noll_ta_symbol_get_unique_aliased_symbol	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_aliased_symbol (const noll_ta_symbol_t * sym,$/;"	f
+noll_ta_symbol_get_unique_aliased_var	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_aliased_var (uid_t alias_var)$/;"	f
+noll_ta_symbol_get_unique_allocated	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_allocated (const noll_uid_array * sels,$/;"	f
+noll_ta_symbol_get_unique_higher_pred	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_higher_pred (const noll_pred_t * pred,$/;"	f
+noll_ta_symbol_get_unique_renamed	noll_ta_symbols.c	/^noll_ta_symbol_get_unique_renamed (const noll_ta_symbol_t * sym,$/;"	f
+noll_ta_symbol_get_vars	noll_ta_symbols.c	/^noll_ta_symbol_get_vars (const noll_ta_symbol_t * symb)$/;"	f
+noll_ta_symbol_higher_pred_str	noll_ta_symbols.c	/^noll_ta_symbol_higher_pred_str (const noll_ta_symbol_t * sym)$/;"	f	file:
+noll_ta_symbol_init	noll_ta_symbols.c	/^noll_ta_symbol_init ()$/;"	f
+noll_ta_symbol_is_alias	noll_ta_symbols.c	/^noll_ta_symbol_is_alias (const noll_ta_symbol_t * symb)$/;"	f
+noll_ta_symbol_is_pred	noll_ta_symbols.c	/^noll_ta_symbol_is_pred (const noll_ta_symbol_t * symb)$/;"	f
+noll_ta_symbol_is_pto	noll_ta_symbols.c	/^noll_ta_symbol_is_pto (const noll_ta_symbol_t * symb)$/;"	f
+noll_ta_symbol_kill	noll_ta_symbols.c	/^noll_ta_symbol_kill (noll_ta_symbol_t * sym)$/;"	f	file:
+noll_ta_symbol_match	noll_ta_symbols.c	/^noll_ta_symbol_match (const noll_ta_symbol_t * lhs,$/;"	f	file:
+noll_ta_symbol_t	noll_ta_symbols.c	/^} noll_ta_symbol_t;$/;"	t	typeref:struct:noll_ta_symbol	file:
+noll_ta_symbol_t	noll_ta_symbols.h	/^  typedef struct noll_ta_symbol noll_ta_symbol_t;$/;"	t	typeref:struct:noll_ta_symbol
+noll_ta_symbol_t	printdterm.c	/^} noll_ta_symbol_t;$/;"	t	typeref:struct:noll_ta_symbol	file:
+noll_ta_t	libvata_noll_iface.cc	/^} noll_ta_t;$/;"	t	typeref:struct:type_noll_ta_t	file:
+noll_ta_t	libvata_noll_iface.h	/^  typedef vata_ta_t noll_ta_t;$/;"	t
+noll_to_vata_symbol	libvata_noll_iface.cc	/^	static TreeAutSymbol noll_to_vata_symbol(const noll_ta_symbol_t* noll_symb)$/;"	f	class:NollAlphabet
+noll_tree_create_node	noll_tree.c	/^void noll_tree_create_node($/;"	f
+noll_tree_fprint	noll_tree.c	/^void noll_tree_fprint(FILE* f, noll_tree_t* tree) {$/;"	f
+noll_tree_free	noll_tree.c	/^void noll_tree_free(noll_tree_t* tree)$/;"	f
+noll_tree_label_type_t	noll_ta_symbols.c	/^enum noll_tree_label_type_t$/;"	g	file:
+noll_tree_new	noll_tree.c	/^noll_tree_t* noll_tree_new(void)$/;"	f
+noll_tree_node_s	noll_tree.h	/^typedef struct noll_tree_node_s$/;"	s
+noll_tree_node_t	noll_tree.h	/^} noll_tree_node_t;$/;"	t	typeref:struct:noll_tree_node_s
+noll_tree_s	noll_tree.h	/^     typedef struct noll_tree_s$/;"	s
+noll_tree_set_root	noll_tree.c	/^void noll_tree_set_root(noll_tree_t* tree, uid_t root)$/;"	f
+noll_tree_t	noll_tree.h	/^     } noll_tree_t;$/;"	t	typeref:struct:noll_tree_s
+noll_tree_to_ta	noll_tree.c	/^noll_ta_t* noll_tree_to_ta(const noll_tree_t* tree)$/;"	f
+noll_typ_t	noll_types.h	/^  } noll_typ_t;$/;"	t	typeref:enum:__anon22
+noll_type_clone	noll_types.c	/^noll_type_clone (noll_type_t * a)$/;"	f
+noll_type_fprint	noll_types.c	/^noll_type_fprint (FILE * f, noll_type_t * a)$/;"	f
+noll_type_free	noll_types.c	/^noll_type_free (noll_type_t * a)$/;"	f
+noll_type_get_record	noll_types.c	/^noll_type_get_record (noll_type_t * ty)$/;"	f
+noll_type_is_fldtype	noll_types.c	/^noll_type_is_fldtype (noll_type_t * t)$/;"	f
+noll_type_is_vartype	noll_types.c	/^noll_type_is_vartype (noll_type_t * t)$/;"	f
+noll_type_match	noll_types.c	/^noll_type_match (noll_type_t * fty, noll_type_t * aty)$/;"	f
+noll_type_t	noll_types.h	/^  typedef struct noll_type_t$/;"	s
+noll_type_t	noll_types.h	/^  } noll_type_t;$/;"	t	typeref:struct:noll_type_t
+noll_uid_array_compose	noll_hom.c	/^noll_uid_array_compose (noll_uid_array * dst, noll_uid_array * src)$/;"	f
+noll_uid_array_contains	noll_graph2ta.c	/^noll_uid_array_contains (const noll_uid_array * arr, uid_t elem)$/;"	f	file:
+noll_uid_array_subseteq	noll_ta_symbols.c	/^noll_uid_array_subseteq (const noll_uid_array * smaller,$/;"	f	file:
+noll_uid_array_tostring	noll_ta_symbols.c	/^noll_uid_array_tostring (const noll_uid_array * arr)$/;"	f	file:
+noll_uid_map	noll_hom.h	/^typedef noll_uid_array noll_uid_map;    \/* used to represent maps uid_t -> uid_t *\/$/;"	t
+noll_uid_map_apply	noll_hom.c	/^noll_uid_map_apply (noll_uid_map * h, noll_uid_array * args, bool useNil)$/;"	f
+noll_uid_map_contains	noll_hom.c	/^noll_uid_map_contains (noll_uid_map * m, uid_t v)$/;"	f
+noll_uid_map_copy	noll_hom.c	/^noll_uid_map_copy (noll_uid_map * src, bool fstNil)$/;"	f
+noll_uid_map_delete	noll_hom.c	/^noll_uid_map_delete (noll_uid_map * m)$/;"	f
+noll_uid_map_fprint	noll_hom.c	/^noll_uid_map_fprint (FILE * f, noll_uid_map * h)$/;"	f
+noll_uid_map_new	noll_hom.c	/^noll_uid_map_new (uint_t size)$/;"	f
+noll_uid_map_set	noll_hom.h	85;"	d
+noll_unique_cnt	noll_graph2ta.c	/^     static size_t noll_unique_cnt = 10000;$/;"	v	file:
+noll_var_array_find_local	noll_vars.c	/^noll_var_array_find_local (noll_var_array * a, const char *name)$/;"	f
+noll_var_array_fprint	noll_vars.c	/^noll_var_array_fprint (FILE * f, noll_var_array * a, const char *msg)$/;"	f
+noll_var_array_make	noll_vars.c	/^noll_var_array_make (uid_t sz)$/;"	f
+noll_var_copy	noll_vars.c	/^noll_var_copy (noll_var_t * a)$/;"	f
+noll_var_free	noll_vars.c	/^noll_var_free (noll_var_t * a)$/;"	f
+noll_var_name	noll_vars.c	/^noll_var_name (noll_var_array * a, uid_t vid, noll_typ_t ty)$/;"	f
+noll_var_new	noll_vars.c	/^noll_var_new (const char *name, noll_type_t * ty, noll_scope_e s)$/;"	f
+noll_var_record	noll_vars.c	/^noll_var_record (noll_var_array * a, uid_t vid)$/;"	f
+noll_var_register	noll_vars.c	/^noll_var_register (noll_var_array * a, const char *name, noll_type_t * ty,$/;"	f
+noll_var_t	noll_vars.h	/^  typedef struct noll_var_t$/;"	s
+noll_var_t	noll_vars.h	/^  } noll_var_t;$/;"	t	typeref:struct:noll_var_t
+noll_var_type	noll_vars.c	/^noll_var_type (noll_var_array * a, uid_t vid)$/;"	f
+noll_vector_array	noll_vector.h	67;"	d
+noll_vector_at	noll_vector.h	64;"	d
+noll_vector_capacity	noll_vector.h	63;"	d
+noll_vector_empty	noll_vector.h	68;"	d
+noll_vector_first	noll_vector.h	66;"	d
+noll_vector_last	noll_vector.h	65;"	d
+noll_vector_size	noll_vector.h	62;"	d
+normalize	noll2bool.c	/^normalize (noll_form_t * form, char *fname)$/;"	f
+normalize_incremental	noll2bool.c	/^normalize_incremental (noll_form_t * form, char *fname)$/;"	f
+not	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (not);$/;"	v
+nst	noll_preds.h	/^    noll_space_t *nst;          \/\/ calls to predicates, non-recursive, NULL for base rule$/;"	m	struct:noll_pred_rule_t
+op	noll2sat.h	/^  noll_pure_op_t op;$/;"	m	struct:noll_sat_pure_s
+or	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (or);$/;"	v
+order	noll_types.h	/^    uid_t order;                \/\/ order number wrt use in predicates$/;"	m	struct:noll_field_t
+output_fname	noll_entl.h	/^  char *output_fname;           \/\/ output file with proof$/;"	m	struct:noll_entl_t
+p	noll.h	/^    } p;$/;"	m	struct:noll_exp_t	typeref:union:noll_exp_t::__anon27
+p	noll2sat.h	/^    } p;                        \/\/ for forig == pred$/;"	m	union:noll_sat_space_s::__anon1	typeref:struct:noll_sat_space_s::__anon1::__anon2
+p	noll_form.h	/^    } p;$/;"	m	struct:noll_dform_s	typeref:union:noll_dform_s::__anon10
+p	noll_form.h	/^    } p;$/;"	m	struct:noll_dterm_s	typeref:union:noll_dterm_s::__anon9
+pabstr	noll_entl.h	/^  noll_sat_t *pabstr;           \/\/ abstraction of the positive formula$/;"	m	struct:noll_entl_t
+parent_	smtlib2noll.h	/^  smtlib2_abstract_parser parent_;$/;"	m	struct:smtlib2_noll_parser
+pargs	noll_preds.h	/^    size_t pargs;               \/\/ type of list = number of arguments of this record type 2 or 4$/;"	m	struct:noll_pred_binding_t
+pfields	noll_preds.h	/^    noll_uint_array *pfields;$/;"	m	struct:noll_pred_typing_t
+pform	noll_entl.h	/^  noll_form_t *pform;           \/\/ positive formula phi$/;"	m	struct:noll_entl_t
+pgraph	noll_entl.h	/^  noll_graph_t *pgraph;         \/\/ graph for positive formula$/;"	m	struct:noll_entl_t
+pid	noll_form.h	/^    uid_t pid;                  \/\/ predicate$/;"	m	struct:noll_ls_t
+pid	noll_lemma.h	/^    uint_t pid;                 \/\/\/ predicate identifier P$/;"	m	struct:noll_lemma_s
+pid	noll_preds.h	/^    uid_t pid;                  \/\/ predicate identifier$/;"	m	struct:noll_pred_t
+pid	noll_types.h	/^    uid_t pid;                  \/\/ predicate where the fields is used in the matrix$/;"	m	struct:noll_field_t
+pkind	noll_preds.h	/^    noll_pred_kind_e pkind;     \/* class of the inductive definition *\/$/;"	m	struct:noll_pred_typing_t
+plus	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (plus);$/;"	v
+pname	noll.h	/^    char *pname;$/;"	m	struct:noll_context_t
+pname	noll_preds.h	/^    char *pname;                \/\/ declaration name$/;"	m	struct:noll_pred_t
+points_to	noll2bool.c	/^  noll_pto_t *points_to;        \/\/ a points-to predicate$/;"	m	struct:noll_pto_indexed_t	file:
+ppreds	noll_preds.h	/^    noll_uint_array *ppreds;$/;"	m	struct:noll_pred_typing_t
+pred	noll_ta_symbols.c	/^      const noll_pred_t *pred;$/;"	m	struct:noll_ta_symbol::__anon18::__anon21	file:
+pred	printdterm.c	/^      const noll_pred_t *pred;$/;"	m	struct:noll_ta_symbol::__anon12::__anon15	file:
+pred2graph_array	noll_pred2ta.c	/^noll_graph_array *pred2graph_array = NULL;$/;"	v
+pred2ta_opt	noll_option.c	/^int pred2ta_opt = 0;$/;"	v
+pred2tree_array	noll_pred2ta.c	/^noll_tree_array *pred2tree_array = NULL;$/;"	v
+predicate	noll2bool.c	/^  noll_ls_t *predicate;         \/\/ a ls predicate$/;"	m	struct:noll_ls_indexed_t	file:
+preds_array	noll_preds.c	/^noll_pred_array *preds_array;$/;"	v
+preds_builtin	noll_option.c	/^bool preds_builtin = false;$/;"	v
+printDform	printdterm.c	/^void printDform(noll_dform_t* dform) {$/;"	f
+printDformArray	printdterm.c	/^void printDformArray(noll_dform_array* arr) {$/;"	f
+printDterm	printdterm.c	/^void printDterm(noll_dterm_t* dterm) {$/;"	f
+printDtermArray	printdterm.c	/^void printDtermArray(noll_dterm_array* arr) {$/;"	f
+printEdge	printdterm.c	/^void printEdge(noll_edge_t* edge) {$/;"	f
+printEdgeArray	printdterm.c	/^void printEdgeArray(noll_edge_array* arr) {$/;"	f
+printEntl	printdterm.c	/^void printEntl(noll_entl_t* entl) {$/;"	f
+printExp	printdterm.c	/^void printExp(noll_exp_t* exp) {$/;"	f
+printField	printdterm.c	/^void printField(noll_field_t* field)  {$/;"	f
+printFieldArray	printdterm.c	/^void printFieldArray(noll_field_array* arr) {$/;"	f
+printForm	printdterm.c	/^void printForm(noll_form_t* form) {$/;"	f
+printFormArray	printdterm.c	/^void printFormArray(noll_form_array* arr) {$/;"	f
+printFormInfo	printdterm.c	/^void printFormInfo(noll_form_info_t* forminfo) {$/;"	f
+printGraph	printdterm.c	/^void printGraph(noll_graph_t* graph) {$/;"	f
+printGraphArray	printdterm.c	/^void printGraphArray(noll_graph_array* arr) {$/;"	f
+printHom	printdterm.c	/^void printHom(noll_hom_t* hom) {$/;"	f
+printLowerBoolMatrix	printdterm.c	/^void printLowerBoolMatrix(_Bool **m, int size) {$/;"	f
+printLowerMatrix	printdterm.c	/^void printLowerMatrix(uid_t **m, int size) {$/;"	f
+printLs	printdterm.c	/^void printLs(noll_ls_t* ls) {$/;"	f
+printMatrix	printdterm.c	/^void printMatrix(noll_uid_array** m, int size) {$/;"	f
+printNormalArray	printdterm.c	/^void printNormalArray(noll_uid_array* arr) {$/;"	f
+printPred	printdterm.c	/^void printPred(noll_pred_t* pred) {$/;"	f
+printPredArray	printdterm.c	/^void printPredArray(noll_pred_array* arr) {$/;"	f
+printPredBinding	printdterm.c	/^void printPredBinding(noll_pred_binding_t* def) {$/;"	f
+printPredRule	printdterm.c	/^void printPredRule(noll_pred_rule_t* predrule) {$/;"	f
+printPredRuleArray	printdterm.c	/^void printPredRuleArray(noll_pred_rule_array* arr) {$/;"	f
+printPredTyping	printdterm.c	/^void printPredTyping(noll_pred_typing_t* typ) {$/;"	f
+printPto	printdterm.c	/^void printPto(noll_pto_t* pto) {$/;"	f
+printPure	printdterm.c	/^void printPure(noll_pure_t* pure) {$/;"	f
+printRMatrix	printdterm.c	/^void printRMatrix(noll_uid_array** m, int size) {$/;"	f
+printRecord	printdterm.c	/^void printRecord(noll_record_t* record) {$/;"	f
+printRecordArray	printdterm.c	/^void printRecordArray(noll_record_array* arr) {$/;"	f
+printSat	printdterm.c	/^void printSat(noll_sat_t* sat) {$/;"	f
+printSatArray	printdterm.c	/^void printSatArray(noll_sat_array* arr) {$/;"	f
+printSatIn	printdterm.c	/^void printSatIn(noll_sat_in_t* satin) {$/;"	f
+printSatInArray	printdterm.c	/^void printSatInArray(noll_sat_in_array* arr) {$/;"	f
+printSatSpace	printdterm.c	/^void printSatSpace(noll_sat_space_t* satspace) {$/;"	f
+printSatSpaceArray	printdterm.c	/^void printSatSpaceArray(noll_sat_space_array* arr) {$/;"	f
+printShare	printdterm.c	/^void printShare(noll_atom_share_t* share) {$/;"	f
+printShareArray	printdterm.c	/^void printShareArray(noll_share_array* arr) {$/;"	f
+printShom	printdterm.c	/^void printShom(noll_shom_t* shom) {$/;"	f
+printShomArray	printdterm.c	/^void printShomArray(noll_shom_array* arr) {$/;"	f
+printSpace	printdterm.c	/^void printSpace(noll_space_t* space) {$/;"	f
+printSpaceArray	printdterm.c	/^void printSpaceArray(noll_space_array* arr)  {$/;"	f
+printSterm	printdterm.c	/^void printSterm(noll_sterm_t* sterm)  {$/;"	f
+printStermArray	printdterm.c	/^void printStermArray(noll_sterm_array* arr) {$/;"	f
+printTAB	printdterm.c	/^void printTAB() {$/;"	f
+printTaSymbol	printdterm.c	/^void printTaSymbol(const noll_ta_symbol_t*  sym) {$/;"	f
+printTaSymbolArray	printdterm.c	/^void printTaSymbolArray(noll_ta_symbol_array* arr) {$/;"	f
+printType	printdterm.c	/^void printType(noll_type_t* type ){$/;"	f
+printUpperMatrix	printdterm.c	/^void printUpperMatrix(noll_pure_op_t ** m, uint_t size) {$/;"	f
+printVar	printdterm.c	/^void printVar(noll_var_t* var) {$/;"	f
+printVarArray	printdterm.c	/^void printVarArray(noll_var_array* arr) {$/;"	f
+print_diagnosis	noll_option.c	/^bool print_diagnosis = false;$/;"	v
+print_help	noll-dp.c	/^print_help (void)$/;"	f
+pto	noll_form.h	/^      noll_pto_t pto;           \/\/ points-to constraint$/;"	m	union:noll_space_s::__anon11
+pto	noll_preds.h	/^    noll_space_t *pto;          \/\/ points-to part, if any, NULL for base rules$/;"	m	struct:noll_pred_rule_t
+pto	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (pto);$/;"	v
+pto_hom	noll_hom.h	/^  noll_uid_array *pto_hom;      \/* pto edge mapping *\/$/;"	m	struct:noll_shom_s
+pto_in	noll2bool.c	/^pto_in (struct noll_pto_t *pto, noll_space_t * form)$/;"	f
+pto_r	noll_types.h	/^    uid_t pto_r;                \/\/ identifier of the target record \/ or UNDEFINED_ID for data$/;"	m	struct:noll_field_t
+pto_size	noll2sat.h	/^  uint_t pto_size;              \/* number of pto atoms *\/$/;"	m	struct:noll_form_info_s
+pto_ty	noll_types.h	/^    noll_typ_t pto_ty;          \/\/ kind of type for pto$/;"	m	struct:noll_field_t
+ptype0	noll_preds.h	/^    uid_t ptype0;$/;"	m	struct:noll_pred_typing_t
+ptypes	noll_preds.h	/^    noll_uint_array *ptypes;$/;"	m	struct:noll_pred_typing_t
+pure	noll_form.h	/^    noll_pure_t *pure;          \/\/ pure part$/;"	m	struct:noll_form_t
+pure	noll_preds.h	/^    noll_pure_t *pure;          \/\/ pure part of the rule (including data)$/;"	m	struct:noll_pred_rule_t
+pused	noll_hom.h	/^  noll_uid_array *pused;        \/* edges of pgraph used in this hom $/;"	m	struct:noll_shom_s
+quant	noll.h	/^      } quant;$/;"	m	union:noll_exp_t::__anon27	typeref:struct:noll_exp_t::__anon27::__anon28
+reachable_from_through_path_wo_marker	noll_graph2ta.c	/^reachable_from_through_path_wo_marker (const noll_graph_t * graph,$/;"	f	file:
+rec	noll_preds.h	/^    noll_space_t *rec;          \/\/ recursive calls$/;"	m	struct:noll_pred_rule_t
+rec_compute_paths	noll_graph2ta.c	/^rec_compute_paths (uint_t node,$/;"	f	file:
+rec_rules	noll_preds.h	/^    noll_pred_rule_array *rec_rules;    \/\/ set of base rules$/;"	m	struct:noll_pred_binding_t
+records_array	noll_types.c	/^noll_record_array *records_array;$/;"	v
+ref	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (ref);$/;"	v
+rid	noll_types.h	/^    uid_t rid;                  \/\/ record identifier, 0 for void*$/;"	m	struct:noll_record_t
+rmat	noll_graph.h	/^  noll_uid_array **rmat;        \/\/ reverse adjacency matrix, rmat[i] is the list of edge identifiers to node i$/;"	m	struct:noll_graph_t
+root	noll_tree.h	/^       uid_t root;$/;"	m	struct:noll_tree_s
+rule	noll_lemma.h	/^    noll_pred_rule_t rule;      \/\/\/ remainder of the lemma stores as follows:$/;"	m	struct:noll_lemma_s
+sat_type	slid_sat.h	/^	slid_sat_t sat_type;$/;"	m	struct:__anon8
+scope	noll_vars.h	/^    noll_scope_e scope;         \/\/ visibility$/;"	m	struct:noll_var_t
+seloc	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (seloc);$/;"	v
+sels	noll_ta_symbols.c	/^      noll_uid_array *sels;$/;"	m	struct:noll_ta_symbol::__anon18::__anon19	file:
+sels	printdterm.c	/^      noll_uid_array *sels;$/;"	m	struct:noll_ta_symbol::__anon12::__anon13	file:
+send	noll.h	/^        uint_t send;            \/* index ending the set of location quantified variables *\/$/;"	m	struct:noll_exp_t::__anon27::__anon28
+sep	noll_form.h	/^      noll_space_array *sep;    \/\/ array of constraints$/;"	m	union:noll_space_s::__anon11
+share	noll_form.h	/^    noll_share_array *share;    \/\/ sharing part$/;"	m	struct:noll_form_t
+share	noll_graph.h	/^  noll_share_array *share;      \/\/ TODO: sharing constraints (on set variables) (related to overlapping)$/;"	m	struct:noll_graph_t
+shom	noll_hom.h	/^  noll_shom_array *shom;        \/* array of size ngraph of simple hom *\/$/;"	m	struct:noll_hom_s
+sid	noll.h	/^      uint_t sid;$/;"	m	union:noll_exp_t::__anon27
+sid	noll_form.h	/^      uid_t sid;                \/\/ symbol (variable or field) identifier$/;"	m	union:noll_dterm_s::__anon9
+sid	noll_form.h	/^    uid_t sid;                  \/\/ set of locations variable bound$/;"	m	struct:noll_ls_t
+sid	noll_form.h	/^    uid_t sid;                  \/\/ source location$/;"	m	struct:noll_pto_t
+sid	slid_sat.h	/^	int sid;     \/\/variable id$/;"	m	struct:__anon7
+sid	slid_sat.h	/^	unsigned int sid;$/;"	m	struct:__anon6
+sigma_0	noll_preds.h	/^    noll_space_t *sigma_0;      \/\/ old: points-to part$/;"	m	struct:noll_pred_binding_t
+sigma_1	noll_preds.h	/^    noll_space_t *sigma_1;      \/\/ old: nested part$/;"	m	struct:noll_pred_binding_t
+sign	noll2bool.c	/^  noll_pure_op_t sign;          \/\/ equality or inequality$/;"	m	struct:noll_pure_atom	file:
+size	noll.h	/^    uint_t size;                \/* size of the array above *\/$/;"	m	struct:noll_exp_t
+size	noll_form.h	/^    uint_t size;                \/\/ allocated size for the matrix, 0 if empty or == locs_array size$/;"	m	struct:noll_pure_t
+size_apto	noll2sat.h	/^  uint_t size_apto;             \/* number of variables, size of the array below *\/$/;"	m	struct:noll_sat_s
+size_inset	noll2sat.h	/^  uint_t size_inset;            \/* number of variables, size of the array below *\/$/;"	m	struct:noll_sat_s
+size_pred	noll2sat.h	/^  uint_t size_pred;             \/* number of variables, size of the array below *\/$/;"	m	struct:noll_sat_s
+size_pto	noll2sat.h	/^  uint_t size_pto;              \/* number of variables, size of the array below *\/$/;"	m	struct:noll_sat_s
+size_pure	noll2sat.h	/^  uint_t size_pure;             \/* number of boolean variables *\/$/;"	m	struct:noll_sat_s
+size_var_pure	noll2sat.h	/^  uint_t size_var_pure;         \/* number of lines in array below *\/$/;"	m	struct:noll_sat_s
+slid_context	slid_sat.h	/^typedef _slid_context* slid_context;$/;"	t
+slid_ctx_var_at	slid_sat.c	11;"	d	file:
+slid_data_constr	slid_sat.h	/^}slid_data_constr;$/;"	t	typeref:struct:__anon6
+slid_data_constr_t	slid_sat.h	/^}slid_data_constr_t;$/;"	t	typeref:enum:__anon5
+slid_del_context	slid_sat.c	/^void slid_del_context(slid_context slid_ctx)$/;"	f
+slid_del_pred_data_constr	slid_sat.c	/^void slid_del_pred_data_constr(slid_data_constr *dc)$/;"	f
+slid_get_hole	slid_sat.c	/^int slid_get_hole(noll_pred_t *pred)$/;"	f
+slid_get_in_alloc_loc_index	slid_sat.c	/^void slid_get_in_alloc_loc_index(noll_uid_array *a, noll_ls_t *ls)$/;"	f
+slid_get_pred_data_constr	slid_sat.c	/^slid_data_constr *slid_get_pred_data_constr(noll_pred_t *p, noll_pred_rule_t *r, unsigned int sid)$/;"	f
+slid_get_pred_data_constr_ce	slid_sat.c	/^noll_dform_array *slid_get_pred_data_constr_ce(noll_pred_t *p, noll_pred_rule_t *r, unsigned int sid)$/;"	f
+slid_get_pred_data_constr_clg	slid_sat.c	/^noll_dform_t *slid_get_pred_data_constr_clg(noll_pred_rule_t *r,unsigned int sid, noll_data_op_t op_t)$/;"	f
+slid_get_pred_data_constr_stc	slid_sat.c	/^noll_dform_array *slid_get_pred_data_constr_stc(noll_pred_t *p, noll_pred_rule_t *r, unsigned int sid)$/;"	f
+slid_get_pred_data_constr_trans	slid_sat.c	/^noll_dform_array *slid_get_pred_data_constr_trans(noll_pred_t *p, noll_pred_rule_t *r, unsigned int sid)$/;"	f
+slid_get_pred_data_constr_type	slid_sat.c	/^slid_data_constr_t slid_get_pred_data_constr_type(noll_pred_t *p, noll_pred_rule_t *r, noll_dform_t *df)$/;"	f
+slid_get_rule_pred	slid_sat.c	/^noll_ls_t *slid_get_rule_pred(noll_space_t *s)$/;"	f
+slid_get_trans_loc	slid_sat.c	/^int slid_get_trans_loc(noll_pred_rule_t *r, unsigned int sid)$/;"	f
+slid_in_alloc_loc	slid_sat.h	/^}slid_in_alloc_loc;$/;"	t	typeref:struct:__anon7
+slid_in_alloc_loc_find	slid_sat.c	/^Z3_ast slid_in_alloc_loc_find(slid_in_alloc_loc_arrays *m, unsigned int k, unsigned int sid)$/;"	f
+slid_in_alloc_loc_locate	slid_sat.c	/^slid_in_alloc_loc *slid_in_alloc_loc_locate(slid_in_alloc_loc_arrays *m, unsigned int k, unsigned int i)$/;"	f
+slid_init_context	slid_sat.c	/^slid_context slid_init_context(Z3_context z3_ctx)$/;"	f
+slid_is_trans_para	slid_sat.c	/^bool slid_is_trans_para(unsigned int sid0, unsigned int sid1, noll_pred_rule_t *r)$/;"	f
+slid_mk_abstr	slid_sat.c	/^void slid_mk_abstr(Z3_context z3_ctx, slid_context slid_ctx, noll_form_t *f)$/;"	f
+slid_mk_assist_constr	slid_sat.c	/^Z3_ast slid_mk_assist_constr(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+slid_mk_closure	slid_sat.c	/^Z3_ast slid_mk_closure(Z3_context z3_ctx, slid_context slid_ctx, slid_data_constr *dc, noll_ls_t *p, int k)$/;"	f
+slid_mk_closures	slid_sat.c	/^Z3_ast slid_mk_closures(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, int k)$/;"	f
+slid_mk_context	slid_sat.c	/^slid_context slid_mk_context(Z3_context z3_ctx, noll_form_t *form)$/;"	f
+slid_mk_fir_unfold	slid_sat.c	/^Z3_ast slid_mk_fir_unfold(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, int k)$/;"	f
+slid_mk_implies	slid_sat.c	/^Z3_ast slid_mk_implies(Z3_context z3_ctx, slid_context slid_ctx, noll_dform_array *forms)$/;"	f
+slid_mk_in_alloc_loc	slid_sat.c	/^slid_in_alloc_loc* slid_mk_in_alloc_loc(Z3_context z3_ctx, Z3_sort bsort,\\$/;"	f
+slid_mk_in_alloc_loc_array_ls	slid_sat.c	/^slid_in_alloc_loc_array* slid_mk_in_alloc_loc_array_ls(Z3_context z3_ctx, Z3_sort bsort,\\$/;"	f
+slid_mk_in_alloc_loc_array_pto	slid_sat.c	/^slid_in_alloc_loc_array* slid_mk_in_alloc_loc_array_pto(Z3_context z3_ctx, Z3_sort bsort,\\$/;"	f
+slid_mk_in_alloc_loc_arrays	slid_sat.c	/^slid_in_alloc_loc_arrays* slid_mk_in_alloc_loc_arrays(Z3_context z3_ctx, Z3_sort bsort,\\$/;"	f
+slid_mk_ite	slid_sat.c	/^Z3_ast slid_mk_ite(Z3_context z3_ctx, slid_context slid_ctx, noll_dterm_t *term)$/;"	f
+slid_mk_pred	slid_sat.c	/^Z3_ast slid_mk_pred(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, int k)$/;"	f
+slid_mk_pred_data_constr_cst	slid_sat.c	/^Z3_ast slid_mk_pred_data_constr_cst(Z3_context z3_ctx, slid_context slid_ctx, slid_data_constr *dc, noll_ls_t *p)$/;"	f
+slid_mk_pred_data_constr_stc	slid_sat.c	/^Z3_ast slid_mk_pred_data_constr_stc(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+slid_mk_pred_data_constr_trans	slid_sat.c	/^Z3_ast slid_mk_pred_data_constr_trans(Z3_context z3_ctx, slid_context slid_ctx,\\$/;"	f
+slid_mk_pto	slid_sat.c	/^Z3_ast slid_mk_pto(Z3_context z3_ctx, slid_context slid_ctx, noll_pto_t *pto, int k)$/;"	f
+slid_mk_pure_abstr	slid_sat.c	/^void slid_mk_pure_abstr(Z3_context z3_ctx, slid_context slid_ctx, noll_pure_t *pure)$/;"	f
+slid_mk_pure_data_constr	slid_sat.c	/^Z3_ast slid_mk_pure_data_constr(Z3_context z3_ctx, slid_context slid_ctx, noll_dform_t *data)$/;"	f
+slid_mk_sec_unfold	slid_sat.c	/^Z3_ast slid_mk_sec_unfold(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, int k)$/;"	f
+slid_mk_sep_constr	slid_sat.c	/^Z3_ast slid_mk_sep_constr(Z3_context z3_ctx, slid_context slid_ctx)$/;"	f
+slid_mk_space_abstr	slid_sat.c	/^void slid_mk_space_abstr(Z3_context z3_ctx, slid_context slid_ctx)$/;"	f
+slid_mk_space_array	slid_sat.c	/^void slid_mk_space_array(noll_space_array **space_arr, noll_space_t *space)$/;"	f
+slid_mk_term	slid_sat.c	/^Z3_ast slid_mk_term(Z3_context z3_ctx, slid_context slid_ctx, noll_dterm_t *term)$/;"	f
+slid_mk_unfold	slid_sat.c	/^Z3_ast slid_mk_unfold(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, int ki)$/;"	f
+slid_sat_check	slid_sat.c	/^void slid_sat_check(noll_form_t *form)$/;"	f
+slid_sat_t	slid_sat.h	/^}slid_sat_t;$/;"	t	typeref:enum:__anon4
+sloc	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (sloc);$/;"	v
+sloc2edge	noll_graph.h	/^  uint_t *sloc2edge;            \/\/ mapping set variables to edges in graph$/;"	m	struct:noll_graph_t
+smt_fname	noll_entl.h	/^  char *smt_fname;              \/\/ smt file with entailment$/;"	m	struct:noll_entl_t
+smtlib2_noll_parser	smtlib2noll.h	/^typedef struct smtlib2_noll_parser$/;"	s
+smtlib2_noll_parser	smtlib2noll.h	/^} smtlib2_noll_parser;$/;"	t	typeref:struct:smtlib2_noll_parser
+smtlib2_noll_parser_assert_formula	smtlib2noll.c	/^smtlib2_noll_parser_assert_formula (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_check_sat	smtlib2noll.c	/^smtlib2_noll_parser_check_sat (smtlib2_parser_interface * p)$/;"	f	file:
+smtlib2_noll_parser_declare_function	smtlib2noll.c	/^smtlib2_noll_parser_declare_function (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_declare_sort	smtlib2noll.c	/^smtlib2_noll_parser_declare_sort (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_declare_variable	smtlib2noll.c	/^smtlib2_noll_parser_declare_variable (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_define_function	smtlib2noll.c	/^smtlib2_noll_parser_define_function (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_delete	smtlib2noll.c	/^smtlib2_noll_parser_delete (smtlib2_noll_parser * p)$/;"	f
+smtlib2_noll_parser_make_exists_term	smtlib2noll.c	/^smtlib2_noll_parser_make_exists_term (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_make_forall_term	smtlib2noll.c	/^smtlib2_noll_parser_make_forall_term (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_make_function_sort	smtlib2noll.c	/^smtlib2_noll_parser_make_function_sort (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_make_parametric_sort	smtlib2noll.c	/^smtlib2_noll_parser_make_parametric_sort (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_make_sort	smtlib2noll.c	/^smtlib2_noll_parser_make_sort (smtlib2_parser_interface * p,$/;"	f	file:
+smtlib2_noll_parser_mk_function	smtlib2noll.c	/^smtlib2_noll_parser_mk_function (smtlib2_context ctx,$/;"	f	file:
+smtlib2_noll_parser_mk_number	smtlib2noll.c	/^smtlib2_noll_parser_mk_number (smtlib2_context ctx,$/;"	f	file:
+smtlib2_noll_parser_new	smtlib2noll.c	/^smtlib2_noll_parser_new (void)$/;"	f
+smtlib2_noll_parser_pop_quantifier_scope	smtlib2noll.c	/^smtlib2_noll_parser_pop_quantifier_scope (smtlib2_parser_interface * p)$/;"	f	file:
+smtlib2_noll_parser_push_quantifier_scope	smtlib2noll.c	/^smtlib2_noll_parser_push_quantifier_scope (smtlib2_parser_interface * p)$/;"	f	file:
+smtlib2_noll_parser_set_logic	smtlib2noll.c	/^smtlib2_noll_parser_set_logic (smtlib2_parser_interface * p,$/;"	f	file:
+sorts_	smtlib2noll.h	/^  smtlib2_hashtable *sorts_;    \/\/ all the declared sort symbols$/;"	m	struct:smtlib2_noll_parser
+space	noll_form.h	/^    noll_space_t *space;        \/\/ space part$/;"	m	struct:noll_form_t
+space	slid_sat.h	/^	noll_space_array *space;    \/\/spatial part of the formula$/;"	m	struct:__anon8
+src_r	noll_types.h	/^    uid_t src_r;                \/\/ identifier of the source record$/;"	m	struct:noll_field_t
+sref	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (sref);$/;"	v
+ssep	noll_graph.h	/^  noll_uid_array *ssep;         \/\/ array of edges strongly separated from this one or NULL$/;"	m	struct:noll_edge_s
+ssep	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (ssep);$/;"	v
+sstart	noll.h	/^        uint_t sstart;          \/* index starting the set of location quantified variables *\/$/;"	m	struct:noll_exp_t::__anon27::__anon28
+start_apto	noll2sat.h	/^  uint_t start_apto;            \/* id of first variable *\/$/;"	m	struct:noll_sat_s
+start_inset	noll2sat.h	/^  uint_t start_inset;           \/* id of first variable *\/$/;"	m	struct:noll_sat_s
+start_pred	noll2sat.h	/^  uint_t start_pred;            \/* id of first variable *\/$/;"	m	struct:noll_sat_s
+start_pto	noll2sat.h	/^  uint_t start_pto;             \/* id of first variable *\/$/;"	m	struct:noll_sat_s
+start_pure	noll2sat.h	/^  uint_t start_pure;            \/* id of first variable *\/$/;"	m	struct:noll_sat_s
+stc	slid_sat.h	/^	noll_dform_array *stc;$/;"	m	struct:__anon6
+str	noll_ta_symbols.c	/^  char *str;$/;"	m	struct:noll_ta_symbol	file:
+str	printdterm.c	/^  char *str;$/;"	m	struct:noll_ta_symbol	file:
+subset	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (subset);$/;"	v
+svar	noll_form.h	/^    uid_t svar;                 \/\/ set of locations variable, UNDEFINED_ID if kind == NOLL_STERM_LVAR$/;"	m	struct:noll_sterm_t
+svar_env	noll.h	/^    noll_var_array *svar_env;$/;"	m	struct:noll_context_t
+svar_size	noll2sat.h	/^  uint_t svar_size;             \/* number of used svar *\/$/;"	m	struct:noll_form_info_s
+svar_stack	noll.h	/^    noll_uint_array *svar_stack;$/;"	m	struct:noll_context_t
+svars	noll.h	/^        noll_var_array *svars;  \/* set of location vars *\/$/;"	m	struct:noll_exp_t::__anon27::__anon28
+svars	noll_form.h	/^    noll_var_array *svars;$/;"	m	struct:noll_form_t
+svars	noll_graph.h	/^  noll_var_array *svars;$/;"	m	struct:noll_graph_t
+symbol	noll_tree.h	/^  const noll_ta_symbol_t *symbol;$/;"	m	struct:noll_tree_node_s
+t	printdterm.c	/^  noll_typ_t t;$/;"	v
+t_left	noll_form.h	/^    noll_sterm_t *t_left;       \/\/ term left$/;"	m	struct:noll_atom_share_t
+t_right	noll_form.h	/^    noll_sterm_array *t_right;  \/\/ term right = union of terms$/;"	m	struct:noll_atom_share_t
+ta	libvata_noll_iface.cc	/^	TreeAut ta;$/;"	m	struct:type_noll_ta_t	file:
+tabn	printdterm.c	/^int tabn=0;$/;"	v
+targs	noll_form.h	/^      noll_dterm_array *targs;  \/\/ term arguments$/;"	m	union:noll_dform_s::__anon10
+test_in_equality	noll2bool.c	/^test_in_equality (uint_t x, uint_t y, noll_pure_op_t oper, int nbv, int nbc,$/;"	f
+test_satisfiability	noll2bool.c	/^test_satisfiability (int nbv, int nbc, char *fname)$/;"	f
+time_difference	noll_sat.c	/^time_difference (struct timeval *result, struct timeval *t2,$/;"	f
+tobool	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (tobool);$/;"	v
+tosat_old	noll_option.c	/^bool tosat_old = false;$/;"	v
+tospace	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (tospace);$/;"	v
+trans	slid_sat.h	/^	noll_dform_array *trans;$/;"	m	struct:__anon6
+typ	noll_form.h	/^    noll_typ_t typ;             \/\/ either NOLL_TYP_INT or NOLL_TYP_BAGINT$/;"	m	struct:noll_dform_s
+typ	noll_form.h	/^    noll_typ_t typ;             \/\/ either NOLL_TYP_INT or NOLL_TYP_BAGINT$/;"	m	struct:noll_dterm_s
+typ	noll_preds.h	/^    noll_pred_typing_t *typ;    \/\/ predicate typing infos$/;"	m	struct:noll_pred_t
+type_in_pred_of_svar	noll2sat.c	/^type_in_pred_of_svar (noll_sat_t * fsat, uint_t type, uint_t svar)$/;"	f
+type_in_predicate_of_svar	noll2bool.c	/^type_in_predicate_of_svar (uint_t type, uint_t svar)$/;"	f
+type_noll_ta_t	libvata_noll_iface.cc	/^typedef struct type_noll_ta_t$/;"	s	file:
+uid_t	noll_types.h	/^  typedef uid_t uid_t;$/;"	t
+uint_t	noll_vector.h	/^typedef uint32_t uint_t;$/;"	t
+unloc	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (unloc);$/;"	v
+update_marking_from	noll_graph2ta.c	/^update_marking_from (uint_t node,$/;"	f	file:
+useNil	noll_preds.h	/^    bool useNil;                \/* the predicate use fields to nil *\/$/;"	m	struct:noll_pred_typing_t
+used_flds	noll2sat.h	/^  bool *used_flds;              \/* bitset of size of fields_array *\/$/;"	m	struct:noll_form_info_s
+used_lvar	noll2sat.h	/^  bool *used_lvar;              \/* bitset of size of locs_array *\/$/;"	m	struct:noll_form_info_s
+used_pred	noll2sat.h	/^  bool *used_pred;              \/* bitset of size of pred_array *\/$/;"	m	struct:noll_form_info_s
+used_svar	noll2sat.h	/^  bool *used_svar;              \/* bitset of size of slocs_array *\/$/;"	m	struct:noll_form_info_s
+value	noll.h	/^      long value;$/;"	m	union:noll_exp_t::__anon27
+value	noll_form.h	/^      long value;               \/\/ integer constant$/;"	m	union:noll_dterm_s::__anon9
+var	noll2sat.h	/^      uid_t var;                \/\/ UNDEFINED_ID if not apto$/;"	m	struct:noll_sat_space_s::__anon1::__anon2
+var	slid_sat.h	/^	z3_ast_array *var;          \/\/nil + variables in the formula$/;"	m	struct:__anon8
+var2node	noll_graph.h	/^  uint_t *var2node;             \/\/ variables to node labels, array of size of lvars$/;"	m	struct:noll_graph_t
+var_apto	noll2sat.h	/^  noll_sat_space_array *var_apto;       \/* sorted array of pto constraints [x,f,alpha] *\/$/;"	m	struct:noll_sat_s
+var_eqns	noll2bool.c	/^int **var_eqns;                 \/\/ stores the integers denoting boolean variables of the form [x=y]$/;"	v
+var_inset	noll2sat.h	/^  noll_sat_in_array *var_inset; \/* sorted array of sharing atoms x in alpha *\/$/;"	m	struct:noll_sat_s
+var_ls	noll2bool.c	/^noll_ls_indexed_t *var_ls;      \/\/ stores the integers denoting boolean variables of the form [P(x,y,z)]$/;"	v
+var_member	noll2bool.c	/^int **var_member;$/;"	v
+var_pred	noll2sat.h	/^  noll_sat_space_array *var_pred;       \/* sorted array of pred atoms P_alpha(x,y,z) *\/$/;"	m	struct:noll_sat_s
+var_pto	noll2bool.c	/^noll_pto_indexed_t *var_pto;    \/\/ stores the integers denoting boolean variables of the form [x,y,f]$/;"	v
+var_pto	noll2sat.h	/^  noll_sat_space_array *var_pto;        \/* sorted array of pto constraints [x,f,y] *\/$/;"	m	struct:noll_sat_s
+var_pto_nodest	noll2bool.c	/^int ***var_pto_nodest;$/;"	v
+var_pure	noll2sat.h	/^  uid_t **var_pure;             \/* lower diagonal matrix [i][j] j <= i,$/;"	m	struct:noll_sat_s
+vars	noll_preds.h	/^    noll_var_array *vars;       \/\/ nil + formal arguments (+ old: local variables for sigma_0, sigma_1)$/;"	m	struct:noll_pred_binding_t
+vars	noll_preds.h	/^    noll_var_array *vars;       \/\/ nil + formal arguments + existentially quantified variables$/;"	m	struct:noll_pred_rule_t
+vars	noll_ta_symbols.c	/^      noll_uid_array *vars;$/;"	m	struct:noll_ta_symbol::__anon18::__anon19	file:
+vars	noll_ta_symbols.c	/^      noll_uid_array *vars;$/;"	m	struct:noll_ta_symbol::__anon18::__anon21	file:
+vars	printdterm.c	/^      noll_uid_array *vars;$/;"	m	struct:noll_ta_symbol::__anon12::__anon13	file:
+vars	printdterm.c	/^      noll_uid_array *vars;$/;"	m	struct:noll_ta_symbol::__anon12::__anon15	file:
+vata_add_transition	libvata_noll_iface.cc	/^void vata_add_transition($/;"	f
+vata_check_inclusion	libvata_noll_iface.cc	/^bool vata_check_inclusion($/;"	f
+vata_create_ta	libvata_noll_iface.cc	/^vata_ta_t* vata_create_ta()$/;"	f
+vata_free_ta	libvata_noll_iface.cc	/^void vata_free_ta($/;"	f
+vata_print_ta	libvata_noll_iface.cc	/^void vata_print_ta($/;"	f
+vata_set_state_root	libvata_noll_iface.cc	/^void vata_set_state_root($/;"	f
+vata_state_t	libvata_noll_iface.h	/^  typedef size_t vata_state_t;$/;"	t
+vata_symbol_t	libvata_noll_iface.h	/^  typedef noll_ta_symbol_t vata_symbol_t;$/;"	t
+vata_symbol_translate_fncptr	libvata_noll_iface.h	/^  typedef const noll_ta_symbol_t *(*vata_symbol_translate_fncptr) (const$/;"	t
+vata_ta_t	libvata_noll_iface.h	/^  typedef struct type_noll_ta_t vata_ta_t;$/;"	t	typeref:struct:type_noll_ta_t
+vata_to_noll_symbol	libvata_noll_iface.cc	/^	static const noll_ta_symbol_t* vata_to_noll_symbol(const TreeAutSymbol& vata_symb)$/;"	f	class:NollAlphabet
+vata_translate_symbols	libvata_noll_iface.cc	/^void vata_translate_symbols($/;"	f
+verbosity_level	noll_option.c	/^int verbosity_level = 0;$/;"	v
+vid	noll_vars.h	/^    uid_t vid;                  \/\/ variable identifier$/;"	m	struct:noll_var_t
+vname	noll_vars.h	/^    char *vname;                \/\/ declaration name$/;"	m	struct:noll_var_t
+vty	noll_vars.h	/^    noll_type_t *vty;           \/\/ type$/;"	m	struct:noll_var_t
+write_bool_abstr	noll2bool.c	/^write_bool_abstr (noll_form_t * form, char *fname, int *nbvar, int *nbclauses)$/;"	f
+wsep	smtlib2noll.c	/^SMTLIB2_NOLL_DECLHANDLER (wsep);$/;"	v
+x	noll2bool.c	/^  uint_t x;                     \/\/first variable$/;"	m	struct:noll_pure_atom	file:
+x	noll2sat.h	/^  uid_t x;                      \/* position in locs_array *\/$/;"	m	struct:noll_sat_in_s
+x	noll2sat.h	/^  uid_t x;$/;"	m	struct:noll_sat_pure_s
+y	noll2bool.c	/^  uint_t y;                     \/\/second variable$/;"	m	struct:noll_pure_atom	file:
+y	noll2sat.h	/^  uid_t y;$/;"	m	struct:noll_sat_pure_s

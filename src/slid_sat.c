@@ -18,6 +18,13 @@ NOLL_VECTOR_DEFINE(slid_in_alloc_loc_arrays, slid_in_alloc_loc_array *);
 
 extern noll_pred_array *preds_array;
 
+/* --------------------------------------------------------------------------*/
+/**
+ * @synopsis  slid_sat_check 
+ *
+ * @param form
+ */
+/* --------------------------------------------------------------------------*/
 //check the formula sat or not
 void slid_sat_check(noll_form_t *form)
 {
