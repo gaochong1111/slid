@@ -1,4 +1,4 @@
-FILE(REMOVE_RECURSE
+file(REMOVE_RECURSE
   "timbuk.y.cc"
   "timbuk.y.hh"
   "timbuk.l.cc"
@@ -62,6 +62,6 @@ FILE(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-FOREACH(lang C CXX)
-  INCLUDE(CMakeFiles/libvata.dir/cmake_clean_${lang}.cmake OPTIONAL)
-ENDFOREACH(lang)
+foreach(lang C CXX)
+  include(CMakeFiles/libvata.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

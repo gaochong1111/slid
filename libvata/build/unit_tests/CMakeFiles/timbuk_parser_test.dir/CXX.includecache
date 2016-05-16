@@ -172,11 +172,11 @@ cassert
 iostream
 -
 
-/home/jack/space/slib/slid/libvata/unit_tests/log_fixture.hh
+/home/guxc/Documents/workspace/spen/libvata/unit_tests/log_fixture.hh
 boost/filesystem.hpp
 -
 
-/home/jack/space/slib/slid/libvata/unit_tests/timbuk_parser_test.cc
+/home/guxc/Documents/workspace/spen/libvata/unit_tests/timbuk_parser_test.cc
 vata/vata.hh
 -
 vata/parsing/timbuk_parser.hh
@@ -192,5 +192,5 @@ boost/test/unit_test.hpp
 boost/filesystem.hpp
 -
 log_fixture.hh
-/home/jack/space/slib/slid/libvata/unit_tests/log_fixture.hh
+/home/guxc/Documents/workspace/spen/libvata/unit_tests/log_fixture.hh
 

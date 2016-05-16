@@ -64,7 +64,7 @@ BINCONSTANT         #b[0-1]+
 HEXCONSTANT         #x[0-9a-fA-F]+
 BVCONSTANT          bv[0-9]+
 RATCONSTANT         [0-9]+\.[0-9]+
-NUMERAL                    [0-9]+
+NUMERAL                    [+-]?[0-9]+
 SYMBOL              [a-zA-Z0-9._+\-*=%/?!$_~&^<>@]+
 KEYWORD             :[a-zA-Z0-9._+\-*=%?!$_~&^<>@]+
 

@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/jack/space/slib/slid/libvata
-BuildDirectory: /home/jack/space/slib/slid/libvata/build
+SourceDirectory: /home/guxc/Documents/workspace/spen/libvata
+BuildDirectory: /home/guxc/Documents/workspace/spen/libvata/build
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: jack-ThinkPad-T410
+Site: debian
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Linux-g++
@@ -33,8 +33,8 @@ ScpCommand: /usr/bin/scp
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/home/jack/space/slib/slid/libvata"
-MakeCommand: /usr/bin/make -i
+ConfigureCommand: "/usr/bin/cmake" "/home/guxc/Documents/workspace/spen/libvata"
+MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}" -- -i
 DefaultCTestConfigurationType: Release
 
 # CVS options
@@ -52,10 +52,17 @@ GITCommand: /usr/bin/git
 GITUpdateOptions: 
 GITUpdateCustom: 
 
+# Perforce options
+P4Command: P4COMMAND-NOTFOUND
+P4Client: 
+P4Options: 
+P4UpdateOptions: 
+P4UpdateCustom: 
+
 # Generic update command
-UpdateCommand: 
+UpdateCommand: /usr/bin/git
 UpdateOptions: 
-UpdateType: 
+UpdateType: git
 
 # Compiler info
 Compiler: /usr/bin/g++

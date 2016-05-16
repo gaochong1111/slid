@@ -1,0 +1,10 @@
+# anything that was built
+build/*
+# Vim swap files
+**.swp
+# Doxygen generated documentation
+/html
+# ctags tags
+tags
+# YouCompleteMe dust
+.ycm_extra_conf.pyc

@@ -326,25 +326,25 @@ cassert
 iostream
 -
 
-/home/jack/space/slib/slid/libvata/cli/operations.hh
+/home/guxc/Documents/workspace/spen/libvata/cli/operations.hh
 vata/vata.hh
 -
 parse_args.hh
-/home/jack/space/slib/slid/libvata/cli/parse_args.hh
+/home/guxc/Documents/workspace/spen/libvata/cli/parse_args.hh
 
-/home/jack/space/slib/slid/libvata/cli/parse_args.cc
+/home/guxc/Documents/workspace/spen/libvata/cli/parse_args.cc
 vata/vata.hh
 -
 vata/util/convert.hh
 -
 parse_args.hh
-/home/jack/space/slib/slid/libvata/cli/parse_args.hh
+/home/guxc/Documents/workspace/spen/libvata/cli/parse_args.hh
 
-/home/jack/space/slib/slid/libvata/cli/parse_args.hh
+/home/guxc/Documents/workspace/spen/libvata/cli/parse_args.hh
 vata/vata.hh
 -
 
-/home/jack/space/slib/slid/libvata/cli/vata.cc
+/home/guxc/Documents/workspace/spen/libvata/cli/vata.cc
 vata/vata.hh
 -
 vata/bdd_bu_tree_aut.hh
@@ -372,7 +372,7 @@ cstdlib
 fstream
 -
 parse_args.hh
-/home/jack/space/slib/slid/libvata/cli/parse_args.hh
+/home/guxc/Documents/workspace/spen/libvata/cli/parse_args.hh
 operations.hh
-/home/jack/space/slib/slid/libvata/cli/operations.hh
+/home/guxc/Documents/workspace/spen/libvata/cli/operations.hh
 
