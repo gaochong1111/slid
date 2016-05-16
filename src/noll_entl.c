@@ -33,6 +33,8 @@
 #include "noll_hom.h"
 #include "noll_pred2ta.h"
 
+extern int solve_entail();
+
 /* ====================================================================== */
 /* Globals */
 /* ====================================================================== */
@@ -839,20 +841,22 @@ noll_entl_solve (void)
    * Test special (syntactic) cases of entailment, 
    * before normalizing the formulas
    */
-  if (noll_option_get_verb () > 0)
-    fprintf (stdout, "  > check special cases\n");
-
-  res = noll_entl_solve_special (true);
-  if (res != -1)
-    return res;
-
-  if (noll_option_get_verb () > 0)
-    {
-      fprintf (stdout, "    not a special case for check-%ssat!\n",
-               (noll_prob->cmd == NOLL_FORM_SAT) ? "" : "un");
-      fflush (stdout);
-    }
-
+/*
+ *  if (noll_option_get_verb () > 0)
+ *    fprintf (stdout, "  > check special cases\n");
+ *
+ *  res = noll_entl_solve_special (true);
+ *  if (res != -1)
+ *    return res;
+ *
+ *  if (noll_option_get_verb () > 0)
+ *    {
+ *      fprintf (stdout, "    not a special case for check-%ssat!\n",
+ *               (noll_prob->cmd == NOLL_FORM_SAT) ? "" : "un");
+ *      fflush (stdout);
+ *    }
+ *
+ */
   struct timeval tvBegin, tvEnd, tvDiff;
 
   gettimeofday (&tvBegin, NULL);
@@ -860,26 +864,32 @@ noll_entl_solve (void)
   /*
    * Compute typing infos
    */
-  if (noll_option_get_verb () > 0)
-    fprintf (stdout, "  > typing formulas\n");
+  //if (noll_option_get_verb () > 0)
+    //fprintf (stdout, "  > typing formulas\n");
 
   noll_entl_type ();
 
-#ifndef NDEBUG
-  fprintf (stdout, "\n*** noll_entl_solve: after typing problem:\n");
-  noll_records_array_fprint (stdout, "records:");
-  noll_fields_array_fprint (stdout, "fields:");
-  noll_pred_array_fprint (stdout, preds_array, "predicates:");
-  fflush (stdout);
-#endif
+  res = solve_entail();
+
+/*
+ *#ifndef NDEBUG
+ *  fprintf (stdout, "\n*** noll_entl_solve: after typing problem:\n");
+ *  noll_records_array_fprint (stdout, "records:");
+ *  noll_fields_array_fprint (stdout, "fields:");
+ *  noll_pred_array_fprint (stdout, preds_array, "predicates:");
+ *  fflush (stdout);
+ *#endif
+ */
 
   /*
    * Normalize both formulas (which also test satisfiability)
    */
-  if (noll_option_get_verb () > 0)
-    fprintf (stdout, "  > normalizing formulas\n");
-
-  noll_entl_normalize ();
+/*
+ *  if (noll_option_get_verb () > 0)
+ *    fprintf (stdout, "  > normalizing formulas\n");
+ *
+ *  noll_entl_normalize ();
+ */
 
   /*
    * Test the satisfiability of pform /\ not(\/_i nform)
@@ -887,55 +897,61 @@ noll_entl_solve (void)
   /*
    * Special cases, not covered by graph homeomorphism
    */
-  res = noll_entl_solve_special (false);
-  if (res != -1)
-    goto check_end;
+  /*
+   *res = noll_entl_solve_special (false);
+   *if (res != -1)
+   *  goto check_end;
+   */
 
   /*
    * If both formulas are not empty,
    * translate formulas to graphs.
    */
-  if (noll_option_get_verb () > 0)
-    fprintf (stdout, "  > translation to graphs\n");
-
-  res = noll_entl_to_graph ();
-  if (res == 0)
-    {
-      // entailment invalid, so sat problem
-      res = 1;
-      goto check_end;
-    }
+/*
+ *  if (noll_option_get_verb () > 0)
+ *    fprintf (stdout, "  > translation to graphs\n");
+ *
+ *  res = noll_entl_to_graph ();
+ *  if (res == 0)
+ *    {
+ *      // entailment invalid, so sat problem
+ *      res = 1;
+ *      goto check_end;
+ *    }
+ */
 
   /*
    * Check graph homeomorphism
    */
-  if (noll_option_get_verb () > 0)
-    fprintf (stdout, "  > check graph homeomorphism\n");
-  /* build homeomorphism from right to left */
-  res = noll_entl_to_hom ();
-  /* sharing constraints in pos_graph are updated and tested! */
-  switch (res)
-    {
-    case 0:
-      {
-        // homeomorphism not found, 
-        // so entailment invalid, 
-        // so sat problem
-        res = 1;
-        break;
-      }
-    case 1:
-      {
-        // homeomorphism found
-        // so entailment valid
-        // so unsat problem
-        res = 0;
-        break;
-      }
-    default:
-      assert (res == -1);
-      break;
-    }
+  /*
+   *if (noll_option_get_verb () > 0)
+   *  fprintf (stdout, "  > check graph homeomorphism\n");
+   *[> build homeomorphism from right to left <]
+   *res = noll_entl_to_hom ();
+   *[> sharing constraints in pos_graph are updated and tested! <]
+   *switch (res)
+   *  {
+   *  case 0:
+   *    {
+   *      // homeomorphism not found, 
+   *      // so entailment invalid, 
+   *      // so sat problem
+   *      res = 1;
+   *      break;
+   *    }
+   *  case 1:
+   *    {
+   *      // homeomorphism found
+   *      // so entailment valid
+   *      // so unsat problem
+   *      res = 0;
+   *      break;
+   *    }
+   *  default:
+   *    assert (res == -1);
+   *    break;
+   *  }
+   */
 
   /*
    * FIN

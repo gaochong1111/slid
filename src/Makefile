@@ -43,7 +43,16 @@ CCINC = noll_vector.h \
 	noll_graph2ta.h noll_pred2ta.h \
         noll_lemma.h \
 	noll_hom.h noll_entl.h \
-	noll.h smtlib2noll.h slf.h
+	noll.h smtlib2noll.h\
+	sl_entail.h\
+	sl_formula.h\
+	sl_abstr.h\
+	sl_for.h\
+	sl_var.h\
+	sl_context.h\
+	graph.h\
+	sl_sat.h\
+	sl_entl.h
 
 CCSRC = noll_types.c \
 	noll_vars.c \
@@ -61,7 +70,17 @@ CCSRC = noll_types.c \
 	noll-dp.c\
 	slid_sat.c
 
-CXXSRC = libvata_noll_iface.cc slf.cc
+CXXSRC = libvata_noll_iface.cc\
+	 sl_entail.cc\
+	 sl_formula.cc\
+	 sl_abstr.cc\
+	 sl_for.cc\
+	 sl_context.cc\
+	 graph.cc\
+	 sl_sat.cc\
+	 sl_entl.cc\
+	 sl_var.cc
+
 
 #---------------------------------------
 # Rules
@@ -102,11 +121,11 @@ indent: $(CCINC) $(CCSRC)
 libvata_noll_iface.o: libvata_noll_iface.cc $(CCINC) $(DEPS)
 	$(CXX) $(CXXFLAGS) $(ICXXFLAGS) -c -o $@ $<
 
-slf.o: slf.cc
-	g++ -c -g -std=c++11 slf.cc
-
 libvata_noll_iface_debug.o: libvata_noll_iface.cc $(CCINC) $(DEPS)
 	$(CXX) $(CXXFLAGS_DEBUG) $(ICXXFLAGS) -c -o $@ $<
+
+%.o: %.cc $(CCINC) $(DEPS)
+	$(CXX) $(CXXFLAGS) $(ICXXFLAGS) -c -o $@ $<
 
 %.o: %.c $(CCINC) $(DEPS)
 	$(CC) $(CFLAGS) $(ICFLAGS) -c -o $@ $<

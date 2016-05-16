@@ -58,30 +58,47 @@
 (declare-fun E2() Ldll_t)
 (declare-fun E3() Ldll_t)
 (declare-fun E4() Ldll_t)
-(declare-fun n1() Int)
-(declare-fun n2() Int)
+(declare-fun E5() Ldll_t)
+(declare-fun E6() Ldll_t)
+
+(declare-fun F1() Ldll_t)
+(declare-fun F2() Ldll_t)
+(declare-fun F3() Ldll_t)
+(declare-fun F4() Ldll_t)
+(declare-fun F5() Ldll_t)
+(declare-fun F6() Ldll_t)
+
+(declare-fun x1() Int)
+(declare-fun x2() Int)
+(declare-fun x3() Int)
+(declare-fun x4() Int)
+(declare-fun x5() Int)
+(declare-fun x6() Int)
+
+(declare-fun y3() Int)
+(declare-fun y4() Int)
+(declare-fun y5() Int)
 
 (declare-fun alpha0() SetLoc)
+(declare-fun alpha1() SetLoc)
 
 (assert
 	(and
-		(<= n1 (+ n2 6))
-		(>= n1 (+ n2 5))
+		(> x3 x5)
+		(distinct E1 E3)
+		;(>= n1 (+ n2 5))
 		(tobool
-			(index alpha0 (ldllseg E1 E3 n1 E2 E4 n2))
+		(ssep   (index alpha0 (ldllseg E1 F1 x1 E3 F3 x3)) 
+			(index alpha0 (ldllseg E2 F2 x2 E4 F4 x4))
+			(index alpha0 (ldllseg E3 F3 x3 E4 F4 x4))
+			(index alpha0 (ldllseg E4 F4 y4 E3 F3 y3))
+			(index alpha0 (ldllseg E3 F3 x3 E5 F5 x5))
+			(index alpha0 (ldllseg E5 F5 y5 E3 F3 y3))
+			(index alpha0 (ldllseg E4 F4 x5 E6 F6 x6))
+		) 
 		)
 	)
 )
 
-(assert
-	(not
-		(and
-			(distinct E1 E4)
-			(tobool
-				(index alpha0 (dllseg E1 E2))
-			)
-		)
-	)
-)
 
 (check-sat)

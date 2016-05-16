@@ -545,18 +545,18 @@ Z3_ast slid_mk_pto(Z3_context z3_ctx, slid_context slid_ctx, noll_pto_t *pto, in
 {
 	assert(pto != NULL);
 
-	Z3_ast r1, r2, t1, t2;
+	Z3_ast r[2], t1, t2;
 	Z3_ast ki, one;
-	one = Z3_mk_int(z3_ctx, 1);
+	one = Z3_mk_int(z3_ctx, 1, slid_ctx->int_sort);
 	ki = noll_vector_at(slid_ctx->k, k);
-	r1 = Z3_mk_eq(z3_ctx, ki, one);
+	r[0] = Z3_mk_eq(z3_ctx, ki, one);
 
 	t1 = slid_in_alloc_loc_find(slid_ctx->m, k, pto->sid);
 	assert(t1 != NULL);
 	t2 = Z3_mk_true(z3_ctx);
-	r2 = Z3_mk_eq(z3_ctx, t1, t2);
+	r[1] = Z3_mk_eq(z3_ctx, t1, t2);
 
-	return Z3_mk_and(z3_ctx, r1, r2);
+	return Z3_mk_and(z3_ctx, 2, r);
 }
 
 Z3_ast slid_mk_pred(Z3_context z3_ctx, slid_context slid_ctx, noll_ls_t *pred, int k)
