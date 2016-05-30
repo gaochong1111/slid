@@ -17,7 +17,7 @@ public:
 	sl_formula& operator=(sl_formula&&) noexcept;	
 
 	void mk_graph();
-	Z3_ast mk_abstr(noll_ls_t*, size_t);
+	//Z3_ast mk_abstr(noll_ls_t*, size_t);
 
 
 	bool is_static_param(noll_pred_t*, size_t);

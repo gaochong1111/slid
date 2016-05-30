@@ -10,6 +10,7 @@ using namespace std;
 
 
 splitter::splitter(sl_formula& f)
+	: startf(f)
 {
 	s.push(f);
 }
@@ -57,15 +58,11 @@ vector<sl_formula> splitter::split(sl_formula& fp)
 {
 	vector<sl_formula> res;
 	vector<Z3_ast> t;
-	vector<int> cc_cycle_num;
-	sl_formula f;
-
-	cc_cycle_num = fp.get_cc_cycle_num();
-
+	vector<int> cc_cycle_num(fp.get_cc_cycle_num());
+	sl_formula f(startf);
 	vector<int> k(cc_cycle_num.size());
 
 	do {
-		f = s.top();
 		t.clear();
 		t.push_back(fp.get_abstr());
 		t.push_back(get_sub_constr(fp, k));
@@ -76,7 +73,6 @@ vector<sl_formula> splitter::split(sl_formula& fp)
 	t.clear();
 	t.push_back(fp.get_abstr());
 	t.push_back(get_sub_constr(fp));
-	f = s.top();
 	f.set_abstr(Z3_mk_and(fp.get_z3_context(), t.size(), &(*(begin(t)))));
 	res.push_back(f);
 
@@ -86,7 +82,7 @@ bool splitter::next(vector<int>& k, const vector<int>& num) const
 {
 	int i;
 	for (i = k.size() - 1; i >= 0; --i) {
-		if (k[i] == (num[i] - 1))
+		if ((num[i] == 0) || (k[i] == (num[i] - 1)))
 			continue;
 		k[i] += 1;
 		for (size_t j = i + 1; j < k.size(); ++j)
@@ -101,34 +97,41 @@ Z3_ast splitter::get_sub_constr(sl_formula& fp, const vector<int>& k) const
 {
 	Z3_context z3_ctx = fp.get_z3_context();
 	Z3_sort isort = fp.get_z3_sort_int();
-	Z3_ast zero, eq, neq;
-	zero = Z3_mk_int(z3_ctx, 0, isort);
+	Z3_ast zero, gt, res;
 	vector<Z3_ast> t, t2;
 	vector<graph::cc_cycle_t>& cycle = fp.get_cc_cycle();
 	size_t u, v, m;
+
+	zero = Z3_mk_int(z3_ctx, 0, isort);
+	res = Z3_mk_true(z3_ctx);
+
 	for (size_t i = 0; i < cycle.size(); ++i) {
 		t.clear();
-		for (size_t j = 0; j < cycle[i][k[i]].size(); ++j) {
+		for (size_t j = 0; (k[i] < cycle[i].size()) && (j < cycle[i][k[i]].size()); ++j) {
 			u = cycle[i][k[i]][j];
 			v = (j == cycle[i][k[i]].size()-1 ? cycle[i][k[i]][0] : cycle[i][k[i]][j+1]);
 			m = fp.get_edge_property(u, v);
 			assert(m >= 0);
-			eq = Z3_mk_eq(z3_ctx, fp.get_unfold_times(m), zero);
-			neq = Z3_mk_not(z3_ctx, eq);
-			t.push_back(neq);
+			gt = Z3_mk_gt(z3_ctx, fp.get_unfold_times(m), zero);
+			t.push_back(gt);
 		}
-		t2.push_back(Z3_mk_or(z3_ctx, t.size(), &(*begin(t))));
+		if (!t.empty())
+			t2.push_back(Z3_mk_or(z3_ctx, t.size(), &(*begin(t))));
 	}
-	return Z3_mk_and(z3_ctx, t2.size(), &(*begin(t2)));
+	if (!t2.empty())
+		res = Z3_mk_and(z3_ctx, t2.size(), &(*begin(t2)));
+	return res;
 }
 Z3_ast splitter::get_sub_constr(sl_formula& fp) const
 {
 	size_t u, v, j, m;
 	Z3_context z3_ctx = fp.get_z3_context();
 	Z3_sort isort = fp.get_z3_sort_int();
-	Z3_ast zero, eq;
+	Z3_ast zero, eq, res;
 	vector<Z3_ast> t;
 	vector<graph::cc_cycle_t>& cycle = fp.get_cc_cycle();
+
+	res = Z3_mk_true(z3_ctx);
 
 	zero = Z3_mk_int(z3_ctx, 0, isort);
 	for (size_t i = 0; i < cycle.size(); ++i) {
@@ -143,7 +146,9 @@ Z3_ast splitter::get_sub_constr(sl_formula& fp) const
 			}
 		}
 	}
-	return Z3_mk_and(z3_ctx, t.size(), &(*begin(t)));
+	if (!t.empty())
+		res = Z3_mk_and(z3_ctx, t.size(), &(*begin(t)));
+	return res;
 }
 extern noll_pred_array *preds_array;
 extern noll_entl_t *noll_prob;
@@ -187,28 +192,29 @@ bool sl_entail::check_sub_model_entail(splitter& s, sl_formula& neg)
 
 bool sl_entail::check_abstr_entail(sl_formula& pos, sl_formula& neg)
 {
-	Z3_solver s;
-	Z3_ast exist, imply;
+	Z3_ast exists, implies;
 	Z3_context z3_ctx = pos.get_z3_context();
-	Z3_sort isort, bsort;
-	isort = pos.get_z3_sort_int();
-	bsort = pos.get_z3_sort_bool();
-	vector<Z3_symbol> ksym, msym;
-	vector<Z3_sort> types(neg.get_spatial_atoms().size(), isort);
-	vector<Z3_symbol> names;
+	vector<Z3_ast> bound(neg.get_k_m_ast());
 
-	ksym = neg.get_z3_symbol_k();
-	msym = neg.get_z3_symbol_m();
-	
-	types.insert(end(types), msym.size(), bsort);
-	names.insert(end(names), begin(ksym), end(ksym));
-	names.insert(end(names), begin(msym), end(msym));
+	exists = Z3_mk_exists_const(z3_ctx, 0, bound.size(), (Z3_app*)(&(*begin(bound))), 0, NULL, neg.get_abstr());
+/*
+ *        Z3_sort isort, bsort;
+ *        isort = pos.get_z3_sort_int();
+ *        bsort = pos.get_z3_sort_bool();
+ *        vector<Z3_symbol> ksym(neg.get_z3_symbol_k());
+ *        vector<Z3_symbol> msym(neg.get_z3_symbol_m());
+ *        vector<Z3_sort> types(neg.get_spatial_atoms().size(), isort);
+ *        vector<Z3_symbol> names(begin(ksym), end(ksym));
+ *
+ *        types.insert(end(types), msym.size(), bsort);
+ *        names.insert(end(names), begin(msym), end(msym));
+ *
+ *        exists = Z3_mk_exists(z3_ctx, 0, 0, NULL, types.size(), &(*begin(types)), &(*begin(names)), neg.get_abstr());
+ */
+	implies = Z3_mk_implies(z3_ctx, pos.get_abstr(), exists);
 
-	exist = Z3_mk_exists(z3_ctx, 0, 0, NULL, types.size(), &(*begin(types)), &(*begin(names)), neg.get_abstr());
-	imply = Z3_mk_implies(z3_ctx, pos.get_abstr(), exist);
 
-
-	return !(sl_sat::check_sat(z3_ctx, Z3_mk_not(z3_ctx, imply)));
+	return !(sl_sat::check_sat(z3_ctx, Z3_mk_not(z3_ctx, implies)));
 
 }
 bool sl_entail::check_hom(sl_formula& pos, sl_formula& neg,
@@ -679,7 +685,7 @@ vector<int> sl_entail::get_sour_param(noll_ls_t* pred)
 	vector<int> res;
 	noll_pred_t* def_pred;
 	def_pred = noll_vector_at(preds_array, pred->pid);
-	dir_num = def_pred->typ->nDir;
+	dir_num = slid_get_hole(def_pred);
 	res.insert(end(res), 
 		   noll_vector_array(pred->args)+1,
 		   noll_vector_array(pred->args)+dir_num);
@@ -691,7 +697,7 @@ vector<int> sl_entail::get_dest_param(noll_ls_t* pred)
 	vector<int> res;
 	noll_pred_t* def_pred;
 	def_pred = noll_vector_at(preds_array, pred->pid);
-	dir_num = def_pred->typ->nDir;
+	dir_num = slid_get_hole(def_pred);
 	res.insert(end(res),
 		   noll_vector_array(pred->args)+dir_num+1,
 		   noll_vector_array(pred->args)+dir_num*2);
@@ -703,7 +709,7 @@ vector<int> sl_entail::get_static_param(noll_ls_t* pred)
 	vector<int> res;
 	noll_pred_t* def_pred;
 	def_pred = noll_vector_at(preds_array, pred->pid);
-	dir_num = def_pred->typ->nDir;
+	dir_num = slid_get_hole(def_pred);
 	res.insert(end(res),
 		   noll_vector_array(pred->args)+dir_num*2,
 		   noll_vector_array(pred->args)+noll_vector_size(pred->args));
