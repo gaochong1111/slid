@@ -11,7 +11,6 @@
 #include "slid_sat.h"
 
 
-
 class sl_abstr {
 public:
 	sl_abstr(): abstr(nullptr) {}
@@ -27,6 +26,7 @@ public:
 	//void init(sl_for&, sl_context&);
 
 	void mk_abstr();
+	Z3_ast mk_abstr(noll_ls_t*, size_t);
 
 	std::vector<noll_space_t*>& get_spatial_atoms();
 	bool is_sp_atom_empty(size_t);
@@ -37,8 +37,11 @@ public:
 	Z3_ast get_abstr();
 	void set_abstr(Z3_ast);
 
-	std::vector<Z3_symbol> get_z3_symbol_k();
-	std::vector<Z3_symbol> get_z3_symbol_m();
+	std::vector<Z3_ast> get_k_m_ast();
+	/*
+	 *std::vector<Z3_symbol> get_z3_symbol_k();
+	 *std::vector<Z3_symbol> get_z3_symbol_m();
+	 */
 
         bool check_eq(size_t, size_t);
 
@@ -85,11 +88,13 @@ private:
 	Z3_ast mk_implies(noll_dform_array*);
 	Z3_ast mk_term(noll_dterm_t*);
 
+	std::vector<int> get_trans_loc(noll_ls_t*);
+
 	void mk_space_abstr();
 	Z3_ast mk_pto(noll_pto_t*, int);
 	Z3_ast mk_unfold(noll_ls_t*, int);
-	Z3_ast mk_fir_unfold(noll_ls_t*, int);
-	Z3_ast mk_sec_unfold(noll_ls_t*, int);
+	Z3_ast mk_fir_unfold(noll_ls_t*, int, std::vector<int>&);
+	Z3_ast mk_sec_unfold(noll_ls_t*, int, std::vector<int>&);
 	Z3_ast mk_closures(noll_ls_t*, int);
 	Z3_ast mk_closure(slid_data_constr*, noll_ls_t*, int);
 	Z3_ast mk_pred_data_constr_cst(slid_data_constr*, noll_ls_t*);
@@ -110,8 +115,8 @@ private:
 	std::vector<sl_var> k;
 	std::vector<std::vector<sl_var>> m;
 	Z3_ast abstr;
-	//sl_sat_t kind = SL_SAT_UNKNOWN;
-	//friend class sl_formula;
+
+	static int _counter;
 };
 
 #endif // sl_abstr.h

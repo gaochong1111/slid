@@ -46,7 +46,9 @@ bool sl_formula::is_static_param(noll_pred_t* pred, size_t sid)
 	return false;
 }
 
-Z3_ast sl_formula::mk_abstr(noll_ls_t* pred, size_t k)
-{
-	return sl_abstr::mk_pred(pred, k);
-}
+/*
+ *Z3_ast sl_formula::mk_abstr(noll_ls_t* pred, size_t k)
+ *{
+ *        return sl_abstr::mk_pred(pred, k);
+ *}
+ */

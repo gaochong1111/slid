@@ -27,6 +27,7 @@ private:
 	Z3_ast get_sub_constr(sl_formula&) const;
 	bool next(std::vector<int>&, const std::vector<int>&) const;
 
+	sl_formula& startf;
 	std::stack<sl_formula> s;
 	std::vector<sl_formula> vecf;
 	size_t offset = 0;

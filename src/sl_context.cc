@@ -22,7 +22,7 @@ void sl_context::init()
 		noll_var_t* v = noll_vector_at(form->lvars, i);
 		Z3_symbol symbol = Z3_mk_string_symbol(z3_ctx, v->vname);
 		Z3_ast node = Z3_mk_const(z3_ctx, symbol, isort);
-		var.push_back(sl_var(i, isort, symbol, node));
+		var.push_back(sl_var(i, node));
 	}
 }
 /*

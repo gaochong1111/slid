@@ -4,6 +4,21 @@
 
 using namespace std;
 
+int sl_abstr::_counter;
+
+
+vector<Z3_ast> sl_abstr::get_k_m_ast()
+{
+	vector<Z3_ast> res;
+
+	for (size_t i = 0; i < k.size(); ++i)
+		res.push_back(k[i].node);
+	for (size_t i = 0; i < m.size(); ++i) {
+		for (size_t j = 0; j < m[i].size(); ++j)
+			res.push_back(m[i][j].node);
+	}
+	return res;
+}
 sl_abstr::sl_abstr(const sl_abstr& abs)
 {
 	f = abs.f;
@@ -11,6 +26,7 @@ sl_abstr::sl_abstr(const sl_abstr& abs)
 	k = abs.k;
 	m = abs.m;
 	abstr = abs.abstr;
+	//id = abs.id;
 }
 sl_abstr& sl_abstr::operator=(const sl_abstr& abs)
 {
@@ -21,6 +37,7 @@ sl_abstr& sl_abstr::operator=(const sl_abstr& abs)
 	k = abs.k;
 	m = abs.m;
 	abstr = abs.abstr;
+	//id = abs.id;
 }
 sl_abstr::sl_abstr(sl_abstr&& abs) noexcept
 {
@@ -29,6 +46,7 @@ sl_abstr::sl_abstr(sl_abstr&& abs) noexcept
 	k = abs.k;
 	m = abs.m;
 	abstr = abs.abstr;
+	//id = abs.id;
 	abs.abstr = nullptr;
 }
 sl_abstr& sl_abstr::operator=(sl_abstr&& abs) noexcept
@@ -40,6 +58,7 @@ sl_abstr& sl_abstr::operator=(sl_abstr&& abs) noexcept
 	k = abs.k;
 	m = abs.m;
 	abstr = abs.abstr;
+	//id = abs.id;
 	abs.abstr = nullptr;
 }
 size_t sl_abstr::get_var_size()
@@ -50,22 +69,24 @@ sl_context& sl_abstr::get_context()
 {
 	return ctx;
 }
-vector<Z3_symbol> sl_abstr::get_z3_symbol_k()
-{
-	vector<Z3_symbol> res;
-	for (size_t i = 0; i < k.size(); ++i)
-		res.push_back(k[i].symbol);
-	return res;
-}
-vector<Z3_symbol> sl_abstr::get_z3_symbol_m()
-{
-	vector<Z3_symbol> res;
-	for (size_t i = 0; i < m.size(); ++i) {
-		for (size_t j = 0; j < m[i].size(); ++j)
-			res.push_back(m[i][j].symbol);
-	}
-	return res;
-}
+/*
+ *vector<Z3_symbol> sl_abstr::get_z3_symbol_k()
+ *{
+ *        vector<Z3_symbol> res;
+ *        for (size_t i = 0; i < k.size(); ++i)
+ *                res.push_back(k[i].symbol);
+ *        return res;
+ *}
+ *vector<Z3_symbol> sl_abstr::get_z3_symbol_m()
+ *{
+ *        vector<Z3_symbol> res;
+ *        for (size_t i = 0; i < m.size(); ++i) {
+ *                for (size_t j = 0; j < m[i].size(); ++j)
+ *                        res.push_back(m[i][j].symbol);
+ *        }
+ *        return res;
+ *}
+ */
 
 bool sl_abstr::check_eq(size_t u, size_t v)
 {
@@ -186,11 +207,13 @@ sl_var sl_abstr::mk_bvar(size_t id, size_t i)
 	var = noll_vector_at(f.nollf->lvars, id);
 	str = (char *)malloc(sizeof(char)*(strlen(var->vname)+strlen("[,]")+3));
 	assert(str != NULL);
-	sprintf(str, "[%s, %d]", var->vname, i);
+	sprintf(str, "%d_[%s, %d]", _counter, var->vname, i);
 	res.sid = id;
-	res.type = ctx.bsort;
-	res.symbol = Z3_mk_string_symbol(ctx.z3_ctx, str);
-	res.node = Z3_mk_const(ctx.z3_ctx, res.symbol, res.type);
+	/*
+	 *res.type = ctx.bsort;
+	 *res.symbol = Z3_mk_string_symbol(ctx.z3_ctx, str);
+	 */
+	res.node = Z3_mk_const(ctx.z3_ctx, Z3_mk_string_symbol(ctx.z3_ctx, str), ctx.bsort);
 
 	return res;
 }
@@ -236,10 +259,10 @@ void sl_abstr::init_kvar(sl_for& formula)
 		space = formula.sp_atoms[i];
 		str = (char *)malloc(sizeof(char) * (strlen("slid_k_")+3));
 		assert(str != NULL);
-		sprintf(str, "slid_k_%d", i);
+		sprintf(str, "%d_k_%d", _counter, i);
 		symbol = Z3_mk_string_symbol(ctx.z3_ctx, str);
 		node = Z3_mk_const(ctx.z3_ctx, symbol, ctx.isort);
-		k.push_back(sl_var(i, ctx.isort, symbol, node));
+		k.push_back(sl_var(i, node));
 	}
 }
 sl_abstr::sl_abstr(noll_form_t* f0, sl_context& c)
@@ -248,6 +271,7 @@ sl_abstr::sl_abstr(noll_form_t* f0, sl_context& c)
 	if(!f.sp_atoms.empty()){	
 		init_bvar(f);
 		init_kvar(f);
+		_counter++;
 	}
 }
 void sl_abstr::init(noll_form_t* f0, sl_context& c)
@@ -257,6 +281,7 @@ void sl_abstr::init(noll_form_t* f0, sl_context& c)
 	if(!f.sp_atoms.empty()){	
 		init_bvar(f);
 		init_kvar(f);
+		_counter++;
 	}
 }
 
@@ -505,88 +530,92 @@ Z3_ast sl_abstr::mk_pto(noll_pto_t *pto, int i)
 {
 	assert(pto != NULL);
 
-	Z3_ast r[2], t1, t2;
+	Z3_ast r[2];
 	Z3_ast ki, one;
 	one = Z3_mk_int(ctx.z3_ctx, 1, ctx.isort);
 	ki = k[i].node;
 	r[0] = Z3_mk_eq(ctx.z3_ctx, ki, one);
 	size_t sid = pto->sid;
-	t1 = (*find_if(begin(m[i]), end(m[i]), [sid](sl_var& v){return v.sid==sid;})).node;
-	assert(t1 != NULL);
-	t2 = Z3_mk_true(ctx.z3_ctx);
-	r[1] = Z3_mk_eq(ctx.z3_ctx, t1, t2);
+	r[1] = (*find_if(begin(m[i]), end(m[i]), [sid](sl_var& v){return v.sid==sid;})).node;
 
 	return Z3_mk_and(ctx.z3_ctx, 2, r);
+}
+Z3_ast sl_abstr::mk_abstr(noll_ls_t* pred, size_t ki)
+{
+	assert(pred != NULL);
+
+	vector<int> loc = get_trans_loc(pred);
+	vector<Z3_ast> s, t;
+	Z3_ast a[2], t1 = NULL;
+
+	a[0] = mk_fir_unfold(pred, ki, loc);
+	a[1] = mk_sec_unfold(pred, ki, loc);
+
+	t.push_back(mk_unfold(pred, ki));
+	
+	s.push_back(Z3_mk_or(ctx.z3_ctx, 2, a));
+	t1 = mk_closures(pred, ki);
+	if (t1 != NULL)
+		s.push_back(t1);
+	t.push_back(Z3_mk_and(ctx.z3_ctx, s.size(), &(*(begin(s)))));
+
+	return Z3_mk_or(ctx.z3_ctx, t.size(), &(*(begin(t))));
+}
+
+vector<int> sl_abstr::get_trans_loc(noll_ls_t* pred)
+{
+	vector<int> res;
+	noll_pred_t* def_pred;
+	noll_pred_rule_t* r;
+	noll_ls_t *p;
+
+	def_pred = noll_vector_at(preds_array, pred->pid);
+	r = noll_vector_at(def_pred->def->rec_rules, 0);
+
+	p = slid_get_rule_pred(r->rec);
+
+	for(size_t i = 0; i < noll_vector_size(p->args); i++){
+		if(noll_vector_at(p->args, i) == 1)
+			res.push_back(noll_vector_at(pred->args, slid_get_hole(def_pred) + i));
+	}
+	return res;
 }
 
 Z3_ast sl_abstr::mk_pred(noll_ls_t *pred, int ki)
 {
 	assert(pred != NULL);
 
-	int n1, n2, n3;
-	z3_ast_array *t, *t1;
-	Z3_ast t2 = NULL, t3 = NULL, t4 = NULL,\
-	       t5 = NULL, t6 = NULL, t7 = NULL,\
-	       t8 = NULL, t9 = NULL, t10 = NULL, t11 = NULL, ret = NULL;
-	noll_pred_t *ppred;
-	noll_pred_rule_t *rr;
+	vector<int> loc = get_trans_loc(pred);
+	vector<Z3_ast> s, t;
+	Z3_ast a[2], t1, t2, t3, t4, t5 = NULL;
 
-	ppred = noll_vector_at(preds_array, pred->pid);
-	rr = noll_vector_at(ppred->def->rec_rules, 0);
-
-	t = z3_ast_array_new();
-	t1 = z3_ast_array_new();
-	size_t sid = noll_vector_at(pred->args, 0);
-	t10 = (*find_if(begin(m[ki]), end(m[ki]), [sid](sl_var& v){return v.sid==sid;})).node;
-	assert(t10 != NULL);
-	t11 = Z3_mk_false(ctx.z3_ctx);
-	z3_ast_array_push(t, Z3_mk_eq(ctx.z3_ctx, t10, t11));
-	
-	if(ppred->typ->nDir >= 2){
-		while((n1 = slid_get_trans_loc(rr, 1)) > 0){
-			n2 = slid_get_hole(ppred) + n1;
-			n3 = noll_vector_at(pred->args, n2);
-			sid = n3;
-			t8 = (*find_if(begin(m[ki]), end(m[ki]), [sid](sl_var& v){return v.sid==sid;})).node;
-			assert(t8 != NULL);
-			t9 = Z3_mk_false(ctx.z3_ctx);
-			z3_ast_array_push(t, Z3_mk_eq(ctx.z3_ctx, t8, t9));
-		}
+	a[0] = mk_fir_unfold(pred, ki, loc);
+	a[1] = mk_sec_unfold(pred, ki, loc);
+	loc.push_back(noll_vector_at(pred->args, 0));
+	for (size_t i = 0; i < loc.size(); ++i) {
+		Z3_ast bvar;
+		int sid = loc[i];
+		bvar = (*find_if(begin(m[ki]), end(m[ki]), [sid](sl_var& v){return v.sid==sid;})).node;
+		t.push_back(Z3_mk_not(ctx.z3_ctx, bvar));
+		s.push_back(bvar);
 	}
+	t.push_back(mk_unfold(pred, ki));
+	
+	t3 = Z3_mk_and(ctx.z3_ctx, t.size(), &(*(begin(t))));
+	t.clear();
+	t.push_back(t3);
 
+	t4 = Z3_mk_and(ctx.z3_ctx, s.size(), &(*(begin(s))));
+	s.clear();
+	s.push_back(t4);
 
-	t2 = mk_unfold(pred, ki);
-	if(t2 != NULL) z3_ast_array_push(t, t2);
+	s.push_back(Z3_mk_or(ctx.z3_ctx, 2, a));
+	t5 = mk_closures(pred, ki);
+	if (t5 != NULL)
+		s.push_back(t5);
+	t.push_back(Z3_mk_and(ctx.z3_ctx, s.size(), &(*(begin(s)))));
 
-	t2 = Z3_mk_and(ctx.z3_ctx, noll_vector_size(t), noll_vector_array(t));
-	z3_ast_array_clear(t);
-	z3_ast_array_push(t, t2);
-
-	t3 = mk_fir_unfold(pred, ki);
-	if(t3 != NULL) z3_ast_array_push(t1, t3);
-
-	t4 = mk_sec_unfold(pred, ki);
-	if(t4 != NULL) z3_ast_array_push(t1, t4);
-
-	t5 = Z3_mk_or(ctx.z3_ctx, noll_vector_size(t1), noll_vector_array(t1));
-	z3_ast_array_clear(t1);
-	if(t5 != NULL) z3_ast_array_push(t1, t5);
-	sid = noll_vector_at(pred->args, 0);
-	t6 = (*find_if(begin(m[ki]), end(m[ki]), [sid](sl_var& v){return v.sid==sid;})).node;
-	assert(t6 != NULL);
-	t3 = Z3_mk_true(ctx.z3_ctx);
-	z3_ast_array_push(t1, Z3_mk_eq(ctx.z3_ctx, t6, t3));
-	t7 = mk_closures(pred, ki);
-	if(t7 != NULL) z3_ast_array_push(t1, t7);
-	t3 = Z3_mk_and(ctx.z3_ctx, noll_vector_size(t1), noll_vector_array(t1));
-	if(t3 != NULL) z3_ast_array_push(t, t3);
-
-	ret = Z3_mk_or(ctx.z3_ctx, noll_vector_size(t), noll_vector_array(t));
-
-	z3_ast_array_delete(t);
-	z3_ast_array_delete(t1);
-
-	return ret;
+	return Z3_mk_or(ctx.z3_ctx, t.size(), &(*(begin(t))));
 }
 
 
@@ -644,91 +673,45 @@ Z3_ast sl_abstr::mk_unfold(noll_ls_t *pred, int ki)
 
 	return ret;
 }
-Z3_ast sl_abstr::mk_fir_unfold(noll_ls_t *pred, int ki)
+Z3_ast sl_abstr::mk_fir_unfold(noll_ls_t *pred, int ki, vector<int>& loc)
 {
 	assert(pred->pid >= 0);
 	assert(pred->pid < noll_vector_size(preds_array));
 
-	int i, n1, n2;
-	noll_pred_t *ppred;
-	z3_ast_array *t;
-	noll_pred_rule_t *r;
-	Z3_ast t1, t2, t3, ret = NULL;
+	vector<Z3_ast> t;
+	Z3_ast t1, t2;
 
-	t = z3_ast_array_new();
-	
-	ppred = noll_vector_at(preds_array, pred->pid);
-
-	r = noll_vector_at(ppred->def->rec_rules, 0);
-	
-	if(ppred->typ->nDir >= 2){
-		while((n1 = slid_get_trans_loc(r, 1)) > 0){
-			n2 = slid_get_hole(ppred) + n1;
-			t1 = ctx.var[noll_vector_at(pred->args, 0)].node;
-			t2 = ctx.var[noll_vector_at(pred->args, n2)].node;
-			z3_ast_array_push(t, Z3_mk_eq(ctx.z3_ctx, t1, t2));
-
-			i = noll_vector_at(pred->args, n2);
-
-			t1 = (*find_if(begin(m[ki]), end(m[ki]), [i](sl_var& v){return v.sid==i;})).node;
-			assert(t1 != NULL);
-			t2 = Z3_mk_true(ctx.z3_ctx);
-			z3_ast_array_push(t, Z3_mk_eq(ctx.z3_ctx, t1, t2));
-		}
+	t1 = ctx.var[noll_vector_at(pred->args, 0)].node;
+	for (size_t i = 0; i < loc.size(); ++i) {
+		t2 = ctx.var[loc[i]].node;
+		t.push_back(Z3_mk_eq(ctx.z3_ctx, t1, t2));
 	}
 	
 	t1 = k[ki].node;
 	t2 = Z3_mk_int(ctx.z3_ctx, 1, ctx.isort);
-	t3 = Z3_mk_eq(ctx.z3_ctx, t1, t2);
-	z3_ast_array_push(t, t3);
+	t.push_back(Z3_mk_eq(ctx.z3_ctx, t1, t2));
 	
-	ret = Z3_mk_and(ctx.z3_ctx, noll_vector_size(t), noll_vector_array(t));
-	z3_ast_array_delete(t);
-
-	return ret;
+	return Z3_mk_and(ctx.z3_ctx, t.size(), &(*(begin(t))));
 }
-Z3_ast sl_abstr::mk_sec_unfold(noll_ls_t *pred, int ki)
+Z3_ast sl_abstr::mk_sec_unfold(noll_ls_t *pred, int ki, vector<int>& loc)
 {
 	assert(pred->pid >= 0);
 	assert(pred->pid < noll_vector_size(preds_array));
 
-	int i, n1, n2;
-	noll_pred_t *ppred;
-	z3_ast_array *t;
-	noll_pred_rule_t *r;
-	Z3_ast t1, t2, t3, ret = NULL;
+	vector<Z3_ast> t;
+	Z3_ast t1, t2;
 
-	t = z3_ast_array_new();
-	
-	ppred = noll_vector_at(preds_array, pred->pid);
-	r = noll_vector_at(ppred->def->rec_rules, 0);
-	
-	if(ppred->typ->nDir >= 2){
-		while((n1 = slid_get_trans_loc(r, 1)) > 0){
-			n2 = slid_get_hole(ppred) + n1;
-			t1 = ctx.var[noll_vector_at(pred->args, 0)].node;
-			t2 = ctx.var[noll_vector_at(pred->args, n2)].node;
-			t3 = Z3_mk_eq(ctx.z3_ctx, t1, t2);
-			z3_ast_array_push(t, Z3_mk_not(ctx.z3_ctx, t3));
-
-			i = noll_vector_at(pred->args, n2);
-
-			t1 = (*find_if(begin(m[ki]), end(m[ki]), [i](sl_var& v){return v.sid==i;})).node;
-			assert(t1 != NULL);
-			t2 = Z3_mk_true(ctx.z3_ctx);
-			z3_ast_array_push(t, Z3_mk_eq(ctx.z3_ctx, t1, t2));
-		}
+	t1 = ctx.var[noll_vector_at(pred->args, 0)].node;
+	for (size_t i = 0; i < loc.size(); ++i) {
+		t2 = ctx.var[loc[i]].node;
+		t.push_back(Z3_mk_not(ctx.z3_ctx, Z3_mk_eq(ctx.z3_ctx, t1, t2)));
 	}
-
+	
 	t1 = k[ki].node;
 	t2 = Z3_mk_int(ctx.z3_ctx, 2, ctx.isort);
-	t3 = Z3_mk_ge(ctx.z3_ctx, t1, t2);
-	z3_ast_array_push(t, t3);
-
-	ret = Z3_mk_and(ctx.z3_ctx, noll_vector_size(t), noll_vector_array(t));
-	z3_ast_array_delete(t);
-
-	return ret;
+	t.push_back(Z3_mk_ge(ctx.z3_ctx, t1, t2));
+	
+	return Z3_mk_and(ctx.z3_ctx, t.size(), &(*(begin(t))));
 }
 
 Z3_ast sl_abstr::mk_closures(noll_ls_t *pred, int ki)
