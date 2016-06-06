@@ -1,2 +1,0 @@
-/usr/bin/ar cr libtests.a  CMakeFiles/tests.dir/log_fixture.cc.o CMakeFiles/tests.dir/formula_parser.cc.o
-/usr/bin/ranlib libtests.a

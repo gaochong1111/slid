@@ -1,1 +1,0 @@
-/usr/bin/g++   -O3 -DNDEBUG    CMakeFiles/vata.dir/vata.cc.o CMakeFiles/vata.dir/parse_args.cc.o  -o vata -rdynamic ../src/libvata.a -lrt 

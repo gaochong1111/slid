@@ -30,8 +30,8 @@
 #include "noll2bool.h"          // for old normalization call
 #include "noll_sat.h"
 #include "noll2graph.h"
-#include "noll_hom.h"
-#include "noll_pred2ta.h"
+//#include "noll_hom.h"
+//#include "noll_pred2ta.h"
 
 extern int solve_entail();
 
@@ -727,18 +727,20 @@ noll_entl_to_hom (void)
 
   int res = 1;
 
-  res = noll_hom_build ();
-  if (noll_option_get_verb () > 0)
-    fprintf (stdout, "    homeomorphism found\n");
-  if (noll_option_is_diag () == true)
-    {
-      if (noll_option_get_verb () > 0)
-        fprintf (stdout, "    see file graph-hom.txt\n");
-      FILE *f_hom = fopen ("graph-hom.txt", "w");
-      noll_hom_fprint (f_hom, noll_prob->hom);
-      fflush (f_hom);
-      fclose (f_hom);
-    }
+  /*
+   *res = noll_hom_build ();
+   *if (noll_option_get_verb () > 0)
+   *  fprintf (stdout, "    homeomorphism found\n");
+   *if (noll_option_is_diag () == true)
+   *  {
+   *    if (noll_option_get_verb () > 0)
+   *      fprintf (stdout, "    see file graph-hom.txt\n");
+   *    FILE *f_hom = fopen ("graph-hom.txt", "w");
+   *    noll_hom_fprint (f_hom, noll_prob->hom);
+   *    fflush (f_hom);
+   *    fclose (f_hom);
+   *  }
+   */
 
   /*
    * Check sharing constraints entailment for the found homeomorphism

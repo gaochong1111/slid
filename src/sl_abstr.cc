@@ -100,6 +100,16 @@ bool sl_abstr::check_eq(size_t u, size_t v)
 		return true;
 	return false;
 }
+bool sl_abstr::check_eq(Z3_ast a, Z3_ast b)
+{
+	Z3_ast eq, c[2];
+	eq = Z3_mk_eq(ctx.z3_ctx, a, b);
+	c[0] = abstr;
+	c[1] = Z3_mk_not(ctx.z3_ctx, eq);
+	if (!sl_sat::check_sat(ctx.z3_ctx, Z3_mk_and(ctx.z3_ctx, 2, c)))
+		return true;
+	return false;
+}
 Z3_ast sl_abstr::get_abstr()
 {
 	if (abstr == nullptr)

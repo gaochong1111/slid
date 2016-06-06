@@ -1,1 +1,0 @@
-/usr/bin/g++   -O3 -DNDEBUG    CMakeFiles/bdd_td_tree_aut_test.dir/bdd_td_tree_aut_test.cc.o  -o bdd_td_tree_aut_test -rdynamic libtests.a ../src/libvata.a -lboost_unit_test_framework -lboost_filesystem -lboost_system 

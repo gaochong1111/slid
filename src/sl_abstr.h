@@ -44,6 +44,7 @@ public:
 	 */
 
         bool check_eq(size_t, size_t);
+	bool check_eq(Z3_ast, Z3_ast);
 
 
 	//Z3_ast mk_abstr(sl_context&, noll_ls_t*);

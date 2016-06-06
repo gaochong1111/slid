@@ -150,6 +150,7 @@ Z3_ast splitter::get_sub_constr(sl_formula& fp) const
 		res = Z3_mk_and(z3_ctx, t.size(), &(*begin(t)));
 	return res;
 }
+
 extern noll_pred_array *preds_array;
 extern noll_entl_t *noll_prob;
 
@@ -661,6 +662,29 @@ void sl_entail::mk_new_var(sl_formula& pos, noll_pred_t* pred, size_t sid, Z3_as
 	pos.add_var(new_var);
 
 }
+bool sl_entail::has_step_len(noll_pred_t* pred, size_t sid)
+{
+	noll_dform_array* eqs;
+	noll_dform_t* eq;
+	noll_dterm_t* plus;
+	noll_dterm_t* c;
+	noll_pred_rule_t* rule;
+	rule = noll_vector_at(pred->def->rec_rules, 0);
+	eqs = slid_get_pred_data_constr_trans(pred, rule, sid);
+	if (noll_vector_size(eqs) == 1) {
+		eq = noll_vector_at(eqs, 0);
+		if (eq->kind != NOLL_DATA_EQ)
+			return false;
+		plus = noll_vector_at(eq->p.targs, 1);
+		assert(plus->kind == NOLL_DATA_PLUS);
+		c = noll_vector_at(plus->args, 1);
+		if (c->kind != NOLL_DATA_INT)
+			return false;
+		return true;
+	}
+	return false;
+}
+
 int sl_entail::get_step_len(noll_pred_t* pred, size_t sid)
 {
 	noll_dform_array* eqs;
@@ -892,12 +916,43 @@ size_t sl_entail::get_param_num(noll_ls_t* pred)
 {
 	return noll_vector_size(pred->args);
 }
+
+int sl_entail::get_trans_loc(noll_pred_rule_t *r, size_t sid)
+{
+	size_t i;
+	noll_ls_t *p;
+
+	p = slid_get_rule_pred(r->rec);
+
+	for(i = 0; i < noll_vector_size(p->args); i++){
+		if(noll_vector_at(p->args, i) == sid)
+			return i;
+	}
+
+	return -1;
+}
+Z3_ast sl_entail::vid_to_ast1(sl_formula& f, size_t vid, int para_num, noll_ls_t* pred)
+{
+	Z3_ast a[2];
+	if (vid <= para_num)
+		return f.get_var_ast(noll_vector_at(pred->args, vid-1));
+	int v = get_trans_loc(get_pred_rule(pred), vid);
+
+	if ((v < 0) || !has_step_len(get_pred_def(pred->pid), v+1))
+		return nullptr;
+
+	int c = get_step_len(get_pred_def(pred->pid), v+1);
+	a[0] = f.get_var_ast(noll_vector_at(pred->args, v));
+	a[1] = Z3_mk_int(f.get_z3_context(), c, f.get_z3_sort_int());
+	return Z3_mk_sub(f.get_z3_context(), 2, a);
+}
 bool sl_entail::match_heap(sl_formula& pos,
 			   map<int, int>& m,
 			   noll_ls_t* pos_pred,
 			   noll_ls_t* neg_pred)
 {
 	int vid1, vid2;
+	Z3_ast ast1, ast2;
 
 	noll_pto_t* pos_pto, *neg_pto;
 	pos_pto = get_pred_rule_pto(get_pred_def(pos_pred->pid));
@@ -920,17 +975,29 @@ bool sl_entail::match_heap(sl_formula& pos,
 		} else {
 			auto ret = m.insert(make_pair(vid2, vid1));
 			if (!ret.second && (vid1 != m[vid2])) {
-				if ((vid1 > ppara_num) || (m[vid2] > ppara_num))
+				ast1 = vid_to_ast1(pos, vid1, ppara_num, pos_pred);
+				ast2 = vid_to_ast1(pos, m[vid2], ppara_num, pos_pred);
+				if ((ast1 == nullptr) || (ast2 == nullptr))
 					return false;
-				vid2 = noll_vector_at(neg_pred->args, vid2-1);
-				vid1 = noll_vector_at(pos_pred->args, vid1-1);
-				if (!pos.check_eq(vid1, m[vid2]))
+				if (!pos.check_eq(ast1, ast2))
 					return false;
+				/*
+				 *if ((vid1 > ppara_num) || (m[vid2] > ppara_num)) {
+				 *        if (!check_eq(pos, vid1, m[vid2]))
+				 *                return false;
+				 *} else {
+				 *        vid2 = noll_vector_at(neg_pred->args, vid2-1);
+				 *        vid1 = noll_vector_at(pos_pred->args, vid1-1);
+				 *        if (!pos.check_eq(vid1, m[vid2]))
+				 *                return false;
+				 *}
+				 */
 			}
 		}
 	}
 	return true;
 }
+
 
 /*
  *map<int, int> sl_entail::mk_var_map(noll_ls_t*pos_pred, noll_ls_t* neg_pred)
@@ -959,11 +1026,36 @@ bool sl_entail::match_heap(sl_formula& pos,
  *        return m;
  *}
  */
+noll_pred_rule_t* sl_entail::get_pred_rule(noll_ls_t* pred)
+{
+	noll_pred_t* pred_def;
+	pred_def = noll_vector_at(preds_array, pred->pid);
+	return noll_vector_at(pred_def->def->rec_rules, 0);
+}
+Z3_ast sl_entail::vid_to_ast2(sl_formula& f, size_t vid, int para_num, noll_ls_t* pred)
+{
+	Z3_ast a[2];
+	noll_ls_t* dpred;
+	dpred = get_pred_rule_pred(get_pred_def(pred->pid));
+	if (vid <= para_num) {
+		size_t vid1 = noll_vector_at(dpred->args, vid-1);
+		return vid_to_ast1(f, vid1, para_num, pred);
+	}
+	int v = get_trans_loc(get_pred_rule(pred), vid);
+
+	if ((v < 0) || !has_step_len(get_pred_def(pred->pid), v+1))
+		return nullptr;
+	int c = get_step_len(get_pred_def(pred->pid), v+1);
+	a[0] = vid_to_ast1(f, noll_vector_at(dpred->args, v), para_num, pred);
+	a[1] = Z3_mk_int(f.get_z3_context(), c, f.get_z3_sort_int());
+	return Z3_mk_sub(f.get_z3_context(), 2, a);
+}
 
 bool sl_entail::match_heap_deep(sl_formula& pos, map<int, int>& m, noll_ls_t* pos_pred, noll_ls_t* neg_pred)
 {
 	int vid1, vid2, u, v;
 	map<int, int> m1;
+	Z3_ast ast1, ast2;
 
 	noll_pto_t* pos_pto, *neg_pto;
 	noll_ls_t* dpos_pred, *dneg_pred;
@@ -998,13 +1090,25 @@ bool sl_entail::match_heap_deep(sl_formula& pos, map<int, int>& m, noll_ls_t* po
 					return false;
 			} else {
 				auto ret1 = m.insert(make_pair(vid2, vid1));
-				if ((!ret1.second)  && (vid1 != m[vid2]))
+				if ((!ret1.second)  && (vid1 != m[vid2])) {
+					ast1 = vid_to_ast1(pos, vid1, ppara_num, pos_pred);
+					ast2 = vid_to_ast1(pos, m[vid2], ppara_num, pos_pred);
+					if ((ast1 == nullptr) || (ast2 == nullptr))
 						return false;
+					if(!pos.check_eq(ast1, ast2))
+						return false;
+				}
 			}
 		} else {
 			auto ret2 = m1.insert(make_pair(vid2, vid1));
-			if (!ret2.second && (vid1 != m1[vid2]))
-				return false;
+			if (!ret2.second && (vid1 != m1[vid2])) {
+				ast1 = vid_to_ast2(pos, vid1, ppara_num, pos_pred);
+				ast2 = vid_to_ast2(pos, m1[vid2], ppara_num, pos_pred);
+				if ((ast1 == nullptr) || (ast2 == nullptr))
+					return false;
+				if(!pos.check_eq(ast1, ast2))
+					return false;
+			}
 		}
 	}
 	return true;

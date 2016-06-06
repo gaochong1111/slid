@@ -75,6 +75,7 @@ private:
 	noll_pto_t* get_pred_rule_pto(noll_space_t*);
 	noll_ls_t* get_pred_rule_pred(noll_space_t*);
 	void mk_new_var(sl_formula&, noll_pred_t*, size_t, Z3_ast, int);
+	bool has_step_len(noll_pred_t*, size_t);
 	int get_step_len(noll_pred_t*, size_t);
 	std::vector<int> get_sour_param(noll_ls_t*);
 	std::vector<int> get_dest_param(noll_ls_t*);
@@ -93,6 +94,11 @@ private:
 	bool match_heap_deep(sl_formula&, std::map<int, int>&, noll_ls_t*, noll_ls_t*);
 	bool check_entail(sl_formula&, size_t, noll_ls_t*);
 	bool match_sour_param(sl_formula&, std::vector<int>&, noll_ls_t*);
+
+	noll_pred_rule_t* get_pred_rule(noll_ls_t*);
+	int get_trans_loc(noll_pred_rule_t*, size_t);
+	Z3_ast vid_to_ast1(sl_formula&, size_t, int, noll_ls_t*);
+	Z3_ast vid_to_ast2(sl_formula&, size_t, int, noll_ls_t*);
 
 
 	sl_formula posf;
