@@ -1,8 +1,7 @@
 About
 =====
-This is a decision procedure for entailment problems between formulas in
-the fragment of Separation Logic with Recursive Definitions (SLRD) 
-defined in [FIT-TR-2014-01].
+This is a decision procedure for the satisfiability and entailment problem between formulas in the fragment of Separation Logic with Recursive Definitions (SLRD) 
+defined in the paper “A complete decision procedure for linearly compositional separation logic with data constraints” (http://lcs.ios.ac.cn/~wuzl/pub/gcw-ijcar16.pdf).
 
 
 Requires
@@ -21,7 +20,7 @@ To compile:
 - Z3 SMT solver
   https://github.com/Z3Prover/z3
 
-- boost
+- boost (http://www.boost.org/)
 
 
 Installation
