@@ -38,8 +38,7 @@ Installation
 
 
 3) Install:
-   - put the 'minisat' tool in the PATH
-   - move the 'spen' binary to a known executable path
+   - move the 'comspen' binary to a known executable path
 
 
 
