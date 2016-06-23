@@ -30,7 +30,7 @@
 	(and (<= ?d1 ?d3) (= ?len1 (+ ?len3 1)) 
 		(tobool (ssep 
 		(pto ?E (sref (ref next ?X) (ref prev ?P) (ref data ?d1)) ) 
-		(sllseg ?X ?E ?len3 ?d3  ?F ?L ?len2 ?d2 )
+		(sldllseg ?X ?E ?len3 ?d3  ?F ?L ?len2 ?d2 )
 		)
 		)
 	) 
@@ -80,7 +80,7 @@
 
 (assert (not 
 	(tobool 
-		(index alpha3 (sldllseg X len1 x Z len3 u))
+		(index alpha3 (sldllseg X P len1 x Z M len3 u))
 	)
 ))
 

@@ -1,5 +1,4 @@
-
-(set-logic QF_S)
+(set-logic QF_SLRDI)
 
 ;; declare sorts
 (declare-sort Dll_t 0)
@@ -12,19 +11,19 @@
 
 ;; declare predicates
 
-(define-fun dll ((?fr Dll_t) (?bk Dll_t) (?pr Dll_t) (?nx Dll_t) ) Space (tospace 
+(define-fun dll ((?E Dll_t) (?P Dll_t) (?F Dll_t) (?L Dll_t)) Space (tospace 
 	(or 
-	(and (= ?fr ?nx) (= ?bk ?pr) 
+	(and (= ?E ?F) (= ?P ?L)
 		(tobool emp
 		)
 
 	)
  
-	(exists ((?u Dll_t) ) 
-	(and (distinct ?fr ?nx) (distinct ?bk ?pr) 
+	(exists ((?u Dll_t)) 
+	(and 
 		(tobool (ssep 
-		(pto ?fr (sref (ref next ?u) (ref prev ?pr) ) ) 
-		(dll ?u ?bk ?fr ?nx )
+		(pto ?E (sref (ref next ?u) (ref prev ?P) ) ) 
+		(dll ?u ?E ?F ?L)
 		) )
 
 	)
@@ -50,7 +49,7 @@
 	(tobool 
 	(ssep 
 		(pto x_emp (sref (ref next w_emp) (ref prev nil) ) ) 
-		(index alpha0 (dll w_emp y_emp nil z_emp )) 
+		(index alpha0 (dll w_emp nil z_emp y_emp )) 
 	)
 
 	)
@@ -61,7 +60,7 @@
 
 (assert (not 
 	(tobool 
-		(index alpha1 (dll x_emp y_emp nil z_emp )) 
+		(index alpha1 (dll x_emp nil z_emp y_emp )) 
 	)
 
 ))

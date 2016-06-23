@@ -91,7 +91,7 @@
 
 (assert (not 
 	(tobool 
-		(index alpha2 (llseg X x nil y))
+		(index alpha2 (slseg X x nil y))
 	)
 ))
 

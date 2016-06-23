@@ -66,6 +66,9 @@
 (declare-fun d () Int)
 (declare-fun d1 () Int)
 (declare-fun d2 () Int)
+(declare-fun d3 () Int)
+(declare-fun d4 () Int)
+(declare-fun d5 () Int)
 
 ;; declare set of locations
 

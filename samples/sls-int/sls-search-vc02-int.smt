@@ -47,9 +47,9 @@
 (declare-fun cur1 () Lst_t)
 (declare-fun cur2 () Lst_t)
 (declare-fun X () Lst_t)
-(declare-fun M0 () BagInt)
-(declare-fun M1 () BagInt)
-(declare-fun M2 () BagInt)
+;;(declare-fun M0 () BagInt)
+;;(declare-fun M1 () BagInt)
+;;(declare-fun M2 () BagInt)
 (declare-fun key () Int)
 (declare-fun d () Int)
 (declare-fun d0 () Int)
@@ -72,8 +72,6 @@
 ;; |-
 ;; slseg(root,cur2,M0,M2) * slist(cur2,M2) & (key in M0 <=> key in M2)
 
-
-
 (assert 
 	(and
 	(tobool 
@@ -82,12 +80,13 @@
 		(pto cur1 (sref (ref next X) (ref data d) ) ) 
 		(index alpha2 (slseg X d2 nil d3) )
 	))
-	(<=  d1 d) (<=  d d2)
-	(< d key) (key < d2)
+	(<= d1 d) (<= d d2)
+	(< d key) (< key  d2)
 	(= cur2 X)
 	(= ret 0)
 	)
 )
+
 
 (assert (not 
 	(and 
@@ -99,5 +98,6 @@
 	(= ret 0)
 	)
 ))
+
 
 (check-sat)

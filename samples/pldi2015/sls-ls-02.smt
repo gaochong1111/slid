@@ -22,7 +22,7 @@
 	(and (= ?E ?F) 
 		(tobool emp
 		)
-		(=?len1 ?len2)
+		(= ?len1 ?len2)
 	)
  
 	(exists ((?X Lst_t)  (?d Int) (?len3 Int)) 

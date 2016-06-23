@@ -83,7 +83,7 @@
 		(index alpha1 (slseg root d1 parent1 d2))
 		(pto parent1 (sref (ref next cur1) (ref data d3)))
 		(pto cur1 (sref (ref next X) (ref data d4)))
-		(index alpha2 (sseg X d5 nil d6))
+		(index alpha2 (slseg X d5 nil d6))
 	))
 	(<=  d2 d3) (<=  d3 d4) (<=  d4 d5)
 	(= parent2 cur1)
@@ -99,6 +99,6 @@
 		(pto parent2 (sref (ref next cur2) (ref data d4)))
 		(index alpha4 (slseg cur2 d5 nil d6))
 	))
-))
+)))
 
 (check-sat)
