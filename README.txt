@@ -38,7 +38,7 @@ Installation
 
 
 3) Install:
-   - move the 'comspen' binary to a known executable path
+   - move the 'compspen' binary to a known executable path
 
 
 
