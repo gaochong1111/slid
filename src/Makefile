@@ -85,10 +85,10 @@ SHARED_LIBS = -lsmtlib2parser \
 	-lm \
 	-lz3
 
-all: comspen
+all: compspen
 
 
-comspen: $(subst .c,$(DEBUG).o,$(CCSRC)) $(subst .cc,$(DEBUG).o,$(CXXSRC))
+compspen: $(subst .c,$(DEBUG).o,$(CCSRC)) $(subst .cc,$(DEBUG).o,$(CXXSRC))
 	$(CXX) $(CXXFLAGS_DEBUG) -o $@ $^ \
 	$(LDFLAGS) \
 	$(SHARED_LIBS)
@@ -97,10 +97,10 @@ clean:
 	rm -f *.o *~ *-out.txt *.dot result.txt
 	
 distclean: clean
-	rm comspen
+	rm compspen
 
-install: comspen
-	mv comspen $(HOME)/bin
+install: compspen
+	mv compspen $(HOME)/bin
 
 indent: $(CCINC) $(CCSRC) 
 	indent -nut $^
