@@ -19,9 +19,15 @@ To compile:
 
 - Z3 SMT solver (tested under z3 4.4.2)
   https://github.com/Z3Prover/z3
+  Linux Commands: 
+  -- aptitude search z3
+  -- sudo apt-get install z3
 
 - boost package (tested under boost 1.58.0)
   http://www.boost.org/
+  Linux Commands: 
+  -- aptitude search boost
+  -- sudo apt-get install libboost-dev
 
 Installation
 ============
