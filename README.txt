@@ -12,16 +12,16 @@ To compile:
 
 - GNU flex >= 2.5.33
 
-- GNU bison (tested under bison 2.7.0)
+- GNU bison (tested under bison 2.4.1)
 
 - SMTLIB2 parser of Alberto Griggio available at 
   https://es.fbk.eu/people/griggio/misc/smtlib2parser.html
 
-- Z3 SMT solver
+- Z3 SMT solver (tested under z3 4.4.2)
   https://github.com/Z3Prover/z3
 
-- boost (http://www.boost.org/)
-
+- boost package (tested under boost 1.58.0)
+  http://www.boost.org/
 
 Installation
 ============
