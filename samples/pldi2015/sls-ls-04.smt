@@ -80,4 +80,6 @@
 	)
 ))
 
+;the result is sat, consider the both empty case
+
 (check-sat)
