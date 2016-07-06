@@ -15,6 +15,7 @@
 				(= ?E ?F)
 				(= ?P ?L)
 				(= ?x0 ?x1) 
+				(tobool emp)
 				;(= ?y0 ?y1) 
 			)
 			(exists
@@ -43,6 +44,7 @@
 				(= ?E ?F)
 				(= ?P ?L)
 				(= ?x0 ?x1) 
+				(tobool emp)
 			)
 			(exists
 				((?X Ldll_t) (?x2 Int))
@@ -66,9 +68,10 @@
 	((?E Ldll_t)(?P Ldll_t) (?F Ldll_t)(?L Ldll_t)) Space
 	(tospace
 		 (or
-			(and
-				(= ?E ?F) (= ?P ?L)
+			(and (= ?E ?F) (= ?P ?L)
+			(tobool emp
 			)
+			)			
 			(exists
 				((?X Ldll_t))
 				(and
