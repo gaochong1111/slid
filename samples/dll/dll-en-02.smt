@@ -143,19 +143,6 @@
 	)
 )
 
-(assert
-	(not
-		(and
-			;(distinct E1 E3)
-			(tobool
-				;(ssep (index alpha0 (dllseg E1 E3))
-					(index alpha1 (dllseg E2 E6))
-				;)
-			)
-		)
-	)
-)
-
 
 (assert
 	(not

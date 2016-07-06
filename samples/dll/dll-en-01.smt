@@ -8,25 +8,25 @@
 
 
 (define-fun ldllseg
-	((?E Ldll_t) (?P Ldll_t) (?x0 Int)(?y0 Int) (?F Ldll_t) (?L Ldll_t) (?x1 Int) (?y1 Int)) Space
+	((?E Ldll_t) (?P Ldll_t) (?x0 Int) (?F Ldll_t) (?L Ldll_t) (?x1 Int)) Space
 	(tospace
 		 (or
 			(and
 				(= ?E ?F)
 				(= ?P ?L)
 				(= ?x0 ?x1) 
-				(= ?y0 ?y1) 
+				;(= ?y0 ?y1) 
 			)
 			(exists
-				((?X Ldll_t) (?x2 Int) (?y2 Int))
+				((?X Ldll_t) (?x2 Int))
 				(and
 					;(>= ?x0 5)
 					(= ?x0 (+ ?x2 1))
-					(<= ?y0 ?y2)
+					;(<= ?y0 ?y2)
 					(tobool
 						(ssep
-							(pto ?E (sref (ref next ?X) (ref prev ?P)(ref data ?y0) ))
-							(ldllseg ?X ?E ?x2 ?y2 ?F ?L ?x1 ?y1)
+							(pto ?E (sref (ref next ?X) (ref prev ?P) ))
+							(ldllseg ?X ?E ?x2 ?F ?L ?x1)
 						)
 					)
 				)
@@ -63,21 +63,21 @@
 )
 
 (define-fun dllseg
-	((?E Ldll_t) (?F Ldll_t)) Space
+	((?E Ldll_t)(?P Ldll_t) (?F Ldll_t)(?L Ldll_t)) Space
 	(tospace
 		 (or
 			(and
-				(= ?E ?F)
+				(= ?E ?F) (= ?P ?L)
 			)
 			(exists
-				((?X Ldll_t) (?Y Ldll_t))
+				((?X Ldll_t))
 				(and
 					;(>= ?x0 5)
 					;(= ?x0 (+ ?x2 1))
 					(tobool
 						(ssep
-							(pto ?E (sref (ref next ?X) (ref prev ?Y) ))
-							(dllseg ?X ?F)
+							(pto ?E (sref (ref next ?X) (ref prev ?P) ))
+							(dllseg ?X ?E ?F ?L)
 						)
 					)
 				)
@@ -131,39 +131,26 @@
 		;(= E4 E3)
 		;(>= n1 (+ n2 5))
 		(tobool
-		(ssep   (index alpha0 (ldllseg E1 F1 x1 u1 E3 F3 x3 u3)) 
-			(index alpha0 (ldllseg E2 F2 x2 u2 E4 F4 x4 u4))
-			(index alpha0 (ldllseg E3 F3 x3 u3 E4 F4 x4 u4))
-			(index alpha0 (ldllseg E4 F4 y4 u4 E3 F3 y3 u3))
-			(index alpha0 (ldllseg E3 F3 x3 u3 E5 F5 x5 u5))
-			(index alpha0 (ldllseg E5 F5 y5 u5 E3 F3 y3 u3))
-			(index alpha0 (ldllseg E4 F4 x5 u4 E6 F6 x6 u4))
+		(ssep   (index alpha0 (ldllseg E1 F1 x1 E3 F3 x3)) 
+			(index alpha0 (ldllseg E2 F2 x2 E4 F4 x4))
+			(index alpha0 (ldllseg E3 F3 x3 E4 F4 x4))
+			(index alpha0 (ldllseg E4 F4 y4 E3 F3 y3))
+			(index alpha0 (ldllseg E3 F3 x3 E5 F5 x5))
+			(index alpha0 (ldllseg E5 F5 y5 E3 F3 y3))
+			(index alpha0 (ldllseg E4 F4 x5 E6 F6 x6))
 		) 
 		)
 	)
 )
 
-(assert
-	(not
-		(and
-			;(distinct E1 E3)
-			(tobool
-				;(ssep (index alpha0 (dllseg E1 E3))
-					(index alpha1 (dllseg E2 E6))
-				;)
-			)
-		)
-	)
-)
-
 
 (assert
 	(not
 		(and
 			;(distinct E1 E3)
 			(tobool
-				(ssep (index alpha0 (sdllseg E1 F1 u1 E3 F3 u3))
-					(index alpha1 (sdllseg E2 F2 u2 E6 F6 u4))
+				(ssep (index alpha0 (dllseg E1 F1 E3 F3))
+					(index alpha1 (dllseg E2 F2 E6 F6))
 				)
 			)
 		)
