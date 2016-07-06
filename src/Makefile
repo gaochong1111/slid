@@ -2,7 +2,7 @@
 #
 
 
-include ../Makefile.config
+include ./Makefile.config
 
 #---------------------------------------
 # Flags

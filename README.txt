@@ -34,19 +34,11 @@ To compile:
 
 Installation
 ============
-1) Configuring: 
-   - change the SMTLIB2_PREFIX variable in the Makefile.config file
-     with the directory where can be found the libsmtlib2parser.so
-
-   - (optional)
-     change the compiler name or the compilation flags for the C compiler
+1) Compiling:
+   - do 'make' in the directory
 
 
-2) Compiling:
-   - do 'make' in src directory
-
-
-3) Install:
+2) Install:
    - move the 'compspen' binary to a known executable path
 
 
