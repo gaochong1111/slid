@@ -13,6 +13,7 @@
 				(= ?E ?F)
 				(= ?P ?L)
 				(= ?x0 ?x1) 
+				(tobool emp)
 			)
 			(exists
 				((?X Ldll_t) (?x2 Int))
@@ -30,12 +31,12 @@
 		)
 	)
 )
-(define-fun dllseg
+(define-fun dllseg1
 	((?E Ldll_t) (?F Ldll_t)) Space
 	(tospace
 		 (or
 			(and
-				(= ?E ?F)
+				(= ?E ?F) (tobool emp)
 			)
 			(exists
 				((?X Ldll_t) (?Y Ldll_t))
@@ -45,7 +46,7 @@
 					(tobool
 						(ssep
 							(pto ?E (sref (ref next ?X) (ref prev ?Y) ))
-							(dllseg ?X ?F)
+							(dllseg1 ?X ?F)
 						)
 					)
 				)
@@ -107,8 +108,8 @@
 		(and
 			;(distinct E1 E3)
 			(tobool
-				(ssep (index alpha0 (dllseg E1 E3))
-					(index alpha1 (dllseg E2 E6))
+				(ssep (index alpha0 (dllseg1 E1 E3))
+					(index alpha1 (dllseg1 E2 E6))
 				)
 			)
 		)

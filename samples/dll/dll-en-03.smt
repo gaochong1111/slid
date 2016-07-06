@@ -19,11 +19,11 @@
 
 	)
  
-	(exists ((?u Dll_t)) 
+	(exists ((?X Dll_t)) 
 	(and 
 		(tobool (ssep 
-		(pto ?E (sref (ref next ?u) (ref prev ?P) ) ) 
-		(dll ?u ?E ?F ?L)
+		(pto ?E (sref (ref next ?X) (ref prev ?P) ) ) 
+		(dll ?X ?E ?F ?L)
 		) )
 
 	)
@@ -31,7 +31,9 @@
 	)
 
 	)
-));; declare variables
+))
+
+;; declare variables
 (declare-fun x_emp () Dll_t)
 (declare-fun w_emp () Dll_t)
 (declare-fun y_emp () Dll_t)
@@ -47,7 +49,8 @@
 (declare-fun alpha0 () SetLoc)
 
 (assert 
-	(and ;(distinct x_emp z_emp) (distinct w_emp z_emp) (distinct y_emp z_emp) 
+	(and 
+	;(distinct x_emp z_emp) (distinct w_emp z_emp) (distinct y_emp z_emp) 
 	;(> n1 (+ n2 1))
 	(tobool 
 	(ssep 
@@ -67,6 +70,7 @@
 		(index alpha0 (dll x_emp nil z_emp y_emp )) 
 	)
 
-))
+)
+)
 
 (check-sat)
