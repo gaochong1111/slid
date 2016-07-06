@@ -19,11 +19,11 @@
 
 	)
  
-	(exists ((?u Sll_t) ) 
+	(exists ((?X Sll_t) ) 
 	(and (distinct ?in ?out) 
 		(tobool (ssep 
-		(pto ?in (ref next ?u) ) 
-		(ls ?u ?out )
+		(pto ?in (ref next ?X) ) 
+		(ls ?X ?out )
 		) )
 
 	)

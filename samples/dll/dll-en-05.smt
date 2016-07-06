@@ -30,7 +30,7 @@
 		)
 	)
 )
-(define-fun dllseg
+(define-fun dllseg1
 	((?E Ldll_t) (?F Ldll_t)) Space
 	(tospace
 		 (or
@@ -45,7 +45,7 @@
 					(tobool
 						(ssep
 							(pto ?E (sref (ref next ?X) (ref prev ?Y) ))
-							(dllseg ?X ?F)
+							(dllseg1 ?X ?F)
 						)
 					)
 				)
@@ -78,7 +78,7 @@
 		(and
 			(distinct E1 E4)
 			(tobool
-				(index alpha0 (dllseg E1 E2))
+				(index alpha0 (dllseg1 E1 E2))
 			)
 		)
 	)
