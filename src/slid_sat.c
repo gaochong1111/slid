@@ -171,17 +171,10 @@ slid_context slid_mk_context(Z3_context z3_ctx, noll_form_t *form)
 
 		for(i = 0; i < noll_vector_size(ret->space); i++){
 			space = noll_vector_at(ret->space, i);
-			switch(space->kind){
-			case NOLL_SPACE_PTO:
-				z3_ast_array_push(ret->k, NULL);
-				break;
-			case NOLL_SPACE_LS:
-				str = (char *)malloc(sizeof(char) * (strlen("slid_k_")+3));
-				assert(str != NULL);
-				sprintf(str, "slid_k_%d", i);
-				z3_ast_array_push(ret->k, Z3_mk_const(z3_ctx, Z3_mk_string_symbol(z3_ctx, str), ret->int_sort));
-				break;
-			}
+			str = (char *)malloc(sizeof(char) * (strlen("slid_k_")+3));
+			assert(str != NULL);
+			sprintf(str, "slid_k_%d", i);
+			z3_ast_array_push(ret->k, Z3_mk_const(z3_ctx, Z3_mk_string_symbol(z3_ctx, str), ret->int_sort));
 			
 		}
 	}
