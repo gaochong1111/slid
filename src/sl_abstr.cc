@@ -210,20 +210,23 @@ vector<sl_var> sl_abstr::mk_pto_bvar(size_t id, size_t i)
 }
 sl_var sl_abstr::mk_bvar(size_t id, size_t i)
 {
-	char *str;
 	noll_var_t* var;
 	sl_var res;
+	string tmp;
+	string str;
 
 	var = noll_vector_at(f.nollf->lvars, id);
-	str = (char *)malloc(sizeof(char)*(strlen(var->vname)+strlen("[,]")+3));
-	assert(str != NULL);
-	sprintf(str, "%d_[%s, %d]", _counter, var->vname, i);
+	//str = (char *)malloc(sizeof(char)*(strlen(var->vname)+strlen("[,]")+3));
+	//assert(str != NULL);
+	//sprintf(str, "%d_[%s, %d]", _counter, var->vname, i);
+	tmp = var->vname;
+	str = to_string(_counter) + "_[" + tmp + "," + to_string(i) + "]";
 	res.sid = id;
 	/*
 	 *res.type = ctx.bsort;
 	 *res.symbol = Z3_mk_string_symbol(ctx.z3_ctx, str);
 	 */
-	res.node = Z3_mk_const(ctx.z3_ctx, Z3_mk_string_symbol(ctx.z3_ctx, str), ctx.bsort);
+	res.node = Z3_mk_const(ctx.z3_ctx, Z3_mk_string_symbol(ctx.z3_ctx, str.c_str()), ctx.bsort);
 
 	return res;
 }
@@ -263,14 +266,14 @@ void sl_abstr::init_kvar(sl_for& formula)
 	Z3_symbol symbol;
 	Z3_ast node;
 	sl_var var;
-	char* str;
 
 	for(size_t i = 0; i < formula.sp_atoms.size(); ++i){
 		space = formula.sp_atoms[i];
-		str = (char *)malloc(sizeof(char) * (strlen("slid_k_")+3));
-		assert(str != NULL);
-		sprintf(str, "%d_k_%d", _counter, i);
-		symbol = Z3_mk_string_symbol(ctx.z3_ctx, str);
+		string str = to_string(_counter) + "_k_" + to_string(i);
+		//str = (char *)malloc(sizeof(char) * (strlen("slid_k_")+3));
+		//assert(str != NULL);
+		//sprintf(str, "%d_k_%d", _counter, i);
+		symbol = Z3_mk_string_symbol(ctx.z3_ctx, str.c_str());
 		node = Z3_mk_const(ctx.z3_ctx, symbol, ctx.isort);
 		k.push_back(sl_var(i, node));
 	}
