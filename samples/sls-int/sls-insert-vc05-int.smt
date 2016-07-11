@@ -56,11 +56,7 @@
 (declare-fun X () Lst_t)
 (declare-fun Y () Lst_t)
 
-(declare-fun M0 () BagInt)
-(declare-fun M1 () BagInt)
-(declare-fun M2 () BagInt)
-(declare-fun M3 () BagInt)
-(declare-fun M4 () BagInt)
+
 
 (declare-fun key () Int)
 (declare-fun d () Int)
@@ -68,7 +64,6 @@
 (declare-fun d2 () Int)
 (declare-fun d3 () Int)
 (declare-fun d4 () Int)
-(declare-fun d5 () Int)
 
 ;; declare set of locations
 
@@ -77,24 +72,24 @@
 (declare-fun alpha3 () SetLoc)
 (declare-fun alpha4 () SetLoc)
 
-;; VC05: slseg(root,parent,M1,M2) * parent |-> ((next,cur),(data,d1)) * cur |-> ((next,X),(data,key)) * slist(X,M4) & 
-;; d1 <= M3 & (key in M0 <=> key in M3) & M3 = {key} cup M4 & key <= M4 & M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & 
-;; M1 = ite(key in M0, M0, M0 cup {key}) & ! parent = nil & !cur = nil & ret = root
-;; |- 
-;; slist(ret,M0) & key in M0
+;; VC06: slseg(root,parent,M1,M2) * parent |-> ((next,x),(data,d1)) * slist(cur,M3) * x |->((next,cur),(data,key)) & 
+;; d1 <= M3 & (key in M0 <=> key in M3) & 
+;; M2 = ite(key in M3, M3 cup {d1}, M3 cup {d1} cup {key}) & 
+;; M1 = ite(key in M0, M0, M0 cup {key}) & ! parent = nil & cur = nil & ret = root
+;; |-
+;; slist(ret,M1) & ! key in M0 & M1 = M0 cup {key}
+
 
 (assert 
 	(and
 	(tobool 
 	(ssep
 		(index alpha1 (slseg root d1 parent d2))
-		(pto parent (sref (ref next cur) (ref data d3)))
-		(pto cur (sref (ref next X) (ref data key)))
-		(index alpha2 (slseg X d4 nil d5))
+		(pto parent (sref (ref next X) (ref data d)))
+		(pto X (sref (ref next cur) (ref data key)))
+		(index alpha2 (slseg cur d3 nil d4))
 	))
-	(<=  d2 d3) 
-	(<=  d3 key) 
-	(<= key d4)
+	(<=  d2 d) (<= d key) (<= key d3) 
 	(= ret root)
 	)
 )
@@ -102,9 +97,9 @@
 (assert (not 
 	(and 
 	(tobool 
-		(index alpha3 (slseg ret d1 nil d5))
+		(index alpha3 (slseg ret d1 nil d4))
 	)
-	(<= d1 key) (<= key d5)
+	(<= d1 key) (<= key d4)
 	)
 ))
 
