@@ -1,4 +1,3 @@
-DIRS=smtlib2parser-1.4 src
 
 all:
 	$(MAKE) -C smtlib2parser-1.4
@@ -7,5 +6,6 @@ install:
 	mv src/compspen $(HOME)/bin
 
 clean:
-	rm smtlib2parser-1.4/*.o
-	rm src/*.o
+	rm -f smtlib2parser-1.4/*.o smtlib2parser-1.4/libsmtlib2parser.a smtlib2parser-1.4/smtlib2yices smtlib2parser-1.4/smtlib2bisonparser.c smtlib2parser-1.4/smtlib2bisonparser.h smtlib2parser-1.4/smtlib2flexlexer.c smtlib2parser-1.4/smtlib2flexlexer.h
+
+	rm -f src/*.o src/compspen
