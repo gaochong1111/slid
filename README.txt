@@ -3,9 +3,9 @@ COMPSPEN: ENtailment of COMPositional SeParation Logic with inductive definition
 About
 =====
 This is a decision procedure for the satisfiability and entailment problem of the formulae in the Linearly Compositional Separation Logic with Recursive Definitions (SLRD_{LC}) 
-defined in the paper “A complete decision procedure for linearly compositional separation logic with data constraints” (http://lcs.ios.ac.cn/~wuzl/pub/gcw-ijcar16.pdf).
+defined in the paper “A complete decision procedure for linearly compositional separation logic with data constraints” (http://lcs.ios.ac.cn/~wuzl/pub/gcw-ijcar16.pdf). 
 
-The input format of the tool is defined in the file /samples/slrdi-theory.smt
+The tool can be seen as an adaption and extension of the tool SPEN (https://www.irif.univ-paris-diderot.fr/~sighirea/spen/index.html). The input format of the tool is defined in the file /samples/slrdi-theory.smt
 
 Requires
 ========
