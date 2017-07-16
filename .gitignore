@@ -31,3 +31,7 @@
 # Debug files
 *.dSYM/
 /Debug/
+
+# Eclipse files
+src/.metadata/
+src/.settings/
