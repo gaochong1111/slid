@@ -2,6 +2,11 @@
 /src/.metadata/
 /src/.settings/
 
+#
+*.autotools
+*.cproject
+*.project
+
 # Object files
 *.o
 *.ko
