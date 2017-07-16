@@ -1,3 +1,11 @@
+# Eclipse files
+/src/.metadata/
+/src/.settings/
+
+# the Executables files
+/src/compsen
+
+
 # Object files
 *.o
 *.ko
@@ -32,6 +40,4 @@
 *.dSYM/
 /Debug/
 
-# Eclipse files
-src/.metadata/
-src/.settings/
+

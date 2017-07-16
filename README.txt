@@ -24,7 +24,7 @@ To compile:
   https://github.com/Z3Prover/z3
   Linux Commands: 
   -- aptitude search z3
-  -- sudo apt-get install z3
+  -- sudo apt-get install libz3-dev
 
 - boost package (tested under boost 1.58.0)
   http://www.boost.org/

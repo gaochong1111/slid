@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "sl_abstr.h"
 #include "sl_sat.h"
+#include <string>
 
 using namespace std;
 
