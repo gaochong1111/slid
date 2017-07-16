@@ -2,6 +2,9 @@
 /src/.metadata/
 /src/.settings/
 
+# the Executables files
+/src/compsen
+
 
 # Object files
 *.o
