@@ -36,6 +36,12 @@
 *.x86_64
 *.hex
 
+# tags
+GRTAGS
+GPATH
+GTAGS
+
+
 # Debug files
 *.dSYM/
 /Debug/
