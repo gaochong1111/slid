@@ -26,7 +26,6 @@
 
 #include <stdio.h>
 #include "noll_graph.h"
-#include "noll_graph2ta.h"
 
 
 /* ====================================================================== */
