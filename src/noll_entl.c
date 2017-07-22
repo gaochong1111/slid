@@ -548,7 +548,7 @@ noll_entl_type ()
 
   /*
    * Order fields,
-   * it has side effects on the fields_array, adds oredeing infos
+   * it has side effects on the fields_array, adds oredering infos
    */
   if (noll_field_order () == 0)
     return 0;
@@ -828,6 +828,7 @@ noll_entl_solve (void)
 {
   int res = 0;
 
+
 #ifndef NDEBUG
   noll_entl_fprint (stdout);
   fflush (stdout);
@@ -837,7 +838,19 @@ noll_entl_solve (void)
    * Special case of sat solving, when no negative formula
    */
   if (noll_entl_is_sat ())
-    return noll_sat_solve (noll_prob->pform);
+     return noll_sat_solve (noll_prob->pform);
+  //else {
+
+
+
+    struct timeval tvBegin, tvEnd, tvDiff;
+
+    gettimeofday (&tvBegin, NULL);
+
+    noll_entl_type ();
+
+    res = solve_entail();
+    // }
 
   /*
    * Test special (syntactic) cases of entailment, 
@@ -859,9 +872,7 @@ noll_entl_solve (void)
  *    }
  *
  */
-  struct timeval tvBegin, tvEnd, tvDiff;
 
-  gettimeofday (&tvBegin, NULL);
 
   /*
    * Compute typing infos
@@ -869,9 +880,6 @@ noll_entl_solve (void)
   //if (noll_option_get_verb () > 0)
     //fprintf (stdout, "  > typing formulas\n");
 
-  noll_entl_type ();
-
-  res = solve_entail();
 
 /*
  *#ifndef NDEBUG
@@ -882,83 +890,6 @@ noll_entl_solve (void)
  *  fflush (stdout);
  *#endif
  */
-
-  /*
-   * Normalize both formulas (which also test satisfiability)
-   */
-/*
- *  if (noll_option_get_verb () > 0)
- *    fprintf (stdout, "  > normalizing formulas\n");
- *
- *  noll_entl_normalize ();
- */
-
-  /*
-   * Test the satisfiability of pform /\ not(\/_i nform)
-   */
-  /*
-   * Special cases, not covered by graph homeomorphism
-   */
-  /*
-   *res = noll_entl_solve_special (false);
-   *if (res != -1)
-   *  goto check_end;
-   */
-
-  /*
-   * If both formulas are not empty,
-   * translate formulas to graphs.
-   */
-/*
- *  if (noll_option_get_verb () > 0)
- *    fprintf (stdout, "  > translation to graphs\n");
- *
- *  res = noll_entl_to_graph ();
- *  if (res == 0)
- *    {
- *      // entailment invalid, so sat problem
- *      res = 1;
- *      goto check_end;
- *    }
- */
-
-  /*
-   * Check graph homeomorphism
-   */
-  /*
-   *if (noll_option_get_verb () > 0)
-   *  fprintf (stdout, "  > check graph homeomorphism\n");
-   *[> build homeomorphism from right to left <]
-   *res = noll_entl_to_hom ();
-   *[> sharing constraints in pos_graph are updated and tested! <]
-   *switch (res)
-   *  {
-   *  case 0:
-   *    {
-   *      // homeomorphism not found, 
-   *      // so entailment invalid, 
-   *      // so sat problem
-   *      res = 1;
-   *      break;
-   *    }
-   *  case 1:
-   *    {
-   *      // homeomorphism found
-   *      // so entailment valid
-   *      // so unsat problem
-   *      res = 0;
-   *      break;
-   *    }
-   *  default:
-   *    assert (res == -1);
-   *    break;
-   *  }
-   */
-
-  /*
-   * FIN
-   */
-check_end:
 
   gettimeofday (&tvEnd, NULL);
   time_difference (&tvDiff, &tvEnd, &tvBegin);

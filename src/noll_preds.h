@@ -125,6 +125,7 @@ extern "C"
    * - the name of the predicate
    * - the type(s) of the variable
    */
+
   typedef struct noll_pred_t
   {
     char *pname;                // declaration name

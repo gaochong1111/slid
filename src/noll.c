@@ -409,6 +409,7 @@ noll_mk_pred_exp2rule_space (noll_context_t * ctx, const char *name,
           }
         else
           {
+            // this maybe not used?
             if (prule->nst == NULL)
               {
                 prule->nst = noll_space_new ();
@@ -437,6 +438,7 @@ noll_mk_pred_exp2rule_space (noll_context_t * ctx, const char *name,
         if (pcall->m.ls.pid == pid)
           {
             /// it is a recursive call
+            /// TODO: the recursive call can be modified array ?
             noll_space_t *nrec = prule->rec;
             if (nrec == NULL)
               {
@@ -900,7 +902,7 @@ noll_mk_pred_typecheck_par_SLRDI (noll_context_t * ctx, const char *name,
         }
       else if (i > (npar_loc + 1))
         {
-    	  /*
+    	  /*TODO: first parameter should be location?
           /// record parameter not in first parameters
           noll_error (1, "Building predicate definition ", name);
           noll_error (1, "Parameter of record type shall be first in list",
@@ -995,7 +997,7 @@ noll_mk_pred_userdef (noll_context_t * ctx, const char *name, uint_t npar,
    * typechecks the predicate profile depending on the logic used,
    * and computes the number of recursive parameters >= 1
    */
-  uint_t nrec_p = 0;
+  uint_t nrec_p = 0; // the number of location
   if ((nrec_p = noll_mk_pred_typecheck (ctx, name, npar, rety, pdef)) == 0)
     {
       noll_error (1, "Building predicate definition ", name);
@@ -1164,12 +1166,12 @@ noll_mk_pred_rules (noll_context_t * ctx, const char *name,
     }
 
   /// Verify that at least one recursive case is specified
-  if (pdef->sigma_0 == NULL)
+  /* if (pdef->sigma_0 == NULL)
     {
       noll_error (1, "Building predicate definition ", name);
       noll_error (1, "No recursive rule provided!", "");
       return 0;
-    }
+      }*/
   return 1;
 }
 
@@ -1353,10 +1355,10 @@ int
 noll_push_quant (noll_context_t * ctx)
 {
 #ifndef NDEBUG
-  fprintf (stdout, "push_quant start: ");
+  fprintf (stdout, "push_quant start: \n");
   noll_context_fprint (stdout, ctx);
 #endif
-  //the NOLL supports only 2 levels of nesting and only inside define - fun
+  //the NOLL supports only 2 levels of nesting and only inside define-fun
   if (noll_vector_size (ctx->lvar_stack) >= 3)
     {
       noll_error (0, "noll_push_quant", "too much nesting");
@@ -1371,7 +1373,7 @@ int
 noll_pop_quant (noll_context_t * ctx)
 {
 #ifndef NDEBUG
-  fprintf (stdout, "pop_quant start: ");
+  fprintf (stdout, "pop_quant start: \n");
   noll_context_fprint (stdout, ctx);
 #endif
   if (noll_vector_size (ctx->lvar_stack) <= 1)

@@ -62,9 +62,8 @@ CCSRC = noll_types.c \
 	noll_lemma.c \
 	noll_entl.c \
 	noll.c smtlib2noll.c \
-	noll-dp.c\
-	slid_sat.c\
-	ptool.c
+	noll_dp.c\
+	slid_sat.c
 
 CXXSRC = sl_entail.cc\
 	 sl_formula.cc\
@@ -95,7 +94,7 @@ compspen: $(subst .c,$(DEBUG).o,$(CCSRC)) $(subst .cc,$(DEBUG).o,$(CXXSRC))
 
 clean:
 	rm -f *.o *~ *-out.txt *.dot result.txt
-	
+
 distclean: clean
 	rm compspen
 
@@ -119,10 +118,10 @@ indent: $(CCINC) $(CCSRC)
 #	$(CXX) $(CXXFLAGS_DEBUG) $(ICXXFLAGS) -c -o $@ $<
 
 %.o: %.cc $(CCINC) $(DEPS)
-	$(CXX) $(CXXFLAGS) $(ICXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS_DEBUG) $(ICXXFLAGS) -c -o $@ $<
 
 %.o: %.c $(CCINC) $(DEPS)
-	$(CC) $(CFLAGS) $(ICFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS_DEBUG) $(ICFLAGS) -c -o $@ $<
 
 %_debug.o: %.c $(CCINC) $(DEPS)
 	$(CC) $(CFLAGS_DEBUG) $(ICFLAGS) -c -o $@ $<

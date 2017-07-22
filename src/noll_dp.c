@@ -77,6 +77,7 @@ main (int argc, char **argv)
       return 1;
     }
 
+
   if (noll_option_get_verb () > 0)
     fprintf (stdout, "spen on file %s\n", argv[arg_file]);
 
@@ -88,10 +89,13 @@ main (int argc, char **argv)
       printf ("File %s not found!\nquit.", argv[arg_file]);
       return 1;
     }
-
+  if (noll_option_get_verb () > 0)
+    fprintf (stdout, "init ta_symbol.\n");
   // initialize the TA symbol database
   noll_ta_symbol_init ();
 
+  if (noll_option_get_verb () > 0)
+    fprintf (stdout, "init entl.\n");
   // initialize the problem
   noll_entl_init ();
   noll_entl_set_fname (argv[arg_file]);
@@ -100,6 +104,8 @@ main (int argc, char **argv)
 
   if (noll_option_get_verb () > 0)
     fprintf (stdout, "  > parse file %s\n", argv[arg_file]);
+
+
   // call the parser
   smtlib2_noll_parser *sp = smtlib2_noll_parser_new ();
   smtlib2_abstract_parser_parse ((smtlib2_abstract_parser *) sp, f);
@@ -107,6 +113,7 @@ main (int argc, char **argv)
   // Step 2: call the solving execute the commands in the file (check-sat)
   // done in (noll.c) noll_check
   // also sets the smtlib2 parser result
+  // noll_entl_fprint(stdout);
 
   // Step 3: finish (free memory, etc.)
   smtlib2_noll_parser_delete (sp);

@@ -1,9 +1,9 @@
-YICES_DIR = /usr/local/yices-1.0.29
+YICES_DIR = /usr/local/yices-1.0.40
 
 CC = gcc
 FLEX = flex
 BISON = bison
-CFLAGS = -static -std=c99 -pedantic -g -Wall -fPIC
+CFLAGS = -static -std=c99 -pedantic -g -Wall
 LDFLAGS = -g -lgmp -lgmpxx -lstdc++ 
 SHARED = $(CC) -shared
 
@@ -34,6 +34,14 @@ all: libsmtlib2parser.a
 clean:
 	rm -f $(OBJECTS) $(YICES_OBJECTS) libsmtlib2parser.a smtlib2yices smtlib2bisonparser.c smtlib2bisonparser.h smtlib2flexlexer.c smtlib2flexlexer.h
 
+
+smtlib2yices: libsmtlib2parser.a $(YICES_OBJECTS)
+	$(CC) $(YICES_OBJECTS) libsmtlib2parser.a $(YICES_DIR)/lib/libyices.a $(LDFLAGS) -o $@
+
+smtlib2yices.o: smtlib2yices.c
+	$(CC) $(CFLAGS) -I$(YICES_DIR)/include -c -o $@ $<
+yicesmain.o: yicesmain.c
+	$(CC) $(CFLAGS) -I$(YICES_DIR)/include -c -o $@ $<
 
 libsmtlib2parser.a: $(OBJECTS)
 	ar rc $@ $(OBJECTS)

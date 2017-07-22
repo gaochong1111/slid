@@ -16,7 +16,7 @@
  *
  **************************************************************************/
 
-/** 
+/**
  * Additional definitions needed to parse NOLL files
  */
 
@@ -324,10 +324,10 @@ extern "C"
 
 #ifndef NDEBUG
 
-#define NOLL_DEBUG(...) \
-	do { \
-			fprintf (stdout, __VA_ARGS__); \
-	} while (0)
+#define NOLL_DEBUG(...)                         \
+  do {                                          \
+    fprintf (stdout, __VA_ARGS__);              \
+  } while (0)
 
 #else                           /* #ifndef NDEBUG */
 
