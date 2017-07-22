@@ -37,9 +37,7 @@ CCINC = noll_vector.h \
 	noll_types.h noll_vars.h noll_preds.h noll_form.h noll_graph.h \
 	noll2bool.h noll2sat.h noll_norm.h noll_sat.h \
         noll2graph.h \
-	noll_ta_symbols.h \
-        noll_lemma.h \
-	noll_entl.h \
+		noll_entl.h \
 	noll.h smtlib2noll.h\
 	sl_entail.h\
 	sl_formula.h\
@@ -58,8 +56,6 @@ CCSRC = noll_types.c \
         noll_option.c \
 	noll2bool.c noll2sat.c noll_norm.c noll_sat.c \
         noll2graph.c \
-	noll_ta_symbols.c \
-	noll_lemma.c \
 	noll_entl.c \
 	noll.c smtlib2noll.c \
 	noll_dp.c\

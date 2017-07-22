@@ -16,10 +16,10 @@
 /*                                                                        */
 /**************************************************************************/
 
-#include <stdio.h>
+#include <stdio.h>x
 #include "smtlib2noll.h"
 #include "noll_option.h"
-#include "noll_ta_symbols.h"
+// #include "noll_ta_symbols.h"
 
 /* ====================================================================== */
 /* MAIN/Main/main */
@@ -89,11 +89,11 @@ main (int argc, char **argv)
       printf ("File %s not found!\nquit.", argv[arg_file]);
       return 1;
     }
-  if (noll_option_get_verb () > 0)
+  /* if (noll_option_get_verb () > 0)
     fprintf (stdout, "init ta_symbol.\n");
   // initialize the TA symbol database
   noll_ta_symbol_init ();
-
+  */
   if (noll_option_get_verb () > 0)
     fprintf (stdout, "init entl.\n");
   // initialize the problem
@@ -119,7 +119,7 @@ main (int argc, char **argv)
   smtlib2_noll_parser_delete (sp);
   fclose (f);
   noll_entl_free ();
-  noll_ta_symbol_destroy ();    // destroy the TA symbol database
+  // noll_ta_symbol_destroy ();    // destroy the TA symbol database
 
   return 0;
 }
