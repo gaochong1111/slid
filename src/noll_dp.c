@@ -19,11 +19,7 @@
 #include <stdio.h>
 #include "smtlib2noll.h"
 #include "noll_option.h"
-// #include "noll_ta_symbols.h"
 
-/* ====================================================================== */
-/* MAIN/Main/main */
-/* ====================================================================== */
 
 /**
  * Print informations on usage.
@@ -51,31 +47,31 @@ main (int argc, char **argv)
 {
   // Step 0: Check the arguments
   if (argc <= 1)
-    {
-      print_help ();
-      return 1;
-    }
+  {
+    print_help ();
+    return 1;
+  }
   int arg_file = 1;
   while (arg_file < argc)
+  {
+    int opt = noll_option_set (argv[arg_file]);
+    if (opt == 1)
+      arg_file++;
+    else if (opt == -1)
     {
-      int opt = noll_option_set (argv[arg_file]);
-      if (opt == 1)
-        arg_file++;
-      else if (opt == -1)
-        {
-          print_help ();
-          return 1;
-        }
-      else
-        break;
-    }
-  if (arg_file >= argc)
-    {
-
-      printf ("no input file\n");
       print_help ();
       return 1;
     }
+    else
+      break;
+  }
+  if (arg_file >= argc)
+  {
+
+    printf ("no input file\n");
+    print_help ();
+    return 1;
+  }
 
 
   if (noll_option_get_verb () > 0)
@@ -85,15 +81,12 @@ main (int argc, char **argv)
   // pre: the file shall exists.
   FILE *f = fopen (argv[arg_file], "r");
   if (!f)
-    {
-      printf ("File %s not found!\nquit.", argv[arg_file]);
-      return 1;
-    }
-  /* if (noll_option_get_verb () > 0)
-    fprintf (stdout, "init ta_symbol.\n");
-  // initialize the TA symbol database
-  noll_ta_symbol_init ();
-  */
+  {
+    printf ("File %s not found!\nquit.", argv[arg_file]);
+    return 1;
+  }
+
+
   if (noll_option_get_verb () > 0)
     fprintf (stdout, "init entl.\n");
   // initialize the problem
@@ -119,7 +112,6 @@ main (int argc, char **argv)
   smtlib2_noll_parser_delete (sp);
   fclose (f);
   noll_entl_free ();
-  // noll_ta_symbol_destroy ();    // destroy the TA symbol database
 
   return 0;
 }

@@ -56,10 +56,8 @@ extern "C"
   typedef struct noll_pred_binding_t
   {
     size_t pargs;               // type of list = number of arguments of this record type 2 or 4
-    noll_var_array *vars;       // nil + formal arguments (+ old: local variables for sigma_0, sigma_1)
+    noll_var_array *vars;       // nil + formal arguments
     uint_t fargs;               // number of formal arguments in the array above
-    noll_space_t *sigma_0;      // old: points-to part
-    noll_space_t *sigma_1;      // old: nested part
     noll_pred_rule_array *base_rules;   // set of base rules
     noll_pred_rule_array *rec_rules;    // set of base rules
   } noll_pred_binding_t;
@@ -250,9 +248,7 @@ extern "C"
   /* Order the fields using the predicate order.
    */
 
-  noll_form_t *noll_pred_get_matrix (uid_t pid);
-  /* Build a formula from the matrix of the predicate
-   */
+
 
   /* ====================================================================== */
   /* Printing */

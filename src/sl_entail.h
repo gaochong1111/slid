@@ -35,13 +35,6 @@ private:
 
 class sl_entail {
 public:
-	/*
-	 *enum sl_entail_t {
-	 *        SL_ENTAIL_UNSAT = -1,
-	 *        SL_ENTAIL_UNKNOWN,
-	 *        SL_ENTAIL_SAT
-	 *};
-	 */
 	sl_entail();
 	bool check_entail();
 

@@ -407,29 +407,11 @@ bool sl_entail::match_pto_field(noll_uid_array* f1, noll_uid_array* f2)
 	return false;
 }
 
-/*
- *bool sl_entail::match_pred(sl_formula& pos, vector<graph::edge_descriptor>& path, noll_ls_t& pred)
- *{
- *        size_t sour_ver, dest_ver;
- *        vector<int> path;
- *        grahp& pos_graph = pos.get_graph();
- *
- *        sour_ver = pos_graph.var_to_vertex(pto.sid);
- *        dest_ver = pos_graph.var_to_vertex(noll_vector_at(pto.dest, 0));
- *
- *        if (pos_graph.is_in_same_cc(sour_ver, dest_ver)) {
- *                path = pos_graph.get_path(sour_ver, dest_ver);
- *                if (!path.empty())
- *                        return match_pred(pos, path, pred);
- *                return false;
- *        }
- *        return false;
- *}
- */
 
 bool sl_entail::match_pred_field(noll_space_t* spatial_atom, noll_ls_t* pred)
 {
-	noll_pto_t* pto1, *pto2;
+	noll_pto_t* pto1 = NULL;
+	noll_pto_t* pto2 = NULL;
 	noll_pred_t* def_pred2;
 	def_pred2 = noll_vector_at(preds_array, pred->pid);
 	pto2 = get_pred_rule_pto(def_pred2);

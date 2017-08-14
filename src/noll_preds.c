@@ -83,8 +83,8 @@ noll_pred_binding_new (void)
   pdef->pargs = 0;
   pdef->fargs = 0;
   pdef->vars = NULL;
-  pdef->sigma_0 = NULL;
-  pdef->sigma_1 = NULL;
+  // pdef->sigma_0 = NULL;
+  // pdef->sigma_1 = NULL;
   pdef->base_rules = NULL;
   pdef->rec_rules = NULL;
   return pdef;
@@ -97,10 +97,10 @@ noll_pred_binding_delete (noll_pred_binding_t * pdef)
     return;
   if (pdef->vars != NULL)
     noll_var_array_delete (pdef->vars);
-  if (pdef->sigma_0 != NULL)
-    noll_space_free (pdef->sigma_0);
-  if (pdef->sigma_1 != NULL)
-    noll_space_free (pdef->sigma_1);
+  /* if (pdef->sigma_0 != NULL)
+     noll_space_free (pdef->sigma_0);
+     if (pdef->sigma_1 != NULL)
+     noll_space_free (pdef->sigma_1);*/
   if (pdef->base_rules != NULL)
     noll_pred_rule_array_delete (pdef->base_rules);
   if (pdef->rec_rules != NULL)
@@ -116,24 +116,22 @@ noll_pred_binding_push_rule (noll_pred_binding_t * def, noll_pred_rule_t * r,
   assert (r != NULL);
   noll_pred_rule_array *rules = NULL;
   if (isRec == true)
-    {
-      if (def->rec_rules == NULL)
-        def->rec_rules = noll_pred_rule_array_new ();
-      rules = def->rec_rules;
-    }
+  {
+    if (def->rec_rules == NULL)
+      def->rec_rules = noll_pred_rule_array_new ();
+    rules = def->rec_rules;
+  }
   else
-    {
-      if (def->base_rules == NULL)
-        def->base_rules = noll_pred_rule_array_new ();
-      rules = def->base_rules;
-    }
+  {
+    if (def->base_rules == NULL)
+      def->base_rules = noll_pred_rule_array_new ();
+    rules = def->base_rules;
+  }
   noll_pred_rule_array_push (rules, r);
-  if ((isRec == true) && (def->sigma_0 == NULL) && (r->rec != NULL))
-    {
-      def->vars = r->vars;      // TODO NEW: it is kept after that ? Yes, it seems
-      def->sigma_0 = r->pto;
-      def->sigma_1 = r->nst;
-    }
+  if ((isRec == true) && (r->rec != NULL))
+  {
+    def->vars = r->vars;      // TODO NEW: it is kept after that ? Yes, it seems
+  }
 }
 
 noll_pred_t *
@@ -157,13 +155,13 @@ uid_t
 noll_pred_array_find (const char *name)
 {
   if (preds_array && (noll_vector_size (preds_array) > 0))
-    {
-      uint_t sz = noll_vector_size (preds_array);
-      for (uint_t i = 0; i < sz; i++)
-        if (noll_pred_getpred (i) && !strcmp (name,
-                                              noll_pred_getpred (i)->pname))
-          return i;
-    }
+  {
+    uint_t sz = noll_vector_size (preds_array);
+    for (uint_t i = 0; i < sz; i++)
+      if (noll_pred_getpred (i) && !strcmp (name,
+                                            noll_pred_getpred (i)->pname))
+        return i;
+  }
   return UNDEFINED_ID;
 }
 
@@ -174,19 +172,19 @@ noll_pred_register (const char *pname, noll_pred_binding_t * def)
 
   uid_t pid = 0;
   for (; pid < noll_vector_size (preds_array); pid++)
+  {
+    noll_pred_t *pi = noll_vector_at (preds_array, pid);
+    if (0 == strcmp (pname, pi->pname))
     {
-      noll_pred_t *pi = noll_vector_at (preds_array, pid);
-      if (0 == strcmp (pname, pi->pname))
-        {
-          if (pi->def != NULL && def != NULL)
-            {
-              printf ("Warning: rewrite predicate definition '%s'!\n", pname);
-            }
-          if (def != NULL)
-            pi->def = def;
-          return pid;
-        }
+      if (pi->def != NULL && def != NULL)
+      {
+        printf ("Warning: rewrite predicate definition '%s'!\n", pname);
+      }
+      if (def != NULL)
+        pi->def = def;
+      return pid;
     }
+  }
 
   /* Warning: modified to support mutually recursive definitions */
   assert (pid == noll_vector_size (preds_array));
@@ -203,29 +201,29 @@ noll_pred_typecheck_call (uid_t pid, noll_type_array * actuals_ty)
   const noll_pred_t *p = noll_pred_getpred (pid);
   assert (NULL != p);
   if (noll_vector_size (actuals_ty) != p->def->fargs)
-    {
-      // TODO: make error message
-      fprintf
-        (stderr,
-         "Predicate call `%s': called with %d parameters instead of %d.\n",
-         p->pname, noll_vector_size (actuals_ty), p->def->fargs);
-      return UNDEFINED_ID;
-    }
-  /// p->def->vars includes nil in position 0, 
+  {
+    // TODO: make error message
+    fprintf
+      (stderr,
+       "Predicate call `%s': called with %d parameters instead of %d.\n",
+       p->pname, noll_vector_size (actuals_ty), p->def->fargs);
+    return UNDEFINED_ID;
+  }
+  /// p->def->vars includes nil in position 0,
   /// while actuals_ty does not
   for (uint_t i = 1; i < p->def->fargs; i++)
+  {
+    noll_var_t *fi = noll_vector_at (p->def->vars, i);
+    noll_type_t *fi_ty = fi->vty;
+    noll_type_t *ai_ty = noll_vector_at (actuals_ty, i - 1);  /* -1 for nil */
+    if (noll_type_match (fi_ty, ai_ty) == false)
     {
-      noll_var_t *fi = noll_vector_at (p->def->vars, i);
-      noll_type_t *fi_ty = fi->vty;
-      noll_type_t *ai_ty = noll_vector_at (actuals_ty, i - 1);  /* -1 for nil */
-      if (noll_type_match (fi_ty, ai_ty) == false)
-        {
-          // TODO: make error message
-          printf ("Predicate call `%s': bad type for parameter %s.\n",
-                  p->pname, fi->vname);
-          return UNDEFINED_ID;
-        }
+      // TODO: make error message
+      printf ("Predicate call `%s': bad type for parameter %s.\n",
+              p->pname, fi->vname);
+      return UNDEFINED_ID;
     }
+  }
   return pid;
 }
 
@@ -233,12 +231,12 @@ const noll_pred_t *
 noll_pred_getpred (uid_t pid)
 {
   if (pid >= noll_vector_size (preds_array))
-    {
-      printf
-        ("noll_pred_getpred: called with identifier %d not in the global environment.\n",
-         pid);
-      return NULL;
-    }
+  {
+    printf
+      ("noll_pred_getpred: called with identifier %d not in the global environment.\n",
+       pid);
+    return NULL;
+  }
 
   return noll_vector_at (preds_array, pid);
 }
@@ -248,9 +246,9 @@ noll_pred_name (uid_t pid)
 {
   const noll_pred_t *pred = NULL;
   if ((pred = noll_pred_getpred (pid)) == NULL)
-    {
-      return "unknown";
-    }
+  {
+    return "unknown";
+  }
 
   return pred->pname;
 }
@@ -267,8 +265,8 @@ noll_pred_gettype (uid_t pid)
   return fp1->vty;
 }
 
-/** 
- * Total ordering of predicates using their call. 
+/**
+ * Total ordering of predicates using their call.
  * Used the reverse ordering of identifiers, due
  * to the parsing.
  * @return true if not (rhs calls lhs)
@@ -320,7 +318,7 @@ noll_pred_is_one_dir (uid_t pid)
 /**
  * Search @p fid inside the fields of predicate @p pid with a role of
  * at most kind.
- * 
+ *
  * @param pid  procedd identifier in preds_array
  * @param fid  field identifier in fields_array
  * @param kind max kind to be found for @p fid
@@ -404,60 +402,60 @@ noll_pred_type ()
   /* go through all predicates starting with the simpler ones */
   for (uint_t pid = 0;
        pid < noll_vector_size (preds_array) && (res == 1); pid++)
+  {
+    noll_pred_t *p = noll_vector_at (preds_array, pid);
+
+    /* initialize the typing infos */
+    res = noll_pred_type_init (p);
+    if (res == 0)
+      return 0;
+
+    /* type the arguments */
+#ifdef SPENEXT
+    res = noll_pred_type_args_ext (p);
+#else
+    res = noll_pred_type_args (p);
+#endif
+    if (res == 0)
+      return 0;
+
+    /* go through the rules to fill the infos */
+    uint_t size =
+      (p->def->base_rules ==
+       NULL) ? 0 : noll_vector_size (p->def->base_rules);
+    for (uint_t ri = 0; ri < size; ri++)
     {
-      noll_pred_t *p = noll_vector_at (preds_array, pid);
-
-      /* initialize the typing infos */
-      res = noll_pred_type_init (p);
-      if (res == 0)
-        return 0;
-
-      /* type the arguments */
 #ifdef SPENEXT
-      res = noll_pred_type_args_ext (p);
-#else
-      res = noll_pred_type_args (p);
-#endif
-      if (res == 0)
-        return 0;
-
-      /* go through the rules to fill the infos */
-      uint_t size =
-        (p->def->base_rules ==
-         NULL) ? 0 : noll_vector_size (p->def->base_rules);
-      for (uint_t ri = 0; ri < size; ri++)
-        {
-#ifdef SPENEXT
-          res =
-            noll_pred_type_rule_ext (p, 0,
-                                     noll_vector_at (p->def->base_rules, ri));
-#else
-          res =
-            noll_pred_type_rule (p, 0,
+      res =
+        noll_pred_type_rule_ext (p, 0,
                                  noll_vector_at (p->def->base_rules, ri));
-#endif
-          if (res == 0)
-            return 0;
-        }
-      /* TODO: no need for level 1 formulas? */
-      size =
-        (p->def->rec_rules ==
-         NULL) ? 0 : noll_vector_size (p->def->rec_rules);
-      for (uint_t ri = 0; ri < size; ri++)
-        {
-#ifdef SPENEXT
-          res =
-            noll_pred_type_rule_ext (p, 1,
-                                     noll_vector_at (p->def->rec_rules, ri));
 #else
-          res =
-            noll_pred_type_rule (p, 1,
-                                 noll_vector_at (p->def->rec_rules, ri));
+      res =
+        noll_pred_type_rule (p, 0,
+                             noll_vector_at (p->def->base_rules, ri));
 #endif
-          if (res == 0)
-            return 0;
-        }
+      if (res == 0)
+        return 0;
     }
+    /* TODO: no need for level 1 formulas? */
+    size =
+      (p->def->rec_rules ==
+       NULL) ? 0 : noll_vector_size (p->def->rec_rules);
+    for (uint_t ri = 0; ri < size; ri++)
+    {
+#ifdef SPENEXT
+      res =
+        noll_pred_type_rule_ext (p, 1,
+                                 noll_vector_at (p->def->rec_rules, ri));
+#else
+      res =
+        noll_pred_type_rule (p, 1,
+                             noll_vector_at (p->def->rec_rules, ri));
+#endif
+      if (res == 0)
+        return 0;
+    }
+  }
   return res;
 }
 
@@ -511,16 +509,16 @@ noll_pred_type_init (noll_pred_t * p)
 
 int get_pred_num_dir(noll_pred_t *p)
 {
-	int i, n;
-	noll_var_t *v;
+  int i, n;
+  noll_var_t *v;
 
-	n = 0;
-	for(i = 1; i <= p->def->fargs; i++){
-		v = noll_vector_at(p->def->vars, i);
-		if(v->vty->kind == NOLL_TYP_RECORD) n++;
-	}
+  n = 0;
+  for(i = 1; i <= p->def->fargs; i++){
+    v = noll_vector_at(p->def->vars, i);
+    if(v->vty->kind == NOLL_TYP_RECORD) n++;
+  }
 
-	return ((n%2==0) ? n/2: (n-1)/2);
+  return ((n%2==0) ? n/2: (n-1)/2);
 }
 
 /**
@@ -535,10 +533,10 @@ noll_pred_type_args (noll_pred_t * p)
     return 0;
 
   /* two direction predicate */
-   /* TODO: better test using the predicate definition */
-   p->typ->isTwoDir = (0 == strcmp (p->pname, "dll")) ? true : false;
+  /* TODO: better test using the predicate definition */
+  p->typ->isTwoDir = (0 == strcmp (p->pname, "dll")) ? true : false;
 
-   p->typ->nDir = get_pred_num_dir(p);
+  p->typ->nDir = get_pred_num_dir(p);
 
   /* type of arguments */
   uint_t nbLoc = 0;             /// number of location args, to fill p->typ->isUnaryLoc
@@ -547,51 +545,51 @@ noll_pred_type_args (noll_pred_t * p)
   uint_t bInt = 0;
   uint_t bLoc = p->typ->nDir;
   for (uint_t i = 0; i < p->def->fargs; i++)
+  {
+    noll_var_t *ai = noll_vector_at (p->def->vars, i + 1);    // shift for nil
+    switch (ai->vty->kind)
     {
-      noll_var_t *ai = noll_vector_at (p->def->vars, i + 1);    // shift for nil
-      switch (ai->vty->kind)
-        {
-        case NOLL_TYP_RECORD:
-          {
-            if (nbLoc < bLoc)
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_LROOT);
-            else if ((nbLoc >= bLoc) && (nbLoc < 2*bLoc)){
-              // TODO: deal correctly with parent arguments
-	      bInt = nbInt;
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_LPENDING);
-            }else
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BORDER);
-            nbLoc++;
-            break;
-          }
-        case NOLL_TYP_BAGINT:
-          {
-            if ((nbBag == 0) || (nbLoc == 1))
-              /// no bag seen before or still in the root part
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BROOT);
-            else if ((nbBag >= 1) && (nbLoc == 2*bLoc))
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BPENDING);
-            else
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BORDER);
-            nbBag++;
-            break;
-          }
-        case NOLL_TYP_INT:
-          {
-            if (nbLoc == bLoc)
-              /// no int seen before or still in the root part
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_IROOT);
-            else if ((nbLoc == 2*bLoc) && (nbInt < 2*bInt))
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_IPENDING);
-            else
-              noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BORDER);
-            nbInt++;
-            break;
-          }
-        default:
-          break;
-        }
+    case NOLL_TYP_RECORD:
+    {
+      if (nbLoc < bLoc)
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_LROOT);
+      else if ((nbLoc >= bLoc) && (nbLoc < 2*bLoc)){
+        // TODO: deal correctly with parent arguments
+        bInt = nbInt;
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_LPENDING);
+      }else
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BORDER);
+      nbLoc++;
+      break;
     }
+    case NOLL_TYP_BAGINT:
+    {
+      if ((nbBag == 0) || (nbLoc == 1))
+        /// no bag seen before or still in the root part
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BROOT);
+      else if ((nbBag >= 1) && (nbLoc == 2*bLoc))
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BPENDING);
+      else
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BORDER);
+      nbBag++;
+      break;
+    }
+    case NOLL_TYP_INT:
+    {
+      if (nbLoc == bLoc)
+        /// no int seen before or still in the root part
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_IROOT);
+      else if ((nbLoc == 2*bLoc) && (nbInt < 2*bInt))
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_IPENDING);
+      else
+        noll_uid_array_push (p->typ->argkind, NOLL_ATYP_BORDER);
+      nbInt++;
+      break;
+    }
+    default:
+      break;
+    }
+  }
   /// this first guess is confirmed by typing rules
 
   /* only one location arg = unary predicate */
@@ -607,8 +605,8 @@ noll_pred_type_args (noll_pred_t * p)
 /**
  * Fill the arguments flds and typs, if not null, with the
  * fields resp. record ids, obtained from formula form.
- * @param p      predicate 
- * @param level  level (0 -- base or 1 -- rec) of the analyzed formulas 
+ * @param p      predicate
+ * @param level  level (0 -- base or 1 -- rec) of the analyzed formulas
  * @param form   analyzed formula
  */
 int
@@ -626,28 +624,28 @@ noll_pred_type_rule_pure (noll_pred_t * p, uint_t level, noll_pure_t * form)
   uid_t vidIPend = UNDEFINED_ID;
   for (uint i = 0; i < p->def->fargs; i++)
     switch (noll_vector_at (p->typ->argkind, i))
-      {
-      case NOLL_ATYP_LROOT:
-        vidLRoot = i + 1;
-        break;
-      case NOLL_ATYP_LPENDING:
-        vidLPend = i + 1;
-        break;
-      case NOLL_ATYP_BROOT:
-        vidBRoot = i + 1;
-        break;
-      case NOLL_ATYP_BPENDING:
-        vidBPend = i + 1;
-        break;
-      case NOLL_ATYP_IROOT:
-        vidIRoot = i + 1;
-        break;
-      case NOLL_ATYP_IPENDING:
-        vidIPend = i + 1;
-        break;
-      default:
-        break;
-      }
+    {
+    case NOLL_ATYP_LROOT:
+      vidLRoot = i + 1;
+      break;
+    case NOLL_ATYP_LPENDING:
+      vidLPend = i + 1;
+      break;
+    case NOLL_ATYP_BROOT:
+      vidBRoot = i + 1;
+      break;
+    case NOLL_ATYP_BPENDING:
+      vidBPend = i + 1;
+      break;
+    case NOLL_ATYP_IROOT:
+      vidIRoot = i + 1;
+      break;
+    case NOLL_ATYP_IPENDING:
+      vidIPend = i + 1;
+      break;
+    default:
+      break;
+    }
   /* compute class using argument types */
   if (vidLRoot == UNDEFINED_ID)
     /* nothing to do, class NOLL_PRED_OTHER */
@@ -666,8 +664,8 @@ noll_pred_type_rule_pure (noll_pred_t * p, uint_t level, noll_pure_t * form)
   p->typ->pkind = NOLL_PRED_COMP;
 
 
-  /// check that pure includes (in-)equality between 
-  ///  - root with 'nil' or root with pending  
+  /// check that pure includes (in-)equality between
+  ///  - root with 'nil' or root with pending
   noll_pure_op_t op = NOLL_PURE_EQ;
   if (vidLPend == UNDEFINED_ID)
     op = noll_pure_matrix_at (form, 0, vidLRoot);       // 0 is nil
@@ -675,29 +673,29 @@ noll_pred_type_rule_pure (noll_pred_t * p, uint_t level, noll_pure_t * form)
     op = noll_pure_matrix_at (form, vidLRoot, vidLPend);
   if ((level == 0 && op != NOLL_PURE_EQ) ||
       (level >= 1 && op == NOLL_PURE_EQ))
-    {
-      p->typ->pkind = NOLL_PRED_WS;
-      return 0;
-    }
+  {
+    p->typ->pkind = NOLL_PRED_WS;
+    return 0;
+  }
 
   if ((op != NOLL_PURE_EQ) || (level > 0))
     return 1;
 
-  /// check that, if op is =,  
-  /// then form includes the same think for msets and data pending      
+  /// check that, if op is =,
+  /// then form includes the same think for msets and data pending
   assert (level == 0 && op == NOLL_PURE_EQ);
   if ((vidBPend != UNDEFINED_ID) &&
       (noll_pure_matrix_at (form, vidBRoot, vidBPend) != op))
-    {
-      p->typ->pkind = NOLL_PRED_WS;
-      return 0;
-    }
+  {
+    p->typ->pkind = NOLL_PRED_WS;
+    return 0;
+  }
   if ((vidIPend != UNDEFINED_ID) &&
       (noll_pure_matrix_at (form, vidIRoot, vidIPend) != op))
-    {
-      p->typ->pkind = NOLL_PRED_WS;
-      return 0;
-    }
+  {
+    p->typ->pkind = NOLL_PRED_WS;
+    return 0;
+  }
   // TODO: check also data constraints
   return 1;
 }
@@ -705,8 +703,8 @@ noll_pred_type_rule_pure (noll_pred_t * p, uint_t level, noll_pure_t * form)
 /**
  * Fill the arguments flds and typs, if not null, with the
  * fields resp. record ids, obtained from formula form.
- * @param p      predicate 
- * @param level  level (0 -- base or 1 -- rec) of the analyzed formulas 
+ * @param p      predicate
+ * @param level  level (0 -- base or 1 -- rec) of the analyzed formulas
  * @param form   analyzed formula
  */
 int
@@ -718,139 +716,139 @@ noll_pred_type_rule_form (noll_pred_t * p, uint_t level,
     return 1;
 
   switch (form->kind)
+  {
+  case NOLL_SPACE_PTO:
+  {
+    //if (level == 1)  // TODO: check done at parsing?!
+    //  return 0;             /* no pto in inner formulas! */
+
+    //if (form->m.pto.sid != 1)  // TODO: allow for RBT
+    /* only pto from first argument */
+    //  return 0;             /* TODO: already checked? */
+
+    for (uid_t i = 0; i < noll_vector_size (form->m.pto.fields); i++)
     {
-    case NOLL_SPACE_PTO:
+      uid_t fid = noll_vector_at (form->m.pto.fields, i);
+      uid_t dst = noll_vector_at (form->m.pto.dest, i);
+
+      /* fill type infos with type of dst */
+      uid_t dst_r = noll_var_record (lvars, dst);
+      if (dst_r != UNDEFINED_ID)
+        noll_vector_at (p->typ->ptypes, dst_r) = 1;
+
+      /* fill field info depending on dst */
+      /* dst is in 0 -- NULL -- to noll_vector_size(p->def->vars) */
+      if (dst == 0)
       {
-        //if (level == 1)  // TODO: check done at parsing?!
-        //  return 0;             /* no pto in inner formulas! */
-
-        //if (form->m.pto.sid != 1)  // TODO: allow for RBT
-        /* only pto from first argument */
-        //  return 0;             /* TODO: already checked? */
-
-        for (uid_t i = 0; i < noll_vector_size (form->m.pto.fields); i++)
+        /* dst == NULL */
+        noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_NULL;
+        p->typ->useNil = true;
+      }
+      else if (dst <= p->def->fargs)
+      {
+        /* to the arguments */
+        noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_BORDER;
+      }
+      else if (dst == (fargs + 1))
+      {
+        /* dst == first existential var, then level 0 */
+        noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_BCKBONE;
+      }
+      else if (dst_r == UNDEFINED_ID)
+      {
+        /* dst is a data variable */
+        noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_DATA;
+      }
+      else
+      {
+        /* dst == other existentials */
+        for (uint_t ex = fargs + 2;
+             ex < noll_vector_size (lvars); ex++)
+          if (dst == ex)
           {
-            uid_t fid = noll_vector_at (form->m.pto.fields, i);
-            uid_t dst = noll_vector_at (form->m.pto.dest, i);
-
-            /* fill type infos with type of dst */
-            uid_t dst_r = noll_var_record (lvars, dst);
-            if (dst_r != UNDEFINED_ID)
-              noll_vector_at (p->typ->ptypes, dst_r) = 1;
-
-            /* fill field info depending on dst */
-            /* dst is in 0 -- NULL -- to noll_vector_size(p->def->vars) */
-            if (dst == 0)
-              {
-                /* dst == NULL */
-                noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_NULL;
-                p->typ->useNil = true;
-              }
-            else if (dst <= p->def->fargs)
-              {
-                /* to the arguments */
-                noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_BORDER;
-              }
-            else if (dst == (fargs + 1))
-              {
-                /* dst == first existential var, then level 0 */
-                noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_BCKBONE;
-              }
-            else if (dst_r == UNDEFINED_ID)
-              {
-                /* dst is a data variable */
-                noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_DATA;
-              }
-            else
-              {
-                /* dst == other existentials */
-                for (uint_t ex = fargs + 2;
-                     ex < noll_vector_size (lvars); ex++)
-                  if (dst == ex)
-                    {
-                      noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_INNER;
-                      break;
-                    }
-              }
-            if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_NONE)
-              return 0;         /* the field info is not filled correctly */
+            noll_vector_at (p->typ->pfields, fid) = NOLL_PFLD_INNER;
+            break;
           }
-        break;
       }
-    case NOLL_SPACE_LS:
-      {
-        uint_t cpid = form->m.ls.pid;
-        const noll_pred_t *cp = noll_pred_getpred (cpid);
-        /* if a recursive call, nothing to do */
-        if (cpid == p->pid)
-          return 1;
-        /* fill pred info */
-        noll_vector_at (p->typ->ppreds, cpid) = 1;
-        if (cp && cp->typ)
-          {
-            // copy called pred information in the arrays
-            if (cp->typ->pfields)
-              for (uid_t fid = 0; fid < noll_vector_size (fields_array);
-                   fid++)
-                {
-                  noll_field_e cpfkind =
-                    noll_vector_at (cp->typ->pfields, fid);
-                  noll_field_e pfkind = noll_vector_at (p->typ->pfields, fid);
-                  if (cpfkind != NOLL_PFLD_NONE && cpfkind != NOLL_PFLD_NULL)
-                    {
-                      /* the field is used in cpid and 
-                       * it shall not be reused as backbone (level 0) in caller pids */
-                      if ((pfkind == NOLL_PFLD_BCKBONE) &&
-                          (noll_option_is_checkTA () == true))
-                        {
-                          /* error, shared field between predicates : stop ! */
-                          fprintf (stderr,
-                                   "Error in predicate typing: shared backbone field fid-%d!\n",
-                                   fid);
-                          fprintf (stderr,
-                                   "\t\t between predicates pid-%d < pid-%d\n",
-                                   p->pid, cpid);
-                          // TODO: put in form
-                          return 0;
-                        }
-                      // set to nested only if the field has not another
-                      // function in p
-                      if (pfkind == NOLL_PFLD_NONE)
-                        noll_vector_at (p->typ->pfields, fid) =
-                          NOLL_PFLD_NESTED;
-                    }
-                }
-            if (cp->typ->useNil)
-              p->typ->useNil = true;
-            if (cp->typ->ptypes)
-              for (uid_t rid = 0; rid < noll_vector_size (records_array);
-                   rid++)
-                {
-                  if (noll_vector_at (cp->typ->ptypes, rid) == 1)
-                    noll_vector_at (p->typ->ptypes, rid) = 1;
-                }
-          }
-        break;
-      }
-    default:
-      {
-        // separation formula
-        for (uid_t i = 0; i < noll_vector_size (form->m.sep); i++)
-          if (0 ==
-              noll_pred_type_rule_form (p, level, lvars, fargs,
-                                        noll_vector_at (form->m.sep, i)))
-            return 0;
-        break;
-      }
+      if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_NONE)
+        return 0;         /* the field info is not filled correctly */
     }
+    break;
+  }
+  case NOLL_SPACE_LS:
+  {
+    uint_t cpid = form->m.ls.pid;
+    const noll_pred_t *cp = noll_pred_getpred (cpid);
+    /* if a recursive call, nothing to do */
+    if (cpid == p->pid)
+      return 1;
+    /* fill pred info */
+    noll_vector_at (p->typ->ppreds, cpid) = 1;
+    if (cp && cp->typ)
+    {
+      // copy called pred information in the arrays
+      if (cp->typ->pfields)
+        for (uid_t fid = 0; fid < noll_vector_size (fields_array);
+             fid++)
+        {
+          noll_field_e cpfkind =
+            noll_vector_at (cp->typ->pfields, fid);
+          noll_field_e pfkind = noll_vector_at (p->typ->pfields, fid);
+          if (cpfkind != NOLL_PFLD_NONE && cpfkind != NOLL_PFLD_NULL)
+          {
+            /* the field is used in cpid and
+             * it shall not be reused as backbone (level 0) in caller pids */
+            if ((pfkind == NOLL_PFLD_BCKBONE) &&
+                (noll_option_is_checkTA () == true))
+            {
+              /* error, shared field between predicates : stop ! */
+              fprintf (stderr,
+                       "Error in predicate typing: shared backbone field fid-%d!\n",
+                       fid);
+              fprintf (stderr,
+                       "\t\t between predicates pid-%d < pid-%d\n",
+                       p->pid, cpid);
+              // TODO: put in form
+              return 0;
+            }
+            // set to nested only if the field has not another
+            // function in p
+            if (pfkind == NOLL_PFLD_NONE)
+              noll_vector_at (p->typ->pfields, fid) =
+                NOLL_PFLD_NESTED;
+          }
+        }
+      if (cp->typ->useNil)
+        p->typ->useNil = true;
+      if (cp->typ->ptypes)
+        for (uid_t rid = 0; rid < noll_vector_size (records_array);
+             rid++)
+        {
+          if (noll_vector_at (cp->typ->ptypes, rid) == 1)
+            noll_vector_at (p->typ->ptypes, rid) = 1;
+        }
+    }
+    break;
+  }
+  default:
+  {
+    // separation formula
+    for (uid_t i = 0; i < noll_vector_size (form->m.sep); i++)
+      if (0 ==
+          noll_pred_type_rule_form (p, level, lvars, fargs,
+                                    noll_vector_at (form->m.sep, i)))
+        return 0;
+    break;
+  }
+  }
   return 1;
 }
 
 /**
  * Fill the arguments flds and typs, if not null, with the
  * fields resp. record ids, obtained from the rule.
- * @param p      predicate 
- * @param level  level (0 -- base or 1 -- rec) of the analyzed rule 
+ * @param p      predicate
+ * @param level  level (0 -- base or 1 -- rec) of the analyzed rule
  * @param rule   analyzed rule
  */
 int
@@ -884,106 +882,106 @@ int
 noll_field_order ()
 {
 
-  /* pre-analysis: 
-   * go through the predicates and 
+  /* pre-analysis:
+   * go through the predicates and
    * set owner for backbone fields */
   for (uint_t pid = 0; pid < noll_vector_size (preds_array); pid++)
-    {
-      noll_pred_t *p = noll_vector_at (preds_array, pid);
-      /* search the backbones and set owner */
-      for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
-        if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_BCKBONE)
-          {
-            noll_field_t *f = noll_vector_at (fields_array, fid);
-            if (f->pid == UNDEFINED_ID)
-              f->pid = pid;
-            else if (noll_option_is_checkTA () == true)
-              {
+  {
+    noll_pred_t *p = noll_vector_at (preds_array, pid);
+    /* search the backbones and set owner */
+    for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
+      if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_BCKBONE)
+      {
+        noll_field_t *f = noll_vector_at (fields_array, fid);
+        if (f->pid == UNDEFINED_ID)
+          f->pid = pid;
+        else if (noll_option_is_checkTA () == true)
+        {
 #ifndef NDEBUG
-                fprintf (stdout, "Error: shared backbone field %d!\n", fid);
+          fprintf (stdout, "Error: shared backbone field %d!\n", fid);
 #endif
-                assert (false);
-              }
-          }
-    }
+          assert (false);
+        }
+      }
+  }
 
   uint_t no = 0;
   /* go through the predicates, in reverse order,
    * and fill the infos on fields */
   for (uint_t pid = noll_vector_size (preds_array) - 1; (pid + 1) >= 1; pid--)
-    {
-      noll_pred_t *p = noll_vector_at (preds_array, pid);
-      /* search the backbones and order them */
-      for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
-        if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_BCKBONE)
-          {
-            noll_field_t *f = noll_vector_at (fields_array, fid);
-            if (f->order == UNDEFINED_ID)
-              {                 /* test that it is not already filled ! */
-                f->order = no++;
-                f->kind = NOLL_PFLD_BCKBONE;
-                f->pid = pid;
-              }
+  {
+    noll_pred_t *p = noll_vector_at (preds_array, pid);
+    /* search the backbones and order them */
+    for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
+      if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_BCKBONE)
+      {
+        noll_field_t *f = noll_vector_at (fields_array, fid);
+        if (f->order == UNDEFINED_ID)
+        {                 /* test that it is not already filled ! */
+          f->order = no++;
+          f->kind = NOLL_PFLD_BCKBONE;
+          f->pid = pid;
+        }
 #ifndef NDEBUG
-            fprintf (stdout, "Field %s @(pid = %d, kind = %d) order=%d\n",
-                     f->name, pid,
-                     noll_vector_at (p->typ->pfields, fid), f->order);
+        fprintf (stdout, "Field %s @(pid = %d, kind = %d) order=%d\n",
+                 f->name, pid,
+                 noll_vector_at (p->typ->pfields, fid), f->order);
 #endif
-          }
-      /* search for inner fields */
-      for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
-        if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_INNER)
-          {
-            noll_field_t *f = noll_vector_at (fields_array, fid);
-            if (f->order == UNDEFINED_ID && f->pid == UNDEFINED_ID)
-              {                 /* test that it is not already filled ! */
-                f->order = no++;
-                f->pid = pid;
-                f->kind = NOLL_PFLD_INNER;
-              }
+      }
+    /* search for inner fields */
+    for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
+      if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_INNER)
+      {
+        noll_field_t *f = noll_vector_at (fields_array, fid);
+        if (f->order == UNDEFINED_ID && f->pid == UNDEFINED_ID)
+        {                 /* test that it is not already filled ! */
+          f->order = no++;
+          f->pid = pid;
+          f->kind = NOLL_PFLD_INNER;
+        }
 #ifndef NDEBUG
-            fprintf (stdout, "Field %s @(pid = %d, kind = %d) order=%d\n",
-                     f->name, pid,
-                     noll_vector_at (p->typ->pfields, fid), f->order);
+        fprintf (stdout, "Field %s @(pid = %d, kind = %d) order=%d\n",
+                 f->name, pid,
+                 noll_vector_at (p->typ->pfields, fid), f->order);
 #endif
-          }
-      /* search for NULL fields */
-      for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
-        if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_NULL)
-          {
-            noll_field_t *f = noll_vector_at (fields_array, fid);
-            if (f->order == UNDEFINED_ID && f->pid == UNDEFINED_ID)
-              {
-                /* test that it is not already filled ! */
-                f->order = no++;
-                f->pid = pid;
-                f->kind = NOLL_PFLD_NULL;
-              }
+      }
+    /* search for NULL fields */
+    for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
+      if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_NULL)
+      {
+        noll_field_t *f = noll_vector_at (fields_array, fid);
+        if (f->order == UNDEFINED_ID && f->pid == UNDEFINED_ID)
+        {
+          /* test that it is not already filled ! */
+          f->order = no++;
+          f->pid = pid;
+          f->kind = NOLL_PFLD_NULL;
+        }
 #ifndef NDEBUG
-            fprintf (stdout, "Field %s @(pid = %d, kind = %d) order=%d\n",
-                     f->name, pid,
-                     noll_vector_at (p->typ->pfields, fid), f->order);
+        fprintf (stdout, "Field %s @(pid = %d, kind = %d) order=%d\n",
+                 f->name, pid,
+                 noll_vector_at (p->typ->pfields, fid), f->order);
 #endif
-          }
-      /* search for to border fields */
-      for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
-        if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_BORDER)
-          {
-            noll_field_t *f = noll_vector_at (fields_array, fid);
-            if (f->order == UNDEFINED_ID && f->pid == UNDEFINED_ID)
-              {
-                /* test that it is not already filled ! */
-                f->order = no++;
-                f->pid = pid;
-                f->kind = NOLL_PFLD_BORDER;
-              }
+      }
+    /* search for to border fields */
+    for (uint_t fid = 0; fid < noll_vector_size (fields_array); fid++)
+      if (noll_vector_at (p->typ->pfields, fid) == NOLL_PFLD_BORDER)
+      {
+        noll_field_t *f = noll_vector_at (fields_array, fid);
+        if (f->order == UNDEFINED_ID && f->pid == UNDEFINED_ID)
+        {
+          /* test that it is not already filled ! */
+          f->order = no++;
+          f->pid = pid;
+          f->kind = NOLL_PFLD_BORDER;
+        }
 #ifndef NDEBUG
-            fprintf (stdout, "Field %s @(pid = %d, kind = %d) order=%d\n",
-                     f->name, pid,
-                     noll_vector_at (p->typ->pfields, fid), f->order);
+        fprintf (stdout, "Field %s @(pid = %d, kind = %d) order=%d\n",
+                 f->name, pid,
+                 noll_vector_at (p->typ->pfields, fid), f->order);
 #endif
-          }
-    }
+      }
+  }
 #ifndef NDEBUG
 #endif
   return 1;
@@ -1001,16 +999,16 @@ noll_pred_get_minfield (uid_t pid)
 
   uid_t minfield_candidate = (uid_t) - 1;
   for (size_t i = 0; i < noll_vector_size (fields); ++i)
-    {
-      if (1 == noll_vector_at (fields, i))
-        {                       // if the field is used in the predicate
-          if (((uid_t) - 1 == minfield_candidate)
-              || noll_field_lt (i, minfield_candidate))
-            {
-              minfield_candidate = i;
-            }
-        }
+  {
+    if (1 == noll_vector_at (fields, i))
+    {                       // if the field is used in the predicate
+      if (((uid_t) - 1 == minfield_candidate)
+          || noll_field_lt (i, minfield_candidate))
+      {
+        minfield_candidate = i;
+      }
     }
+  }
 
   // make sure that there was some minimum field
   assert ((uid_t) - 1 != minfield_candidate);
@@ -1018,223 +1016,8 @@ noll_pred_get_minfield (uid_t pid)
   return minfield_candidate;
 }
 
-/**
- * Build a formula from the matrix of the predicate.
- * Unfolds one time the matrix.
- * @param pid   predicate identifier
- * @param args  predicate actual argument
- * @result      a formula which contains the matrix of the predicate
- *              instantiated with the actual arguments
- */
-noll_form_t *
-noll_pred_get_matrix1 (uid_t pid)
-{
-
-  const noll_pred_t *pred = noll_pred_getpred (pid);
-  assert (pred != NULL);
-
-  /* pred->def->vars is an array built from
-   * - nil (at entry 0 of the array)
-   * - args (starting at entry 1 until pred->def->fargs
-   * - existentially quantified variables 
-   */
-
-  /* Build and empty formula */
-  noll_form_t *res = noll_form_new ();
-  res->kind = NOLL_FORM_SAT;
-  noll_var_array_copy (res->lvars, pred->def->vars);    // copy all from vars
-  /* TODO: use svars for nested predicate calls */
-  res->svars = noll_var_array_new ();   // Warning: do not use NULL
-  res->share = noll_share_array_new (); // Warning: do not use NULL
-  /* - build the pure part E != {F} U B */
-  res->pure = noll_pure_new (noll_vector_size (pred->def->vars));
-  noll_form_add_neq (res, 1, 0);
-  for (size_t i = 2; i < noll_vector_size (pred->def->vars); i++)
-    noll_form_add_neq (res, 1, i);
-
-  /* - build the spatial part */
-  if (pred->def->sigma_1 == NULL)
-    res->space = pred->def->sigma_0;    // TODO: make a copy
-  else
-    {
-      res->space = noll_space_new ();
-      res->space->kind = NOLL_SPACE_SSEP;
-      if (pred->def->sigma_1->kind == NOLL_SPACE_SSEP)
-        {
-          /* TODO: deal with loop */
-          noll_space_array_copy (res->space->m.sep,
-                                 pred->def->sigma_1->m.sep);
-          noll_space_array_push (res->space->m.sep, pred->def->sigma_0);
-        }
-      else
-        {
-          res->space->m.sep = noll_space_array_new ();
-          noll_space_array_push (res->space->m.sep, pred->def->sigma_0);
-          /* TODO: deal with loop */
-          noll_space_array_push (res->space->m.sep, pred->def->sigma_1);
-        }
-    }
-  /* substitute formal arguments with actual arguments */
-#ifndef NDEBUG
-  fprintf (stderr, "\n- matrix formula \n");
-  noll_form_fprint (stderr, res);
-  fflush (stderr);
-#endif
-
-  return res;
-}
 
 
-/**
- * Build a formula from the matrix of the predicate.
- * Unfolds two times the matrix.
- * @param pid   predicate identifier
- * @param args  predicate actual argument
- * @result      a formula which contains the matrix of the predicate
- *              instantiated with the actual arguments
- */
-noll_form_t *
-noll_pred_get_matrix (uid_t pid)
-{
-
-  const noll_pred_t *pred = noll_pred_getpred (pid);
-  assert (pred != NULL);
-
-  /* pred->def->vars is an array built from
-   * - nil (at entry 0 of the array)
-   * - args (starting at entry 1 until pred->def->fargs
-   * - existentially quantified variables 
-   */
-
-  /* Build and empty formula */
-  noll_form_t *res = noll_form_new ();
-  res->kind = NOLL_FORM_SAT;
-  /* copy all from vars */
-  noll_var_array_copy (res->lvars, pred->def->vars);
-  /* insert a copy of existential variables from X_tl+1 ... */
-  for (size_t i = pred->def->fargs + 2;
-       i < noll_vector_size (pred->def->vars); i++)
-    {
-      noll_var_t *vi = noll_vector_at (pred->def->vars, i);
-      noll_var_t *vip = noll_var_copy (vi);
-      /* change the name by adding a p suffix */
-      size_t nlen = strlen (vi->vname) + 2;     // p and \O
-      vip->vname = (char *) realloc (vip->vname, nlen * sizeof (char));
-      snprintf (vip->vname, nlen, "%sp", vi->vname);
-      vip->vid =
-        noll_vector_size (pred->def->vars) + i - pred->def->fargs - 2;
-      noll_var_array_push (res->lvars, vip);
-    }
-#ifndef NDEBUG
-  fprintf (stderr, "\n- new list of variables \n");
-  noll_var_array_fprint (stderr, res->lvars, ", ");
-  fflush (stderr);
-#endif
-
-  /* TODO: use svars for nested predicate calls */
-  res->svars = noll_var_array_new ();   // Warning: do not use NULL
-  res->share = noll_share_array_new (); // Warning: do not use NULL
-
-  /* - build the pure part 
-   *     E != {NULL, F} U B 
-   *     X_tl != {NULL, F} U B
-   *     TODO: E != X_tl is computed by normalisation 
-   */
-  res->pure = noll_pure_new (noll_vector_size (res->lvars));
-  uid_t id_in = 1;
-  uid_t id_x_tl = pred->def->fargs + 1;
-  /* E != NULL, X_tl != NULL */
-  noll_form_add_neq (res, id_in, 0);
-  noll_form_add_neq (res, id_x_tl, 0);
-  /* E != X_tl */
-  noll_form_add_neq (res, id_x_tl, id_in);
-  for (uid_t i = 1; i < pred->def->fargs; i++)
-    {
-      /* args in res->lvars are shifted by 1 to introduce NULL */
-      noll_form_add_neq (res, id_in, i + 1);
-      noll_form_add_neq (res, id_x_tl, i + 1);
-    }
-
-  /* - build the spatial part */
-  uint_t res_size = 0;
-  res->space = noll_space_new ();
-  res->space->kind = NOLL_SPACE_SSEP;
-  res->space->m.sep = noll_space_array_new ();
-  /*    + push the first unfolding */
-  noll_space_array_push (res->space->m.sep, pred->def->sigma_0);        // TODO: make a copy
-  res_size++;
-  if (pred->def->sigma_1 != NULL)
-    {
-      if (pred->def->sigma_1->kind == NOLL_SPACE_SSEP)
-        {
-          /* TODO: unfold the loop construct */
-          for (uint_t i = 0;
-               i < noll_vector_size (pred->def->sigma_1->m.sep); i++)
-            {
-              noll_space_array_push (res->space->m.sep,
-                                     noll_vector_at (pred->def->sigma_1->m.
-                                                     sep, i));
-              res_size++;
-            }
-        }
-      else
-        {
-          /* TODO: unfold the loop construct */
-          noll_space_array_push (res->space->m.sep, pred->def->sigma_1);
-          res_size++;
-        }
-    }
-
-  /*    + push the second unfolding and substitute existentials by new vars */
-  noll_uid_array *alpha = noll_uid_array_new ();
-  noll_uid_array_push (alpha, 0);       // null unchanged
-  noll_uid_array_push (alpha, id_x_tl); // E is replaced by X_tl
-  for (uid_t i = 1; i < pred->def->fargs; i++)
-    noll_uid_array_push (alpha, i + 1); // args are unchanged
-  noll_uid_array_push (alpha, 2);       // X_tl is replaced by F
-  /* the newly introduced vars replace the old ones */
-  for (uid_t i = pred->def->fargs + 2;
-       i < noll_vector_size (pred->def->vars); i++)
-    {
-      /* new existential variables substitute ones in the definition */
-
-      noll_uid_array_push (alpha, noll_vector_size (pred->def->vars)
-                           + i - pred->def->fargs - 2);
-    }
-#ifndef NDEBUG
-  fprintf (stderr, "\n- substitution: ");
-  for (uid_t i = 0; i < noll_vector_size (alpha); i++)
-    fprintf (stderr, "%s -> %s, ",
-             noll_var_name (res->lvars, i, NOLL_TYP_RECORD),
-             noll_var_name (res->lvars, noll_vector_at (alpha, i),
-                            NOLL_TYP_RECORD));
-  fprintf (stderr, "\n");
-  fflush (stderr);
-#endif
-
-  for (uint_t j = 0; j < res_size; j++)
-    {
-      noll_space_t *sj = noll_vector_at (res->space->m.sep, j);
-      noll_space_t *sj_sub = noll_space_sub (sj, alpha);
-#ifndef NDEBUG
-      fprintf (stderr, "\n\tsub-%d formula \n", j);
-      noll_space_fprint (stderr, res->lvars, NULL, sj_sub);
-      fflush (stderr);
-#endif
-      noll_space_array_push (res->space->m.sep, sj_sub);
-    }
-
-  /* free allocated memory */
-  noll_uid_array_delete (alpha);
-
-#ifndef NDEBUG
-  fprintf (stderr, "\n- matrix formula \n");
-  noll_form_fprint (stderr, res);
-  fflush (stderr);
-#endif
-
-  return res;
-}
 
 
 /* ====================================================================== */
@@ -1245,32 +1028,32 @@ void
 noll_pred_type_fprint (FILE * f, noll_pred_typing_t * typ)
 {
   if (typ == NULL)
-    {
-      fprintf (f, "NULL\n");
-      return;
-    }
+  {
+    fprintf (f, "NULL\n");
+    return;
+  }
   fprintf (f, " class=[");
   switch (typ->pkind)
-    {
-    case NOLL_PRED_LST_PAR:
-      fprintf (f, "list-like, with parent");
-      break;
-    case NOLL_PRED_LST:
-      fprintf (f, "list-like, one dir");
-      break;
-    case NOLL_PRED_COMP_PAR:
-      fprintf (f, "compositional, with parent");
-      break;
-    case NOLL_PRED_COMP:
-      fprintf (f, "compositional, one dir");
-      break;
-    case NOLL_PRED_WS:
-      fprintf (f, "well structured");
-      break;
-    default:
-      fprintf (f, "default");
-      break;
-    }
+  {
+  case NOLL_PRED_LST_PAR:
+    fprintf (f, "list-like, with parent");
+    break;
+  case NOLL_PRED_LST:
+    fprintf (f, "list-like, one dir");
+    break;
+  case NOLL_PRED_COMP_PAR:
+    fprintf (f, "compositional, with parent");
+    break;
+  case NOLL_PRED_COMP:
+    fprintf (f, "compositional, one dir");
+    break;
+  case NOLL_PRED_WS:
+    fprintf (f, "well structured");
+    break;
+  default:
+    fprintf (f, "default");
+    break;
+  }
   fprintf (f, " argkind=[");
   for (uint i = 0; i < noll_vector_size (typ->argkind); i++)
     fprintf (f, "%d: %d,", i, noll_vector_at (typ->argkind, i));
@@ -1319,10 +1102,10 @@ noll_pred_fprint (FILE * f, uid_t pid)
 
   fprintf (f, "of rules ");
   if (pi->def == NULL)
-    {
-      fprintf (f, "NULL\n");
-      return;
-    }
+  {
+    fprintf (f, "NULL\n");
+    return;
+  }
   assert (pi->def->base_rules != NULL);
   for (uint_t ri = 0; ri < noll_vector_size (pi->def->base_rules); ri++)
     noll_pred_rule_fprint (f, noll_vector_at (pi->def->base_rules, ri));
@@ -1337,17 +1120,17 @@ noll_pred_array_fprint (FILE * f, noll_pred_array * a, const char *msg)
   fprintf (f, "\n%s: ", msg);
   fflush (f);
   if (!a)
-    {
-      fprintf (f, "null\n");
-      return;
-    }
+  {
+    fprintf (f, "null\n");
+    return;
+  }
   fprintf (f, "[");
   uint_t length_a = noll_vector_size (a);
   for (uint_t i = 0; i < length_a; i++)
-    {
-      noll_pred_fprint (f, i);
-      fprintf (f, "\n");
-    }
+  {
+    noll_pred_fprint (f, i);
+    fprintf (f, "\n");
+  }
   fprintf (f, " - ]");
   fflush (f);
 }
