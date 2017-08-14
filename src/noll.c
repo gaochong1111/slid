@@ -21,7 +21,6 @@
 
 #include "noll.h"
 #include "noll_option.h"
-#include "noll_ta_symbols.h"
 
 /* ====================================================================== */
 /* Globals */

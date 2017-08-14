@@ -28,7 +28,6 @@
 #include "noll_form.h"
 #include "noll_preds.h"
 #include "noll2sat.h"
-#include "noll_norm.h"
 
 /* ====================================================================== */
 /* Sat checking and diagnosis */

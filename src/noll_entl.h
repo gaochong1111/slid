@@ -26,10 +26,7 @@
 #include <stdio.h>
 #include "noll_form.h"
 #include "noll2sat.h"
-#include "noll_norm.h"
 #include "noll_sat.h"
-#include "noll_graph.h"
-#include "noll_hom.h"
 
 
 /* ====================================================================== */
@@ -65,10 +62,10 @@ typedef struct noll_entl_t
   noll_sat_t *pabstr;           // abstraction of the positive formula
   noll_sat_array *nabstr;       // abstraction of the negative formulae
 
-  noll_graph_t *pgraph;         // graph for positive formula
-  noll_graph_array *ngraph;     // graphs for negative formulae
+  // noll_graph_t *pgraph;         // graph for positive formula
+  // noll_graph_array *ngraph;     // graphs for negative formulae
 
-  noll_hom_t *hom;              // homomorphism found
+  // noll_hom_t *hom;              // homomorphism found
 } noll_entl_t;
 
 /* ====================================================================== */
@@ -123,23 +120,23 @@ void noll_entl_fprint (FILE * f);
 /* Solver */
 /* ====================================================================== */
 
-int noll_entl_type (void);
+// int noll_entl_type (void);
 /* Type the predicates, fields, formulas in noll_prob */
 
-int noll_entl_normalize (void);
+// int noll_entl_normalize (void);
 /* Normalize the formulae in noll_prob */
 
-int noll_entl_to_graph (void);
+// int noll_entl_to_graph (void);
 /* Translate to graph representation all formulae in noll_prob */
 
-int noll_entl_to_homomorphism (void);
+// int noll_entl_to_homomorphism (void);
 /* Build the homomorphism for this entailment problem */
 
 int noll_entl_solve (void);
 /* Check the global problem in noll_prob */
 
-int noll_share_check (noll_var_array * lvars, noll_var_array * svars,
-                      noll_share_array * lambda1, noll_share_array * lambda2);
+// int noll_share_check (noll_var_array * lvars, noll_var_array * svars,
+//                      noll_share_array * lambda1, noll_share_array * lambda2);
 /* Check satisfiability (if one of formula is NULL)
  * or entailment (lambda1 => lambda2) of share formulas */
 

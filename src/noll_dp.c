@@ -16,7 +16,7 @@
 /*                                                                        */
 /**************************************************************************/
 
-#include <stdio.h>x
+#include <stdio.h>
 #include "smtlib2noll.h"
 #include "noll_option.h"
 // #include "noll_ta_symbols.h"

@@ -81,7 +81,7 @@ void graph::add_vertex(sl_abstr& abs)
 	vector<set<int>> eq_class_set;
 	eq_class_set = sl_sat::get_equivalence_class(abs);
 	for (size_t i = 0; i < eq_class_set.size(); ++i) {
-		eq_class = eq_class_set[i];	
+		eq_class = eq_class_set[i];
 		/* add one vertex of index i*/
 		boost::add_vertex(adj_list);
 		/* initialize the property of the ith vertex*/
@@ -107,36 +107,36 @@ void graph::add_edge(sl_abstr& abs)
 	for (size_t i = 0; i < sp_atoms.size(); ++i) {
 		sp_atom = sp_atoms[i];
 		switch (sp_atom->kind) {
-			case NOLL_SPACE_PTO:
-				noll_pto_t* pto;
-				pto = &(sp_atom->m.pto);
-				source = adj_list[boost::graph_bundle][pto->sid];
-				target = adj_list[boost::graph_bundle][noll_vector_at(pto->dest, 0)];
+		case NOLL_SPACE_PTO:
+			noll_pto_t* pto;
+			pto = &(sp_atom->m.pto);
+			source = adj_list[boost::graph_bundle][pto->sid];
+			target = adj_list[boost::graph_bundle][noll_vector_at(pto->dest, 0)];
+			boost::add_edge(source, target, i, adj_list);
+			break;
+		case NOLL_SPACE_LS:
+			/* the spatial atom may not be empty */
+			if (!abs.is_sp_atom_empty(i)) {
+				noll_ls_t* ls;
+				ls = &(sp_atom->m.ls);
+				n = slid_get_hole(noll_vector_at(preds_array, ls->pid));
+				source = adj_list[boost::graph_bundle][noll_vector_at(ls->args, 0)];
+				target = adj_list[boost::graph_bundle][noll_vector_at(ls->args, n)];
 				boost::add_edge(source, target, i, adj_list);
-				break;
-			case NOLL_SPACE_LS:
-				/* the spatial atom may not be empty */
-				if (!abs.is_sp_atom_empty(i)) {
-					noll_ls_t* ls;
-					ls = &(sp_atom->m.ls);
-					n = slid_get_hole(noll_vector_at(preds_array, ls->pid));
-					source = adj_list[boost::graph_bundle][noll_vector_at(ls->args, 0)];
-					target = adj_list[boost::graph_bundle][noll_vector_at(ls->args, n)];
-					boost::add_edge(source, target, i, adj_list);
-				}
-				break;
+			}
+			break;
 		}
 	}
 }
 /* --------------------------------------------------------------------------*/
 /**
- * @synopsis  get_edge_property 
+ * @synopsis  get_edge_property
  *
  * @param u   vertex index u
  * @param v
  *
- * @return    edge property representing spatial atom id 
- * 	      -1 no edge between u and v
+ * @return    edge property representing spatial atom id
+ *		  -1 no edge between u and v
  */
 /* --------------------------------------------------------------------------*/
 int graph::get_edge_property(size_t u, size_t v) const
@@ -155,7 +155,7 @@ int graph::get_edge_property(edge_descriptor e)
 }
 /* --------------------------------------------------------------------------*/
 /**
- * @synopsis  seek_cc calculate the connected components 
+ * @synopsis  seek_cc calculate the connected components
  */
 /* --------------------------------------------------------------------------*/
 void graph::seek_cc()
@@ -253,9 +253,48 @@ void graph::seek_cycle()
 		cycle.push_back(t);
 	}
 }
+
 /* --------------------------------------------------------------------------*/
 /**
- * @synopsis  dfs 
+ * @synopsis  print the graph info
+ */
+/* --------------------------------------------------------------------------*/
+void graph::print_graph()
+{
+	size_t i, k, weight;
+	adjacency_list::out_edge_iterator out_it1, out_it2;
+	fprintf(stdout, "print graph:\n");
+
+
+	typedef boost::graph_traits<adjacency_list>::vertex_iterator vertex_iter;
+
+
+	size_t num = boost::num_vertices(adj_list);
+    fprintf(stdout, "node size: %d \n", num);
+
+
+	for (i = 0; i < num; ++i) {
+
+		vertex_lable eq_class = adj_list[i];
+        fprintf(stdout, "equal_class : %d     :", i);
+		for (auto it = begin(eq_class); it != end(eq_class); ++it)
+		    fprintf(stdout, "%d ", *it);
+        fprintf(stdout, "\n");
+		tie(out_it1, out_it2) = boost::out_edges(i, adj_list);
+		for (; out_it1 != out_it2; ++out_it1) {
+			k = boost::target(*out_it1, adj_list);
+			weight = get_edge_property(i, k);
+			fprintf (stdout, "%d -> %d w: %d", i, k, weight);
+		}
+		fprintf(stdout, "\n");
+	}
+	fprintf(stdout, "\n");
+}
+
+
+/* --------------------------------------------------------------------------*/
+/**
+ * @synopsis  dfs
  *
  * @param v
  * @param c
@@ -272,8 +311,8 @@ void graph::seek_cycle()
  *        adjacency_list::out_edge_iterator it1, it2;
  *        visited[v] = 1;
  *        if ((i = locate(s)) != -1) {
- *                c.insert(end(c), begin(s)+i, end(s)-1); 
- *                r.push_back(c);	
+ *                c.insert(end(c), begin(s)+i, end(s)-1);
+ *                r.push_back(c);
  *        }
  *        tie(it1, it2) = boost::out_edges(com[v], adj_list);
  *        for (; it1 != it2; ++it1) {
@@ -305,9 +344,9 @@ void graph::seek_cycle()
  */
 /* --------------------------------------------------------------------------*/
 /**
- * @synopsis  is_dag_like 
+ * @synopsis  is_dag_like
  *
- * @return   
+ * @return
  */
 /* --------------------------------------------------------------------------*/
 bool graph::is_dag_like() const
@@ -446,7 +485,7 @@ vector<graph::edge_descriptor> graph::get_path(size_t u, size_t v) const
 {
 	assert(u != v);
 	vector<edge_descriptor> r;
-	
+
 	int i = which_cc(u);
 	if (i != which_cc(v))
 		return r;
@@ -462,8 +501,8 @@ vector<graph::edge_descriptor> graph::get_path(size_t u, size_t v) const
 }
 
 vector<graph::edge_descriptor> graph::get_path(size_t u, size_t v,
-						vector<edge_descriptor>& s, vector<int>& visited,
-						map<int, int>& m) const
+											   vector<edge_descriptor>& s, vector<int>& visited,
+											   map<int, int>& m) const
 {
 	if (u == v) return s;
 	vector<edge_descriptor> res;

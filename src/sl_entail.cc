@@ -184,7 +184,13 @@ bool sl_entail::check_sub_model_entail(splitter& s, sl_formula& neg)
 {
 	sl_formula t;
 	s.set_offset(0);
+
+    // fprintf(stdout, "in check_sub_model_entail\n");
+
+
+
 	while (s.get_split_formula(t)) {
+		// t.print_graph();
 		if (!check_hom(t, neg))
 			return false;
 	}

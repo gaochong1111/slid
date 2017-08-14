@@ -50,6 +50,10 @@ void slid_sat_check(noll_form_t *form)
 	Z3_solver_inc_ref(z3_ctx, s);
 
 	slid_mk_abstr(z3_ctx, slid_ctx, form);
+	// print the abstr of phi
+	// Z3_string abs_str = Z3_ast_to_string (z3_ctx, slid_ctx->abstr);
+
+	// fprintf(stdout,"%s\n",abs_str);
 
 	if(slid_ctx->sat_type == SLID_UNSAT) return;
 

@@ -66,11 +66,13 @@ public:
 	std::vector<edge_descriptor> merge_path(std::vector<edge_descriptor>&, std::vector<int>&) const;
 	std::vector<edge_descriptor> merge_path(std::vector<edge_descriptor>&, std::vector<edge_descriptor>&);
 	std::vector<std::pair<int, int>> get_cycle_coords() const;
+	void print_graph();
 private:
 	void add_vertex(sl_abstr&);
 	void add_edge(sl_abstr&);
 	void seek_cc();
 	void seek_cycle();
+
 
 /*
  *        void dfs(int, std::vector<int>&, std::vector<int>&, std::vector<int>&, std::vector<std::vector<int>>&);

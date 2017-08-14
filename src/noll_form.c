@@ -24,10 +24,6 @@
 
 #include "noll_form.h"
 #include "noll_preds.h"
-#include "noll2bool.h"
-#include "noll2sat.h"
-#include "noll2graph.h"
-#include "noll_graph.h"
 
 NOLL_VECTOR_DEFINE (noll_dterm_array, noll_dterm_t *);
 

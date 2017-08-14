@@ -34,11 +34,8 @@ LDFLAGS = \
 
 CCINC = noll_vector.h \
         noll_option.h \
-	noll_types.h noll_vars.h noll_preds.h noll_form.h noll_graph.h \
-	noll2bool.h noll2sat.h noll_norm.h noll_sat.h \
-        noll2graph.h \
-		noll_entl.h \
-	noll.h smtlib2noll.h\
+	noll_types.h noll_vars.h noll_preds.h noll_form.h \
+	noll.h smtlib2noll.h  noll2sat.h noll_sat.h noll_entl.h\
 	sl_entail.h\
 	sl_formula.h\
 	sl_abstr.h\
@@ -49,17 +46,22 @@ CCINC = noll_vector.h \
 	sl_sat.h\
 	sl_entl.h
 
+	# noll_graph.h \
+	noll2bool.h noll_norm.h  \
+        noll2graph.h \
+		 \
+
+
 CCSRC = noll_types.c \
 	noll_vars.c \
 	noll_preds.c noll_form.c \
-	noll_graph.c \
-        noll_option.c \
-	noll2bool.c noll2sat.c noll_norm.c noll_sat.c \
-        noll2graph.c \
-	noll_entl.c \
-	noll.c smtlib2noll.c \
+    noll_option.c \
+	noll2sat.c noll_sat.c noll_entl.c\
+ 	noll.c smtlib2noll.c \
 	noll_dp.c\
 	slid_sat.c
+
+# noll_graph.c noll2bool.c  noll_norm.c  noll2graph.c 	\
 
 CXXSRC = sl_entail.cc\
 	 sl_formula.cc\
@@ -107,17 +109,12 @@ indent: $(CCINC) $(CCSRC)
 .SUFFIXES: .c .h .a .o .so .cc
 
 
-#libvata_noll_iface.o: libvata_noll_iface.cc $(CCINC) $(DEPS)
-#	$(CXX) $(CXXFLAGS) $(ICXXFLAGS) -c -o $@ $<
-
-#libvata_noll_iface_debug.o: libvata_noll_iface.cc $(CCINC) $(DEPS)
-#	$(CXX) $(CXXFLAGS_DEBUG) $(ICXXFLAGS) -c -o $@ $<
 
 %.o: %.cc $(CCINC) $(DEPS)
-	$(CXX) $(CXXFLAGS_DEBUG) $(ICXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(ICXXFLAGS) -c -o $@ $<
 
 %.o: %.c $(CCINC) $(DEPS)
-	$(CC) $(CFLAGS_DEBUG) $(ICFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(ICFLAGS) -c -o $@ $<
 
 %_debug.o: %.c $(CCINC) $(DEPS)
 	$(CC) $(CFLAGS_DEBUG) $(ICFLAGS) -c -o $@ $<
