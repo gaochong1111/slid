@@ -527,6 +527,7 @@ smtlib2_noll_parser_define_function (smtlib2_parser_interface * p,
                                       smtlib2_vector_size (params),
                                       (noll_type_t *) sort,
                                       (noll_exp_t *) term);
+
         if (noll_option_get_verb () > 0)
           fprintf (stdout, "in smtlib2_noll_parser_define_function: register predicate %s.\n", name);
 

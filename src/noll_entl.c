@@ -61,34 +61,9 @@ noll_entl_init (void)
   // init command
   noll_prob->cmd = NOLL_FORM_SAT;       // by default value
 
-  // boolean abstraction and graphs to NULL
-  noll_prob->pabstr = NULL;
-  // noll_prob->pgraph = NULL;
-  noll_prob->nabstr = NULL;
-  // noll_prob->ngraph = NULL;
 
 }
 
-/**
- * Free memory allocated for entailment checking
- */
-void
-noll_entl_free_aux (void)
-{
-
-  assert (noll_prob != NULL);
-  if (noll_prob->pabstr != NULL)
-  {
-    noll_sat_free (noll_prob->pabstr);
-    noll_prob->pabstr = NULL;
-  }
-  if (noll_prob->nabstr != NULL)
-  {
-    noll_sat_array_delete (noll_prob->nabstr);
-    noll_prob->nabstr = NULL;
-  }
-
-}
 
 void
 noll_entl_free (void)
@@ -110,7 +85,7 @@ noll_entl_free (void)
     noll_form_array_delete (noll_prob->nform);
     noll_prob->nform = NULL;
   }
-  noll_entl_free_aux ();
+
   free (noll_prob);
 }
 
@@ -300,11 +275,6 @@ noll_entl_solve (void)
   time_difference (&tvDiff, &tvEnd, &tvBegin);
   printf ("\nTotal time (sec): %ld.%06ld\n\n", (long int) tvDiff.tv_sec,
           (long int) tvDiff.tv_usec);
-  /*
-   * Free the allocated memory
-   * (only graphs, formulas will be deallocated at the end)
-   */
-  noll_entl_free_aux ();
 
   return res;
 }
