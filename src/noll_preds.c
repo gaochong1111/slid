@@ -401,7 +401,7 @@ noll_pred_type ()
   int res = 1;
   /* go through all predicates starting with the simpler ones */
   for (uint_t pid = 0;
-       pid < noll_vector_size (preds_array) && (res == 1); pid++)
+       pid < noll_vector_size (preds_array); pid++)
   {
     noll_pred_t *p = noll_vector_at (preds_array, pid);
 
@@ -411,11 +411,9 @@ noll_pred_type ()
       return 0;
 
     /* type the arguments */
-#ifdef SPENEXT
-    res = noll_pred_type_args_ext (p);
-#else
+
     res = noll_pred_type_args (p);
-#endif
+
     if (res == 0)
       return 0;
 
@@ -425,15 +423,9 @@ noll_pred_type ()
        NULL) ? 0 : noll_vector_size (p->def->base_rules);
     for (uint_t ri = 0; ri < size; ri++)
     {
-#ifdef SPENEXT
-      res =
-        noll_pred_type_rule_ext (p, 0,
-                                 noll_vector_at (p->def->base_rules, ri));
-#else
       res =
         noll_pred_type_rule (p, 0,
                              noll_vector_at (p->def->base_rules, ri));
-#endif
       if (res == 0)
         return 0;
     }
@@ -443,15 +435,9 @@ noll_pred_type ()
        NULL) ? 0 : noll_vector_size (p->def->rec_rules);
     for (uint_t ri = 0; ri < size; ri++)
     {
-#ifdef SPENEXT
-      res =
-        noll_pred_type_rule_ext (p, 1,
-                                 noll_vector_at (p->def->rec_rules, ri));
-#else
       res =
         noll_pred_type_rule (p, 1,
                              noll_vector_at (p->def->rec_rules, ri));
-#endif
       if (res == 0)
         return 0;
     }
@@ -494,6 +480,7 @@ noll_pred_type_init (noll_pred_t * p)
   p->typ->isUnaryLoc = false;
   p->typ->useNil = false;
   p->typ->isTwoDir = false;
+  p->typ->nDir = 2; // the number of location args
 
   /* type of arguments */
   p->typ->argkind = noll_uid_array_new ();
@@ -507,9 +494,14 @@ noll_pred_type_init (noll_pred_t * p)
   return 1;
 }
 
+/**
+ * consider the linear predicate, only one static argument
+ * @param p      predicate
+ * @return n     the number of location in alpha
+ */
 int get_pred_num_dir(noll_pred_t *p)
 {
-  int i, n;
+  size_t i, n;
   noll_var_t *v;
 
   n = 0;
@@ -534,7 +526,7 @@ noll_pred_type_args (noll_pred_t * p)
 
   /* two direction predicate */
   /* TODO: better test using the predicate definition */
-  p->typ->isTwoDir = (0 == strcmp (p->pname, "dll")) ? true : false;
+  // p->typ->isTwoDir = (0 == strcmp (p->pname, "dll")) ? true : false;
 
   p->typ->nDir = get_pred_num_dir(p);
 
@@ -719,13 +711,6 @@ noll_pred_type_rule_form (noll_pred_t * p, uint_t level,
   {
   case NOLL_SPACE_PTO:
   {
-    //if (level == 1)  // TODO: check done at parsing?!
-    //  return 0;             /* no pto in inner formulas! */
-
-    //if (form->m.pto.sid != 1)  // TODO: allow for RBT
-    /* only pto from first argument */
-    //  return 0;             /* TODO: already checked? */
-
     for (uid_t i = 0; i < noll_vector_size (form->m.pto.fields); i++)
     {
       uid_t fid = noll_vector_at (form->m.pto.fields, i);
@@ -832,6 +817,15 @@ noll_pred_type_rule_form (noll_pred_t * p, uint_t level,
   }
   default:
   {
+    // recognize the predicate is LIN or TREE
+    size_t rec_n = noll_vector_size (form->m.sep);
+    if (rec_n > 1) {
+      p->typ->pkind = NOLL_PRED_TREE;
+
+    } else {
+      p->typ->pkind = NOLL_PRED_LIN;
+    }
+
     // separation formula
     for (uid_t i = 0; i < noll_vector_size (form->m.sep); i++)
       if (0 ==
@@ -1032,6 +1026,7 @@ noll_pred_type_fprint (FILE * f, noll_pred_typing_t * typ)
     fprintf (f, "NULL\n");
     return;
   }
+
   fprintf (f, " class=[");
   switch (typ->pkind)
   {
@@ -1050,10 +1045,19 @@ noll_pred_type_fprint (FILE * f, noll_pred_typing_t * typ)
   case NOLL_PRED_WS:
     fprintf (f, "well structured");
     break;
+  case NOLL_PRED_LIN:
+    fprintf (f, "linear predicate");
+    break;
+  case NOLL_PRED_TREE:
+    fprintf (f, "tree predicate");
+    break;
   default:
     fprintf (f, "default");
     break;
   }
+  fprintf(f, "]\n root location number: %d\n", typ->nDir);
+
+  /*
   fprintf (f, " argkind=[");
   for (uint i = 0; i < noll_vector_size (typ->argkind); i++)
     fprintf (f, "%d: %d,", i, noll_vector_at (typ->argkind, i));
@@ -1072,21 +1076,22 @@ noll_pred_type_fprint (FILE * f, noll_pred_typing_t * typ)
       fprintf (f, "%s(kind-%d), ", noll_field_name (fi),
                noll_vector_at (typ->pfields, fi));
   fprintf (f, "]\n");
+  */
 
 }
 
 void
 noll_pred_rule_fprint (FILE * f, noll_pred_rule_t * rule)
 {
-  fprintf (f, "\nrule: ");
-  noll_var_array_fprint (f, rule->vars, "exists ");
-  fprintf (f, ". \n\t(pure) ");
+  // fprintf (f, "\nrule: ");
+  noll_var_array_fprint (f, rule->vars, "vars");
+  fprintf (f, ". \n(pure):\n");
   noll_pure_fprint (f, rule->vars, rule->pure);
-  fprintf (f, "\n\t & (pto) ");
+  fprintf (f, "\n(pto):");
   noll_space_fprint (f, rule->vars, NULL, rule->pto);
-  fprintf (f, "\n\t  * (nst) ");
+  fprintf (f, "\n(nst):");
   noll_space_fprint (f, rule->vars, NULL, rule->nst);
-  fprintf (f, "\n\t  * (rec) ");
+  fprintf (f, "\n(rec):");
   noll_space_fprint (f, rule->vars, NULL, rule->rec);
 }
 
@@ -1096,22 +1101,28 @@ noll_pred_fprint (FILE * f, uid_t pid)
   assert (pid < noll_vector_size (preds_array));
 
   noll_pred_t *pi = noll_vector_at (preds_array, pid);
-  fprintf (f, "pred-%d: %s(%d args) ", pi->pid, pi->pname, pi->def->fargs);
-  fprintf (f, "of type ");
-  noll_pred_type_fprint (f, pi->typ);
+  fprintf (f, "pred-%d: %s(%d args) \n", pi->pid, pi->pname, pi->def->fargs);
 
-  fprintf (f, "of rules ");
+    fprintf (f, "of type \n");
+    noll_pred_type_fprint (f, pi->typ);
+
+
+  fprintf (f, "of rules \n");
   if (pi->def == NULL)
   {
     fprintf (f, "NULL\n");
     return;
   }
   assert (pi->def->base_rules != NULL);
+  fprintf (f, "\nbase rule:\n");
   for (uint_t ri = 0; ri < noll_vector_size (pi->def->base_rules); ri++)
     noll_pred_rule_fprint (f, noll_vector_at (pi->def->base_rules, ri));
   assert (pi->def->rec_rules != NULL);
   for (uint_t ri = 0; ri < noll_vector_size (pi->def->rec_rules); ri++)
+  {
+    fprintf (f, "\nrec rules %d:\n", (ri+1));
     noll_pred_rule_fprint (f, noll_vector_at (pi->def->rec_rules, ri));
+  }
 }
 
 void
@@ -1124,12 +1135,12 @@ noll_pred_array_fprint (FILE * f, noll_pred_array * a, const char *msg)
     fprintf (f, "null\n");
     return;
   }
-  fprintf (f, "[");
+  fprintf (f, "[\n");
   uint_t length_a = noll_vector_size (a);
   for (uint_t i = 0; i < length_a; i++)
   {
     noll_pred_fprint (f, i);
-    fprintf (f, "\n");
+    fprintf (f, ",\n");
   }
   fprintf (f, " - ]");
   fflush (f);

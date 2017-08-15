@@ -72,6 +72,8 @@ extern "C"
     NOLL_PRED_COMP_PAR,         // compositional definition, with parent
     NOLL_PRED_COMP,             // compositional definition, one way
     NOLL_PRED_WS,               // well structured definition
+    NOLL_PRED_LIN,              // linear predicate (single-list, double-list)
+    NOLL_PRED_TREE,             // tree predicate
     NOLL_PRED_OTHER             // default
   } noll_pred_kind_e;
    

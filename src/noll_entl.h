@@ -48,11 +48,13 @@
  *  - abstract graphs of positive/negative formulae
  */
 
+
 typedef struct noll_entl_t
 {
   char *smt_fname;              // smt file with entailment
   char *output_fname;           // output file with proof
   noll_logic_t logic;           // theory used in formulas
+  noll_pred_kind_e pred_t;  // TODO NEW: predicate type (linear or tree)
   noll_form_t *pform;           // positive formula phi
   noll_form_array *nform;       // array of negative formulae psi
   noll_form_kind_t cmd;         // command given: check-sat (default),
@@ -110,7 +112,6 @@ void noll_entl_fprint (FILE * f);
 /* ====================================================================== */
 /* Solver */
 /* ====================================================================== */
-
 
 int noll_entl_solve (void);
 

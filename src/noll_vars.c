@@ -133,7 +133,7 @@ noll_type_t *
 noll_var_type (noll_var_array * a, uid_t vid)
 {
   assert (a);
-  //if (vid == VNIL_ID)
+  // if (vid == VNIL_ID)
   //  return NOLL_TYP_VOID;
   if (vid != VNIL_ID && vid >= noll_vector_size (a))
     {
@@ -190,9 +190,9 @@ noll_var_array_fprint (FILE * f, noll_var_array * a, const char *msg)
       assert (vi != NULL);
       noll_type_t *ti = vi->vty;
       if (vi->scope == NOLL_SCOPE_LOCAL)
-        fprintf (f, "?");
+        fprintf (f, "L");
       else
-        fprintf (f, " ");
+        fprintf (f, "G");
       fprintf (f, "%s:", vi->vname);
       noll_type_fprint (f, ti);
       fprintf (f, ", ");

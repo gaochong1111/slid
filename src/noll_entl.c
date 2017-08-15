@@ -30,7 +30,7 @@
 #include "noll_sat.h"
 
 
-extern int solve_entail();
+extern int solve_entail(void);
 
 /* ====================================================================== */
 /* Globals */
@@ -58,6 +58,7 @@ noll_entl_init (void)
   noll_prob->nform = noll_form_array_new ();
   // if empty aray, then SAT problem, else ENTAILMENT problem
 
+  noll_prob->pred_t = NOLL_PRED_LIN;
   // init command
   noll_prob->cmd = NOLL_FORM_SAT;       // by default value
 
@@ -177,7 +178,18 @@ noll_entl_fprint (FILE * f)
 
   noll_records_array_fprint (f, "records:");
   noll_fields_array_fprint (f, "fields:");
-  noll_pred_array_fprint (f, preds_array, "predicates:");
+
+  if (noll_prob->pred_t == NOLL_PRED_TREE)
+  {
+    fprintf(f, "\npredicate type: tree predicate.\n");
+  }
+  else
+  {
+    fprintf(f, "\npredicate type: linear predicate.\n");
+  }
+
+
+  noll_pred_array_fprint (f, preds_array, "predicates");
 
   fprintf (f, "\nFormula 1: ");
   noll_form_fprint (f, noll_prob->pform);
@@ -201,7 +213,7 @@ noll_entl_fprint (FILE * f)
  * @return 1 if typing is ok
  */
 int
-noll_entl_type ()
+noll_entl_type (void)
 {
   /*
    * Type predicate definitions,
@@ -209,6 +221,8 @@ noll_entl_type ()
    */
   if (noll_pred_type () == 0)
     return 0;
+
+
 
   /*
    * Order fields,
@@ -254,28 +268,46 @@ noll_entl_solve (void)
   int res = 0;
 
 
-//#ifndef NDEBUG
-  noll_entl_fprint (stdout);
-  fflush (stdout);
-//#endif
+  for (uint_t pid = 0;
+       pid < noll_vector_size (preds_array); pid++)
+  {
+    noll_pred_t *p = noll_vector_at (preds_array, pid);
+    size_t size = (p->def->rec_rules == NULL) ? 0 : noll_vector_size (p->def->rec_rules);
+    noll_space_t* pcall = NULL;
+    if (size > 0) {
+      pcall = noll_vector_at (p->def->rec_rules, 0)->rec;
+      size_t pcall_num = noll_vector_size (pcall->m.sep);
+      if (pcall_num > 1)
+      {
+        noll_prob->pred_t = NOLL_PRED_TREE;
+        break;
+      }
+    }
+  }
 
-  /*
-  if (noll_entl_is_sat ())
-    return noll_sat_solve (noll_prob->pform);
-  struct timeval tvBegin, tvEnd, tvDiff;
+  if (noll_prob->pred_t == NOLL_PRED_TREE)
+  {
+    //#ifndef NDEBUG
+    noll_entl_fprint (stdout);
+    fflush (stdout);
+    //#endif
+  }
+  else{
+    noll_entl_type ();
 
-  gettimeofday (&tvBegin, NULL);
+    if (noll_entl_is_sat ())
+        return noll_sat_solve (noll_prob->pform);
 
-  noll_entl_type ();
+    struct timeval tvBegin, tvEnd, tvDiff;
 
-  // solve entail problem
-  res = solve_entail();
+    gettimeofday (&tvBegin, NULL);
+    // solve entail problem
+    res = solve_entail();
 
-
-  gettimeofday (&tvEnd, NULL);
-  time_difference (&tvDiff, &tvEnd, &tvBegin);
-  printf ("\nTotal time (sec): %ld.%06ld\n\n", (long int) tvDiff.tv_sec,
-          (long int) tvDiff.tv_usec);
-  */
+    gettimeofday (&tvEnd, NULL);
+    time_difference (&tvDiff, &tvEnd, &tvBegin);
+    printf ("\nTotal time (sec): %ld.%06ld\n\n", (long int) tvDiff.tv_sec,
+    (long int) tvDiff.tv_usec);
+  }
   return res;
 }

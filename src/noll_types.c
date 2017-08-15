@@ -292,6 +292,9 @@ noll_type_fprint (FILE * f, noll_type_t * a)
     case NOLL_TYP_INT:
       fprintf (f, "Int");
       break;
+    case NOLL_TYP_REAL:
+      fprintf (f, "Real");
+      break;
     case NOLL_TYP_BAGINT:
       fprintf (f, "BagInt");
       break;
@@ -326,7 +329,7 @@ noll_type_is_vartype (noll_type_t * t)
 {
   assert (NULL != t);
   /// depends on logic  // TODO NEW
-  if ((t->kind >= NOLL_TYP_INT) && (t->kind <= NOLL_TYP_SETLOC))
+  if ((t->kind >= NOLL_TYP_INT) && (t->kind <= NOLL_TYP_SETLOC)|| (t->kind == NOLL_TYP_REAL))
     return true;
   return false;
 }
@@ -450,10 +453,15 @@ noll_fields_array_fprint (FILE * f, const char *msg)
   for (uint_t i = 0; i < length; i++)
     {
       noll_field_t *fi = noll_vector_at (fields_array, i);
-      fprintf (f, " %s:%s->%s (%d-th, in pid-%d),",
+      /*fprintf (f, " %s:%s->%s (%d-th, in pid-%d),",
                fi->name, noll_record_name (fi->src_r),
                (fi->pto_ty == NOLL_TYP_RECORD) ?
-               noll_record_name (fi->pto_r) : "data", fi->order, fi->pid);
+               noll_record_name (fi->pto_r) : "data", fi->order, fi->pid);*/
+      fprintf (f, " %s:%s->%s ,",
+               fi->name, noll_record_name (fi->src_r),
+               (fi->pto_ty == NOLL_TYP_RECORD) ?
+               noll_record_name (fi->pto_r) : "data");
+
     }
   fprintf (f, " - ]");
 }
