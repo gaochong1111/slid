@@ -4,7 +4,8 @@
 
 # the Executables files
 /src/compsen
-
+# the output file
+*.out
 
 # Object files
 *.o
