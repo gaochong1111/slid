@@ -188,6 +188,15 @@ noll_mk_type_int ()
 }
 
 noll_type_t *
+noll_mk_type_real ()
+{
+  noll_type_t * ret = (noll_type_t *) malloc (sizeof (struct noll_type_t));
+  ret->kind = NOLL_TYP_REAL;
+  ret->args = noll_uid_array_new ();
+  return ret;
+}
+
+noll_type_t *
 noll_mk_type_bagint ()
 {
   noll_type_t *ret = (noll_type_t *) malloc (sizeof (struct noll_type_t));
@@ -326,8 +335,9 @@ bool
 noll_type_is_fldtype (noll_type_t * t)
 {
   assert (NULL != t);
-  /// depends on logic  // TODO NEW
-  if ((t->kind == NOLL_TYP_INT) || (t->kind == NOLL_TYP_RECORD))
+  /// depends on logic
+  // TODO NEW
+  if ((t->kind == NOLL_TYP_INT) || (t->kind == NOLL_TYP_RECORD) || (t->kind == NOLL_TYP_REAL))
     return true;
   return false;
 }

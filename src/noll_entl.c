@@ -254,11 +254,12 @@ noll_entl_solve (void)
   int res = 0;
 
 
-#ifndef NDEBUG
+//#ifndef NDEBUG
   noll_entl_fprint (stdout);
   fflush (stdout);
-#endif
+//#endif
 
+  /*
   if (noll_entl_is_sat ())
     return noll_sat_solve (noll_prob->pform);
   struct timeval tvBegin, tvEnd, tvDiff;
@@ -275,6 +276,6 @@ noll_entl_solve (void)
   time_difference (&tvDiff, &tvEnd, &tvBegin);
   printf ("\nTotal time (sec): %ld.%06ld\n\n", (long int) tvDiff.tv_sec,
           (long int) tvDiff.tv_usec);
-
+  */
   return res;
 }

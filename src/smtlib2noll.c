@@ -294,6 +294,15 @@ smtlib2_noll_parser_set_logic (smtlib2_parser_interface * p,
                              (intptr_t) (void *)
                              smtlib2_strdup ("BagInt"),
                              (intptr_t) (void *) ty);
+      // TODO: add primitive sort Real
+      ty = noll_mk_type_real ();
+      smtlib2_hashtable_set (noll_sorts (p),
+                             (intptr_t) (void *)
+                             smtlib2_strdup ("Real"),
+                             (intptr_t) (void *) ty);
+      if (noll_option_get_verb () > 0)
+        fprintf (stdout, "in smtlib2_noll_parser_set_logic: set-logic %s\n", logic);
+
       // break; // TODO NEW: put break because SetLoc is not useful in SLRDI
     }
     default:
@@ -305,8 +314,6 @@ smtlib2_noll_parser_set_logic (smtlib2_parser_interface * p,
                              smtlib2_strdup ("SetLoc"),
                              (intptr_t) (void *) ty);
 
-      if (noll_option_get_verb () > 0)
-        fprintf (stdout, "in smtlib2_noll_parser_set_logic: set-logic %s\n", logic);
 
       break;
     }

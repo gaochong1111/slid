@@ -5,7 +5,7 @@
  :date "2014-10-10"
  :last_modified "2015-01-22"
 
- :sorts ((Field 2) (SetLoc 0) (SetRef 1) (Space 0) (Int 0) (BagInt 0))
+ :sorts ((Field 2) (SetLoc 0) (SetRef 1) (Space 0) (Real 0)  (Int 0) (BagInt 0))
 
  :funs  ((emp Space)
          (ssep Space Space :left-assoc)

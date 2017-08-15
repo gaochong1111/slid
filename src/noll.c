@@ -295,6 +295,7 @@ noll_mk_fun_decl (noll_context_t * ctx, const char *name, noll_type_t * rty)
   switch (rty->kind)
     {
     case NOLL_TYP_INT:
+    case NOLL_TYP_REAL:
     case NOLL_TYP_BAGINT:
     case NOLL_TYP_RECORD:
       {
