@@ -62,7 +62,7 @@ extern "C"
     NOLL_TYP_FIELD,
     NOLL_TYP_SETREF,
     NOLL_TYP_SPACE,
-    NOLL_TYP_REAL,
+    NOLL_TYP_RAT,
     NOLL_TYP_OTHER
   } noll_typ_t;
 
@@ -160,7 +160,7 @@ extern "C"
 
   noll_type_t *noll_mk_type_bool (void);
   noll_type_t *noll_mk_type_int (void);
-  noll_type_t *noll_mk_type_real (void);
+  noll_type_t *noll_mk_type_rat (void);
   noll_type_t *noll_mk_type_bagint (void);
   noll_type_t *noll_mk_type_field (noll_type_t * src, noll_type_t * dest);
   noll_type_t *noll_mk_type_record (uid_t rid);

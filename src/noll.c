@@ -295,7 +295,7 @@ noll_mk_fun_decl (noll_context_t * ctx, const char *name, noll_type_t * rty)
   switch (rty->kind)
   {
   case NOLL_TYP_INT:
-  case NOLL_TYP_REAL: // add new type
+  case NOLL_TYP_RAT: // add new type
   case NOLL_TYP_BAGINT:
   case NOLL_TYP_RECORD:
   {
@@ -1332,7 +1332,7 @@ noll_push_var (noll_context_t * ctx, const char *name, noll_type_t * vty)
   if (!ctx)
     return;
   uid_t vid = UNDEFINED_ID;
-  if ((vty->kind == NOLL_TYP_RECORD) || (vty->kind == NOLL_TYP_REAL) ||
+  if ((vty->kind == NOLL_TYP_RECORD) || (vty->kind == NOLL_TYP_RAT) ||
       (vty->kind == NOLL_TYP_INT) || (vty->kind == NOLL_TYP_BAGINT))
   {
     assert (ctx->lvar_env != NULL);
@@ -1537,6 +1537,7 @@ noll_mk_number (noll_context_t * ctx, const char *str)
     assert (0);
   }
 
+  //TODO: mk rat constant
   noll_exp_t *res = noll_mk_op (NOLL_F_INT, NULL, 0);
   char *endstr;
   res->p.value = strtol (str, &endstr, 10);
@@ -1584,7 +1585,7 @@ noll_mk_symbol (noll_context_t * ctx, const char *name)
   }
   if (typ != NULL)
   {
-    if ((typ->kind == NOLL_TYP_RECORD) || (typ->kind == NOLL_TYP_REAL)||
+    if ((typ->kind == NOLL_TYP_RECORD) || (typ->kind == NOLL_TYP_RAT)||
         (typ->kind == NOLL_TYP_INT) || (typ->kind == NOLL_TYP_BAGINT))
     {
       ret = noll_mk_op (NOLL_F_LVAR, NULL, 0);

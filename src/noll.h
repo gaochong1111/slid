@@ -72,6 +72,7 @@ extern "C"
     NOLL_F_PLUS,
     NOLL_F_MINUS,
     NOLL_F_INT,                 /* integer constant */
+    NOLL_F_RAT,                 /* rat constant */
     NOLL_F_DFIELD,              /* integer field selection */
     NOLL_F_BAG,                 /* Bag_of_Int theory */
     NOLL_F_EMPTYBAG,

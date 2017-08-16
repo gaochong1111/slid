@@ -47,7 +47,9 @@
 )
 )
 
+(declare-fun x() Int)
 
+(assert (and true  (= 1.2 3.4)))
 (check-sat)
 
 

@@ -295,7 +295,7 @@ smtlib2_noll_parser_set_logic (smtlib2_parser_interface * p,
                              smtlib2_strdup ("BagInt"),
                              (intptr_t) (void *) ty);
       // TODO: add primitive sort Real
-      ty = noll_mk_type_real ();
+      ty = noll_mk_type_rat ();
       smtlib2_hashtable_set (noll_sorts (p),
                              (intptr_t) (void *)
                              smtlib2_strdup ("Real"),
@@ -874,6 +874,8 @@ smtlib2_noll_parser_mk_number (smtlib2_context ctx,
   if ((width == 0) && (base == 10))
   {
     // parse only only base 10 numbers, not arrays
+    // fprintf(stdout, "********number: %s********", rep);
+
     ret = noll_mk_number (sctx, rep);
   }
   return (smtlib2_term) ret;

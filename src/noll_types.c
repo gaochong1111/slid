@@ -188,10 +188,10 @@ noll_mk_type_int ()
 }
 
 noll_type_t *
-noll_mk_type_real ()
+noll_mk_type_rat ()
 {
   noll_type_t * ret = (noll_type_t *) malloc (sizeof (struct noll_type_t));
-  ret->kind = NOLL_TYP_REAL;
+  ret->kind = NOLL_TYP_RAT;
   ret->args = noll_uid_array_new ();
   return ret;
 }
@@ -292,7 +292,7 @@ noll_type_fprint (FILE * f, noll_type_t * a)
     case NOLL_TYP_INT:
       fprintf (f, "Int");
       break;
-    case NOLL_TYP_REAL:
+    case NOLL_TYP_RAT:
       fprintf (f, "Real");
       break;
     case NOLL_TYP_BAGINT:
@@ -329,7 +329,7 @@ noll_type_is_vartype (noll_type_t * t)
 {
   assert (NULL != t);
   /// depends on logic  // TODO NEW
-  if ((t->kind >= NOLL_TYP_INT) && (t->kind <= NOLL_TYP_SETLOC)|| (t->kind == NOLL_TYP_REAL))
+  if ((t->kind >= NOLL_TYP_INT) && (t->kind <= NOLL_TYP_SETLOC)|| (t->kind == NOLL_TYP_RAT))
     return true;
   return false;
 }
@@ -340,7 +340,7 @@ noll_type_is_fldtype (noll_type_t * t)
   assert (NULL != t);
   /// depends on logic
   // TODO NEW
-  if ((t->kind == NOLL_TYP_INT) || (t->kind == NOLL_TYP_RECORD) || (t->kind == NOLL_TYP_REAL))
+  if ((t->kind == NOLL_TYP_INT) || (t->kind == NOLL_TYP_RECORD) || (t->kind == NOLL_TYP_RAT))
     return true;
   return false;
 }
