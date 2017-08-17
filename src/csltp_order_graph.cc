@@ -3,10 +3,19 @@
 #include "csltp_order_graph.h"
 
 /** class Vertex  **/
-Vertex::Vertex(string name): name(name) {}
+Vertex::Vertex(){}
+
+Vertex::Vertex(string name) {
+        this->name = name;
+}
 
 string Vertex::getName(){
         return this->name;
+}
+
+Vertex& Vertex::operator= (const Vertex& vertex) {
+        this->name = vertex.name;
+        return *this;
 }
 
 bool Vertex:: operator< (const Vertex& vertex) const{
@@ -23,7 +32,10 @@ ostream& operator << (ostream& os, Vertex& vertex) {
 
 /** class Edge **/
 
-Edge::Edge(Vertex v1, LabelOp lb ,Vertex v2) :source(v1),label(lb) ,dest(v2){
+Edge::Edge(Vertex v1, LabelOp lb ,Vertex v2) {
+        this->source = v1;
+        this->label = lb;
+        this->dest = v2;
 }
 
 bool Edge::operator < (const Edge& edge) const {
@@ -79,7 +91,7 @@ bool operator == (const set<Vertex>& s1, const set<Vertex>& s2) {
 }
 
 int find_vertex(const vector<Vertex>& vec, const Vertex& v) {
-        for (int i=0; i<vec.size(); i++) {
+        for (unsigned int i=0; i<vec.size(); i++) {
                 if (vec[i] == v) {
                         return i;
                 }
@@ -102,6 +114,10 @@ void OrderGraph::addVertex(Vertex v) {
 int OrderGraph::addEdge(Edge edge) {
         if (this->vertexes.find(edge.getSource()) != this->vertexes.end() &&
             this->vertexes.find(edge.getDest()) != this->vertexes.end()) {
+                if (edge.getSource() == edge.getDest() && edge.getLabel() == LABEL_LE) {
+                        // V <= V, do not insert
+                        return 1;
+                }
                 edges.insert(edge);
                 return 1;
         }
@@ -162,7 +178,7 @@ int OrderGraph::substitution(const vector<Vertex>& old_v, const vector<Vertex>& 
                 return -1; // error
 
         set<Vertex> old_vertexes;
-        for (int i=0; i<old_v.size(); i++) {
+        for (unsigned int i=0; i<old_v.size(); i++) {
                 old_vertexes.insert(old_v[i]);
                 // substitute vertex
                 // erase old
@@ -175,7 +191,7 @@ int OrderGraph::substitution(const vector<Vertex>& old_v, const vector<Vertex>& 
         if (old_vertexes.size() != old_v.size())
                 return -1;
         // insert new
-        for (int i=0; i<new_v.size(); i++) {
+        for (unsigned int i=0; i<new_v.size(); i++) {
                 this->vertexes.insert(new_v[i]);
         }
 
@@ -251,20 +267,43 @@ bool OrderGraph::operator == (const OrderGraph& og) const {
         return false;
 }
 
+/**
+ * print as dot file
+ * @param file: file path
+ */
 void OrderGraph::printAsDot(string file) {
+
+        string label_str[] = {"<", "<="}; //used by print label
+
         ofstream fs(file);
         if (!fs) return;
         fs<<"digraph{\n";
         for (auto vertex : vertexes) {
-                fs << vertex.getName()<<";\n";
+                string vertex_name = vertex.getName();
+                this->delSpecialChar(vertex_name);
+                fs << vertex_name<<";\n";
         }
         for (auto edge : edges) {
                 if (edge.getSource() == edge.getDest() && edge.getLabel()==LABEL_LE)
                         continue;
-                fs << edge.getSource().getName() << "->" <<edge.getDest().getName()<<"[label=\""<<label_str[edge.getLabel()] <<"\"];\n";
+                string source_name = edge.getSource().getName();
+                string dest_name  = edge.getDest().getName();
+                this->delSpecialChar(source_name);
+                this->delSpecialChar(dest_name);
+                fs << source_name << "->" <<dest_name<<"[label=\""<<label_str[edge.getLabel()] <<"\"];\n";
         }
         fs<<"}\n";
         fs.close();
+}
+
+void OrderGraph::delSpecialChar(string& str) {
+        string::iterator it;
+        for(it=str.begin(); it != str.end(); it++) {
+                if ((*it >= '!' && *it <= '.') ||
+                    (*it >= '<' && *it <= '?')) {
+                        str.erase(it);
+                }
+        }
 }
 
 /** class OrderGraphSet **/
@@ -279,9 +318,9 @@ void OrderGraphSet::addOrderGraph(OrderGraph og) {
         }
 }
 
-bool OrderGraphSet::isExist(const OrderGraph& og) {
+bool OrderGraphSet::isExist(const OrderGraph& og) const{
 
-        for (int i=0; i < this->graphs.size(); i++) {
+        for (unsigned int i=0; i < this->graphs.size(); i++) {
                 if (this->graphs[i] == og) {
                         return true;
                 }
@@ -293,10 +332,22 @@ int OrderGraphSet::size() {
         return this->graphs.size();
 }
 
-OrderGraph OrderGraphSet::at(int i) {
-        if (i>=0 && i<this->graphs.size()) {
+OrderGraph OrderGraphSet::at(unsigned int i) {
+        if (i<this->graphs.size()) {
                 return this->graphs[i];
         }
         OrderGraph og;
         return og;
+}
+
+bool OrderGraphSet::operator==(const OrderGraphSet& ogset) const {
+        if (this->graphs.size() == ogset.graphs.size()) {
+                for (auto graph : this->graphs) {
+                        if (!ogset.isExist(graph)) {
+                                return false;
+                        }
+                }
+                return true;
+        }
+        return false;
 }

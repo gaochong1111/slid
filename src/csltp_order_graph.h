@@ -1,3 +1,6 @@
+#ifndef CSLTP_ORDER_GRAPH_H
+#define CSLTP_ORDER_GRAPH_H
+
 #include<set>
 #include<vector>
 #include<string>
@@ -7,10 +10,12 @@ using namespace std;
 class Vertex
 {
 public:
+        Vertex();
         Vertex(string name);
 
         string getName();
 
+        Vertex& operator=(const Vertex& vertex);
         bool operator < (const Vertex& vertex) const;
         bool operator == (const Vertex& vertex) const;
         friend ostream& operator << (ostream& os, Vertex& vertex);
@@ -23,7 +28,6 @@ enum LabelOp{
         LABEL_LE
 };
 
-string label_str[] = {"<", "<="};
 
 class Edge
 {
@@ -105,6 +109,8 @@ public:
         bool operator == (const OrderGraph& og) const ;
 
         void printAsDot(string file) ;
+private:
+        void delSpecialChar(string& str); // process the vertex name , used by printasdot
 
 private:
         set<Vertex> vertexes;
@@ -121,13 +127,16 @@ public:
          */
         void addOrderGraph(OrderGraph og) ;
 
-        bool isExist(const OrderGraph& og) ;
+        bool isExist(const OrderGraph& og) const;
 
         int size() ;
 
-        OrderGraph at(int i) ;
+        OrderGraph at(unsigned int i) ;
+
+        bool operator == (const OrderGraphSet& ogset) const;
 
 private:
         vector<OrderGraph> graphs;
 };
 
+#endif // csltp_order_graph.h

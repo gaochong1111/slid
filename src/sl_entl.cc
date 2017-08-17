@@ -5,6 +5,5 @@
 int solve_entail()
 {
 	sl_entail s;
-	
 	return !(s.check_entail());
 }

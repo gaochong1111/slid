@@ -29,6 +29,8 @@
 #include "noll_entl.h"
 #include "slid_sat.h"
 
+#include "csltp_sat.h"
+
 
 extern int solve_entail(void);
 
@@ -308,6 +310,10 @@ noll_entl_solve (void)
     // tree predicate
     //#ifndef NDEBUG
     noll_entl_fprint (stdout);
+
+    noll_pred_t *pi = noll_vector_at (preds_array, 0);
+    lfp(pi);
+
     fflush (stdout);
     //#endif
   }

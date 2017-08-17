@@ -76,18 +76,20 @@ typedef struct{
 typedef _slid_context* slid_context;
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 //main procedure to check sat using z3 smt solver
 //require that the order of predicate parameter
 /**
  *@return 1, if sat
  0, if unsat
- -1,if undef
+ 3,if undef
 */
-int slid_sat_check(noll_form_t *);
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+	int slid_sat_check(noll_form_t *);
 slid_context slid_init_context(Z3_context);
 slid_context slid_mk_context(Z3_context, noll_form_t *);
 slid_in_alloc_loc_arrays *slid_mk_in_alloc_loc_arrays(Z3_context, Z3_sort, noll_var_array *,\

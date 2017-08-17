@@ -45,6 +45,7 @@ CCINC = noll_vector.h \
 	graph.h\
 	sl_sat.h\
     csltp_order_graph.h\
+	csltp_sat.h\
 	sl_entl.h
 
 # noll_graph.h  noll2sat.h noll_sat.h\
@@ -57,8 +58,7 @@ CCSRC = noll_types.c \
 	noll_vars.c \
 	noll_preds.c noll_form.c \
     noll_option.c \
-	  noll_entl.c\
- 	noll.c smtlib2noll.c \
+	noll.c smtlib2noll.c \
 	noll_dp.c\
 	slid_sat.c
 
@@ -73,6 +73,8 @@ CXXSRC = sl_entail.cc\
 	 sl_sat.cc\
 	 sl_entl.cc\
 	 csltp_order_graph.cc\
+	 csltp_sat.cc\
+     noll_entl.c\
 	 sl_var.cc
 
 

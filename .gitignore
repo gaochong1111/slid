@@ -6,6 +6,7 @@
 /src/compsen
 # the output file
 *.out
+*.dot
 
 # Object files
 *.o

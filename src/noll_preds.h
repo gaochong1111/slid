@@ -232,10 +232,8 @@ extern "C"
    */
   bool noll_pred_is_main_backbone_field (uid_t fid);
 
-
+  /* Type the predicate definitions.*/
   int noll_pred_type (void);
-  /* Type the predicate definitions.
-   */
 
   /**
    * @brief  Retrieves the minimum field of a predicate
@@ -246,10 +244,13 @@ extern "C"
    */
   uid_t noll_pred_get_minfield (uid_t pid);
 
+  /* Order the fields using the predicate order.*/
   int noll_field_order (void);
-  /* Order the fields using the predicate order.
-   */
 
+
+  /* ====================================================================== */
+  /* Related Order Graph functions */
+  /* ====================================================================== */
 
 
   /* ====================================================================== */
