@@ -4,9 +4,9 @@
 
 (declare-fun left() (Field Bsth_t Bsth_t))
 (declare-fun right() (Field Bsth_t Bsth_t))
-(declare-fun data() (Field Bsth_t Real))
+(declare-fun data() (Field Bsth_t Rat))
 
-(define-fun bsth ((?E Bsth_t) (?x Real) (?y Real) (?F Bsth_t) (?x1 Real) (?y1 Real)) Space
+(define-fun bsth ((?E Bsth_t) (?x Rat) (?y Rat) (?F Bsth_t) (?x1 Rat) (?y1 Rat)) Space
 (tospace
     (or
         (and
@@ -16,7 +16,7 @@
             (tobool emp)
         )
 
-        (exists ((?X Bsth_t) (?Y Bsth_t) (?z Real) (?x2 Real) (?y2 Real))
+        (exists ((?X Bsth_t) (?Y Bsth_t) (?z Rat) (?x2 Rat) (?y2 Rat))
             (and
                 (< ?y2 ?z)
                 (< ?z ?x2)
@@ -30,7 +30,7 @@
             )
         )
 
-        (exists ((?X Bsth_t) (?Y Bsth_t) (?z Real) (?x2 Real) (?y2 Real))
+        (exists ((?X Bsth_t) (?Y Bsth_t) (?z Rat) (?x2 Rat) (?y2 Rat))
             (and
                 (< ?y2 ?z)
                 (< ?z ?x2)

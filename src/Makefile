@@ -44,6 +44,7 @@ CCINC = noll_vector.h \
 	sl_context.h\
 	graph.h\
 	sl_sat.h\
+    csltp_order_graph.h\
 	sl_entl.h
 
 # noll_graph.h  noll2sat.h\
@@ -71,6 +72,7 @@ CXXSRC = sl_entail.cc\
 	 graph.cc\
 	 sl_sat.cc\
 	 sl_entl.cc\
+	 csltp_order_graph.cc\
 	 sl_var.cc
 
 

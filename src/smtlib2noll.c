@@ -294,11 +294,11 @@ smtlib2_noll_parser_set_logic (smtlib2_parser_interface * p,
                              (intptr_t) (void *)
                              smtlib2_strdup ("BagInt"),
                              (intptr_t) (void *) ty);
-      // TODO: add primitive sort Real
+      // TODO: add primitive sort Rat
       ty = noll_mk_type_rat ();
       smtlib2_hashtable_set (noll_sorts (p),
                              (intptr_t) (void *)
-                             smtlib2_strdup ("Real"),
+                             smtlib2_strdup ("Rat"),
                              (intptr_t) (void *) ty);
       if (noll_option_get_verb () > 0)
         fprintf (stdout, "in smtlib2_noll_parser_set_logic: set-logic %s\n", logic);

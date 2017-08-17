@@ -293,7 +293,7 @@ noll_type_fprint (FILE * f, noll_type_t * a)
       fprintf (f, "Int");
       break;
     case NOLL_TYP_RAT:
-      fprintf (f, "Real");
+      fprintf (f, "Rat");
       break;
     case NOLL_TYP_BAGINT:
       fprintf (f, "BagInt");

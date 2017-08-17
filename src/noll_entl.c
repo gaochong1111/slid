@@ -268,6 +268,7 @@ noll_entl_solve (void)
   int res = 0;
 
 
+  // check the predicate type
   for (uint_t pid = 0;
        pid < noll_vector_size (preds_array); pid++)
   {
@@ -287,12 +288,14 @@ noll_entl_solve (void)
 
   if (noll_prob->pred_t == NOLL_PRED_TREE)
   {
+    // tree predicate
     //#ifndef NDEBUG
     noll_entl_fprint (stdout);
     fflush (stdout);
     //#endif
   }
   else{
+    // linear predicate
     noll_entl_type ();
 
     if (noll_entl_is_sat ())
