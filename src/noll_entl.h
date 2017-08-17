@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 #include "noll_form.h"
-#include "noll_sat.h"
+#include "noll_preds.h"
 
 
 /* ====================================================================== */
@@ -114,6 +114,13 @@ void noll_entl_fprint (FILE * f);
 /* ====================================================================== */
 
 int noll_entl_solve (void);
+
+/* ====================================================================== */
+/* Utilities */
+/* ====================================================================== */
+int
+time_difference (struct timeval *result, struct timeval *t2,
+                 struct timeval *t1);
 
 
 #endif /* NOLL_ENTL_H_ */

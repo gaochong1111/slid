@@ -26,9 +26,17 @@ extern noll_pred_array *preds_array;
  */
 /* --------------------------------------------------------------------------*/
 //check the formula sat or not
-void slid_sat_check(noll_form_t *form)
+/**
+ *@return 1, if sat
+          0, if unsat
+		  -1,if undef
+ */
+int slid_sat_check(noll_form_t *form)
 {
-	if(form == NULL) return;
+	if (form == NULL || form->kind == NOLL_FORM_UNSAT)
+	{
+		return 0;
+	}
 
 	int ret;
 	Z3_solver s;
@@ -59,17 +67,17 @@ void slid_sat_check(noll_form_t *form)
 
 	//init assertion
 	Z3_solver_assert(z3_ctx, s, slid_ctx->abstr);
-	
+
 	//check
 	switch(Z3_solver_check(z3_ctx, s)){
 	case Z3_L_FALSE:
 		ret = SLID_UNSAT;
 		form->kind = NOLL_FORM_UNSAT;
-		break;
+		return 0;
 	case Z3_L_UNDEF:
 		ret = SLID_UNDEF;
 		form->kind = NOLL_FORM_OTHER;
-		break;
+		return -1;
 	case Z3_L_TRUE:
 		ret = SLID_SAT;
 		form->kind = NOLL_FORM_SAT;
@@ -78,7 +86,7 @@ void slid_sat_check(noll_form_t *form)
 			Z3_model_inc_ref(z3_ctx, m);
 			printf("example:\n%s\n", Z3_model_to_string(z3_ctx, m));
 		}
-		break;
+	    return 1;
 	}
 	
 	Z3_del_context(z3_ctx);

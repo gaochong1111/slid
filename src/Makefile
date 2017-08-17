@@ -35,7 +35,7 @@ LDFLAGS = \
 CCINC = noll_vector.h \
         noll_option.h \
 	noll_types.h noll_vars.h noll_preds.h noll_form.h \
-	noll.h smtlib2noll.h  noll_sat.h noll_entl.h\
+	noll.h smtlib2noll.h   noll_entl.h\
 	sl_entail.h\
 	sl_formula.h\
 	sl_abstr.h\
@@ -47,7 +47,7 @@ CCINC = noll_vector.h \
     csltp_order_graph.h\
 	sl_entl.h
 
-# noll_graph.h  noll2sat.h\
+# noll_graph.h  noll2sat.h noll_sat.h\
 	noll2bool.h noll_norm.h  \
         noll2graph.h \
 		 \
@@ -57,12 +57,12 @@ CCSRC = noll_types.c \
 	noll_vars.c \
 	noll_preds.c noll_form.c \
     noll_option.c \
-	 noll_sat.c noll_entl.c\
+	  noll_entl.c\
  	noll.c smtlib2noll.c \
 	noll_dp.c\
 	slid_sat.c
 
-# noll_graph.c noll2bool.c  noll_norm.c  noll2graph.c 	noll2sat.c	\
+# noll_sat.c noll_graph.c noll2bool.c  noll_norm.c  noll2graph.c 	noll2sat.c	\
 
 CXXSRC = sl_entail.cc\
 	 sl_formula.cc\

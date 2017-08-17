@@ -27,7 +27,7 @@
 #include "noll_option.h"
 #include "noll_form.h"
 #include "noll_entl.h"
-#include "noll_sat.h"
+#include "slid_sat.h"
 
 
 extern int solve_entail(void);
@@ -251,6 +251,23 @@ noll_entl_type (void)
 }
 
 
+/**
+ * compute the difference between two times.
+ *
+ * @return 1 if the difference is negative, otherwise 0.
+ */
+int
+time_difference (struct timeval *result, struct timeval *t2,
+                 struct timeval *t1)
+{
+  long int diff = (t2->tv_usec + 1000000 * t2->tv_sec)
+    - (t1->tv_usec + 1000000 * t1->tv_sec);
+  result->tv_sec = diff / 1000000;
+  result->tv_usec = diff % 1000000;
+
+  return (int) (diff < 0);
+}
+
 
 /**
  * Return status of the noll_prob->cmd for the formula
@@ -298,19 +315,23 @@ noll_entl_solve (void)
     // linear predicate
     noll_entl_type ();
 
-    if (noll_entl_is_sat ())
-        return noll_sat_solve (noll_prob->pform);
-
     struct timeval tvBegin, tvEnd, tvDiff;
 
+    // begin timer
     gettimeofday (&tvBegin, NULL);
-    // solve entail problem
-    res = solve_entail();
+
+    if (noll_entl_is_sat ()) {
+      res = slid_sat_check(noll_prob->pform);
+    } else {
+      // solve entail problem
+      res = solve_entail();
+    }
+    //return noll_sat_solve (noll_prob->pform);
 
     gettimeofday (&tvEnd, NULL);
     time_difference (&tvDiff, &tvEnd, &tvBegin);
     printf ("\nTotal time (sec): %ld.%06ld\n\n", (long int) tvDiff.tv_sec,
-    (long int) tvDiff.tv_usec);
+            (long int) tvDiff.tv_usec);
   }
   return res;
 }

@@ -13,4 +13,5 @@ public:
 	static std::vector<std::set<int>> get_equivalence_class(sl_abstr&);
 };
 
+
 #endif //sl_sat.h

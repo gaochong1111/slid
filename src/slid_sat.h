@@ -78,7 +78,12 @@ typedef _slid_context* slid_context;
 
 //main procedure to check sat using z3 smt solver
 //require that the order of predicate parameter
-void slid_sat_check(noll_form_t *);
+/**
+ *@return 1, if sat
+ 0, if unsat
+ -1,if undef
+*/
+int slid_sat_check(noll_form_t *);
 
 #ifdef __cplusplus
 extern "C" {
