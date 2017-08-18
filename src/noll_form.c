@@ -974,6 +974,7 @@ noll_dterm_fprint (FILE * f, noll_var_array * lvars, noll_dterm_t * dt)
 
   switch (dt->kind)
   {
+    //TODO: add NOLL_DATA_RAT .
   case NOLL_DATA_INT:
     fprintf (f, "%ld", dt->p.value);
     break;

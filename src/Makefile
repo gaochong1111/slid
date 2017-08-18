@@ -11,20 +11,17 @@ include ./Makefile.config
 # Use ICFLAGS to specify machine-independent compilation flags.
 ICFLAGS = -I. \
 -I$(SMTLIB2_PREFIX)
- 
-# Use -DSPENEXT to compile the spen analyser
-#ICFLAGS = -I. \
-#-DSPENEXT \
-#-I$(SMTLIB2_PREFIX)
 
-#ICXXFLAGS = \
--I$(LIBVATA_INCLUDE)\
--I../z3/src/api\
--I../z3/src/api/c++
+LIB_DIR=/usr/local/lib
+Z3LIB_PATH=/usr/local/lib/libz3.so
+
+SHARED_LIBS = -lsmtlib2parser -lm
+
+DYN_LINK_LIB_FLAG = -rdynamic $(Z3LIB_PATH)
+DYN_RUN_LIB_FLAG = -Wl,-R$(LIB_DIR)
 
 LDFLAGS = \
 -L$(SMTLIB2_PREFIX) \
-#-L$(LIBVATA_LIB)
 
 #DEBUG=_debug
 
@@ -82,9 +79,7 @@ CXXSRC = sl_entail.cc\
 # Rules
 #---------------------------------------
 
-SHARED_LIBS = -lsmtlib2parser \
-	-lm \
-	-lz3
+
 
 all: compspen
 
@@ -92,6 +87,8 @@ all: compspen
 compspen: $(subst .c,$(DEBUG).o,$(CCSRC)) $(subst .cc,$(DEBUG).o,$(CXXSRC))
 	$(CXX) $(CXXFLAGS_DEBUG) -o $@ $^ \
 	$(LDFLAGS) \
+	$(DYN_LINK_LIB_FLAG) \
+	$(DYN_RUN_LIB_FLAG) \
 	$(SHARED_LIBS)
 
 clean:

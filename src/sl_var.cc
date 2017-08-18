@@ -36,6 +36,7 @@ sl_var& sl_var::operator=(const sl_var& v)
 	 *symbol = v.symbol;
 	 */
 	node = v.node;
+	return *this;
 }
 sl_var& sl_var::operator=(sl_var&& v) noexcept
 {

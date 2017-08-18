@@ -47,9 +47,20 @@
 )
 )
 
-(declare-fun x() Int)
+(declare-fun Z1() Bsth_t)
+(declare-fun Z2() Bsth_t)
+(declare-fun Z3() Bsth_t)
+(declare-fun Z4() Bsth_t)
 
-(assert (and true  (= 1.2 3.4)))
+(declare-fun r1() Rat)
+(declare-fun r2() Rat)
+(declare-fun r3() Rat)
+(declare-fun r4() Rat)
+(declare-fun r5() Rat)
+
+
+(assert (and true (tobool (ssep (pto Z1 (sref (ref left Z2) (ref right Z3) (ref data r1))) (bsth Z2 r2 r3 Z4 r4 r5)))))
+
 (check-sat)
 
 
