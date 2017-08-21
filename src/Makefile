@@ -33,17 +33,19 @@ CCINC = noll_vector.h \
         noll_option.h \
 	noll_types.h noll_vars.h noll_preds.h noll_form.h \
 	noll.h smtlib2noll.h   noll_entl.h\
-	sl_entail.h\
-	sl_formula.h\
-	sl_abstr.h\
-	sl_for.h\
-	sl_var.h\
-	sl_context.h\
-	graph.h\
-	sl_sat.h\
-    csltp_order_graph.h\
-	csltp_sat.h\
-	sl_entl.h
+	csltp_order_graph.h csltp_sat.h\
+
+
+# slid_files
+#	sl_entail.h\
+sl_formula.h\
+sl_abstr.h\
+sl_for.h\
+sl_var.h\
+graph.h\
+sl_sat.h\
+sl_context.h\
+sl_entl.h
 
 # noll_graph.h  noll2sat.h noll_sat.h\
 	noll2bool.h noll_norm.h  \
@@ -56,23 +58,23 @@ CCSRC = noll_types.c \
 	noll_preds.c noll_form.c \
     noll_option.c \
 	noll.c smtlib2noll.c \
-	noll_dp.c\
-	slid_sat.c
+	noll_dp.c
 
 # noll_sat.c noll_graph.c noll2bool.c  noll_norm.c  noll2graph.c 	noll2sat.c	\
+# slid_files: slid_sat.c
 
-CXXSRC = sl_entail.cc\
-	 sl_formula.cc\
-	 sl_abstr.cc\
-	 sl_for.cc\
-	 sl_context.cc\
-	 graph.cc\
-	 sl_sat.cc\
-	 sl_entl.cc\
-	 csltp_order_graph.cc\
-	 csltp_sat.cc\
-     noll_entl.c\
-	 sl_var.cc
+CXXSRC =noll_entl.c csltp_order_graph.cc csltp_sat.cc\
+
+# slid_files:
+# sl_entail.cc\
+sl_formula.cc\
+sl_abstr.cc\
+sl_for.cc\
+sl_context.cc\
+graph.cc\
+sl_sat.cc\
+sl_entl.cc\
+sl_var.cc
 
 
 #---------------------------------------

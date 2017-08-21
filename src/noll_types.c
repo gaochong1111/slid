@@ -366,8 +366,12 @@ noll_type_match (noll_type_t * fty, noll_type_t * aty)
       /// void is also encoded by aty_r == 0
       res = ((aty_r == NOLL_TYP_VOID) || (aty_r == fty_r)) ? true : false;
     }
-  else
-    res = (fty->kind == aty->kind) ? true : false;
+  else if (fty->kind == aty->kind || (fty->kind==NOLL_TYP_RAT && aty->kind==NOLL_TYP_INT) ) {
+    res = true;
+  } else {
+    res = false;
+  }
+
   return res;
 }
 

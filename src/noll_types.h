@@ -56,13 +56,13 @@ extern "C"
   {
     NOLL_TYP_BOOL = 0,
     NOLL_TYP_INT,
+    NOLL_TYP_RAT,
     NOLL_TYP_BAGINT,
     NOLL_TYP_RECORD,
     NOLL_TYP_SETLOC,
     NOLL_TYP_FIELD,
     NOLL_TYP_SETREF,
     NOLL_TYP_SPACE,
-    NOLL_TYP_RAT,
     NOLL_TYP_OTHER
   } noll_typ_t;
 

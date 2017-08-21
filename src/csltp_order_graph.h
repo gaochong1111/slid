@@ -17,7 +17,7 @@ public:
 
         Vertex& operator=(const Vertex& vertex);
         bool operator < (const Vertex& vertex) const;
-        bool operator == (const Vertex& vertex) const;
+        bool operator == (const Vertex vertex) const;
         friend ostream& operator << (ostream& os, Vertex& vertex);
 private:
         string name;
@@ -34,6 +34,7 @@ class Edge
 public:
         Edge(Vertex v1, LabelOp lb ,Vertex v2);
         bool operator < (const Edge& edge) const;
+        bool operator == (const Edge vertex) const;
         Vertex getSource();
         Vertex getDest() ;
         LabelOp getLabel() ;
@@ -107,6 +108,9 @@ public:
 
 
         bool operator == (const OrderGraph& og) const ;
+
+        set<Vertex> getVertexes();
+        set<Edge> getEdges();
 
         void printAsDot(string file) ;
 private:

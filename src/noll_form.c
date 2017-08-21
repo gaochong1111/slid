@@ -1200,9 +1200,13 @@ noll_space_fprint (FILE * f,
         fprintf (f, " nil ");
       else
       {
-        noll_var_t *vari = noll_vector_at (lvars, vi);
-        assert (vari != NULL);
-        fprintf (f, " %s ", vari->vname);
+        if (vi >= noll_vector_size(lvars)) {
+          fprintf (f, " %d ", vi- noll_vector_size(lvars));
+        } else {
+          noll_var_t *vari = noll_vector_at (lvars, vi);
+          assert (vari != NULL);
+          fprintf (f, " %s ", vari->vname);
+        }
       }
     }
     fprintf (f, ")\n");

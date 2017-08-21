@@ -58,8 +58,11 @@
 (declare-fun r4() Rat)
 (declare-fun r5() Rat)
 
+(declare-fun h1() Int)
+(declare-fun h2() Int)
 
-(assert (and true (tobool (ssep (pto Z1 (sref (ref left Z2) (ref right Z3) (ref data r1))) (bsth Z2 r2 r3 Z4 r4 r5)))))
+
+(assert (and true (distinct Z1 Z2) (< r1 r2) (= h1 h2) (<= h1 (+ h2 10)) (tobool (ssep (pto Z1 (sref (ref left Z2) (ref right Z3) (ref data r1))) (bsth Z2 r2 r3 Z4 r4 r5)))))
 
 (check-sat)
 

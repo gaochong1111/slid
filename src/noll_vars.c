@@ -137,10 +137,10 @@ noll_var_type (noll_var_array * a, uid_t vid)
   //  return NOLL_TYP_VOID;
   if (vid != VNIL_ID && vid >= noll_vector_size (a))
     {
-      fprintf (stdout,
-               "Error: incorrect id (%d > %d) for location variable.\n", vid,
-               noll_vector_size (a));
-      return NULL;
+      //  fprintf (stdout,
+      //         "Error: incorrect id (%d > %d) for location variable.\n", vid,
+      //         noll_vector_size (a));
+      return noll_mk_type_int ();
     }
   noll_var_t *v = noll_vector_at (a, vid);
   noll_type_t *ty = v->vty;

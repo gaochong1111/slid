@@ -1,5 +1,6 @@
 #include<iostream>
 #include<fstream>
+#include<locale>
 #include "csltp_order_graph.h"
 
 /** class Vertex  **/
@@ -21,7 +22,8 @@ Vertex& Vertex::operator= (const Vertex& vertex) {
 bool Vertex:: operator< (const Vertex& vertex) const{
         return this->name < vertex.name;
 }
-bool Vertex:: operator == (const Vertex& vertex) const {
+bool Vertex:: operator == (const Vertex vertex) const {
+        // cout<< "in Vertex: override == \n";
         return this->name == vertex.name;
 }
 
@@ -46,6 +48,11 @@ bool Edge::operator < (const Edge& edge) const {
         }
 
         return false;
+}
+
+bool Edge::operator == (const Edge edge) const {
+        cout<< "in Edge: override == \n";
+        return this->label== edge.label && this->source == edge.source && this->dest == edge.dest;
 }
 
 Vertex Edge::getSource() {
@@ -103,7 +110,29 @@ int find_vertex(const vector<Vertex>& vec, const Vertex& v) {
 /** class OrderGraph **/
 
 void OrderGraph::addVertex(Vertex v) {
-        this->vertexes.insert(v);
+        if (this->vertexes.find(v) == this->vertexes.end()) {
+                this->vertexes.insert(v);
+                locale loc;
+                string name = v.getName();
+                if (isdigit(name[0], loc)) {
+                        for (auto vertex : this->vertexes) {
+                                if(vertex == v) continue;
+
+                                string dest = vertex.getName();
+                                int name_i = atoi(name.c_str());
+                                if(isdigit(dest[0], loc)) {
+                                        int dest_i = atoi(dest.c_str());
+                                        if (dest_i < name_i) {
+                                                Edge e_lt(vertex, LABEL_LT, v);
+                                                edges.insert(e_lt);
+                                        } else {
+                                                Edge e_gt(v, LABEL_LT, vertex);
+                                                edges.insert(e_gt);
+                                        }
+                                }
+                        }
+                }
+        }
 }
 
 /***
@@ -114,16 +143,45 @@ void OrderGraph::addVertex(Vertex v) {
 int OrderGraph::addEdge(Edge edge) {
         if (this->vertexes.find(edge.getSource()) != this->vertexes.end() &&
             this->vertexes.find(edge.getDest()) != this->vertexes.end()) {
-                if (edge.getSource() == edge.getDest() && edge.getLabel() == LABEL_LE) {
+                // Vertex v_s = edge.getSource();
+                // Vertex v_d = edge.getDest();
+                bool res = (edge.getSource() == edge.getDest());
+                // cout << v_s  << " --- " << v_d << " == : "<< res << endl;
+                if (res && edge.getLabel() == LABEL_LE) {
                         // V <= V, do not insert
+                        // cout << "do nothing .\n";
                         return 1;
                 }
                 edges.insert(edge);
                 return 1;
         }
+
+        locale loc;
+        string source = edge.getSource().getName();
+        string dest = edge.getDest().getName();
+        bool is_source = isdigit(source[0], loc);
+        bool is_dest = isdigit(dest[0], loc);
+        if (is_source || is_dest) {
+                if (is_source) {
+                        this->addVertex(edge.getSource());
+                }
+                if (is_dest) {
+                        this->addVertex(edge.getDest());
+                }
+                edges.insert(edge);
+                return 1;
+        }
+
         return 0;
 }
 
+set<Vertex> OrderGraph::getVertexes() {
+        return this->vertexes;
+}
+
+set<Edge> OrderGraph::getEdges() {
+        return this->edges;
+}
 
 /**
  * saturate the graph
@@ -141,10 +199,12 @@ void OrderGraph::saturate() {
                                 if (edge1.getDest() == edge2.getSource()) {
                                         if (edge1.getLabel() == LABEL_LE && edge2.getLabel() == LABEL_LE ) {
                                                 Edge edge(edge1.getSource(), LABEL_LE, edge2.getDest());
-                                                this->edges.insert(edge);
+                                                // this->edges.insert(edge);
+                                                this->addEdge(edge);
                                         } else {
                                                 Edge edge(edge1.getSource(), LABEL_LT, edge2.getDest());
-                                                this->edges.insert(edge);
+                                                // this->edges.insert(edge);
+                                                this->addEdge(edge);
                                         }
                                 }
                         }
@@ -216,7 +276,9 @@ int OrderGraph::substitution(const vector<Vertex>& old_v, const vector<Vertex>& 
                 if (flag) {
                         Edge e(source, edge.getLabel(), dest);
                         this->edges.erase(edge);
-                        this->edges.insert(e);
+
+                        // this->edges.insert(e);
+                        this->addEdge(e);
                 }
         }
         return 1;
@@ -229,10 +291,12 @@ int OrderGraph::substitution(const vector<Vertex>& old_v, const vector<Vertex>& 
  */
 void OrderGraph::unionGraph(const OrderGraph& og) {
         for (auto vertex : og.vertexes) {
-                this->vertexes.insert(vertex);
+                // this->vertexes.insert(vertex);
+                this->addVertex(vertex);
         }
         for (auto edge : og.edges) {
-                this->edges.insert(edge);
+                // this->edges.insert(edge);
+                this->addEdge(edge);
         }
 }
 
@@ -253,7 +317,14 @@ int OrderGraph::restriction(set<Vertex>& v_set) {
         for (auto edge : edges_copy) {
                 if (v_set.find(edge.getSource()) == v_set.end() ||
                     v_set.find(edge.getDest()) == v_set.end()) {
-                        this->edges.erase(edge);
+                        locale loc;
+                        string source = edge.getSource().getName();
+                        bool is_source = isdigit(source[0], loc);
+                        string dest = edge.getDest().getName();
+                        bool is_dest = isdigit(dest[0], loc);
+                        if(!is_source && !is_dest) {
+                                this->edges.erase(edge);
+                        }
                 }
         }
         return 1;
@@ -264,6 +335,7 @@ bool OrderGraph::operator == (const OrderGraph& og) const {
         if (this->vertexes == og.vertexes && this->edges == og.edges) {
                 return true;
         }
+
         return false;
 }
 
@@ -284,10 +356,12 @@ void OrderGraph::printAsDot(string file) {
                 fs << vertex_name<<";\n";
         }
         for (auto edge : edges) {
-                if (edge.getSource() == edge.getDest() && edge.getLabel()==LABEL_LE)
-                        continue;
+                // if (edge.getSource() == edge.getDest() && edge.getLabel()==LABEL_LE)
+                //        continue;
                 string source_name = edge.getSource().getName();
                 string dest_name  = edge.getDest().getName();
+                // cout << source_name << "->" << dest_name <<endl;
+
                 this->delSpecialChar(source_name);
                 this->delSpecialChar(dest_name);
                 fs << source_name << "->" <<dest_name<<"[label=\""<<label_str[edge.getLabel()] <<"\"];\n";

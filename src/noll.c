@@ -648,10 +648,6 @@ noll_mk_pred_rule_check_pure (const char *name,
   }
   else
   {
-    /// isRec == true
-    // if nrec_p == 1 then empty or E != nil and mset composition
-    // if nrec_p == 2 then E != F and mset composition
-
     uint_t E = 1;
     if (nrec_p == 1)
     {
@@ -1171,13 +1167,6 @@ noll_mk_pred_rules (noll_context_t * ctx, const char *name,
     return 0;
   }
 
-  /// Verify that at least one recursive case is specified
-  /* if (pdef->sigma_0 == NULL)
-     {
-     noll_error (1, "Building predicate definition ", name);
-     noll_error (1, "No recursive rule provided!", "");
-     return 0;
-     }*/
   return 1;
 }
 
@@ -1541,6 +1530,9 @@ noll_mk_number (noll_context_t * ctx, const char *str)
   noll_exp_t *res = noll_mk_op (NOLL_F_INT, NULL, 0);
   char *endstr;
   res->p.value = strtol (str, &endstr, 10);
+
+  // fprintf(stdout, "mk number : %s\n", str);
+
   if (endstr == NULL)
   {
     /// bad translation to integer
@@ -2776,12 +2768,17 @@ noll_exp_push_dform (noll_exp_t * e, noll_var_array * lenv, int level)
     noll_dform_free (df);
     return NULL;
   }
+
   if ((t1->typ != t2->typ) ||
       ((e->discr == NOLL_F_SUBSET) && (t1->typ != NOLL_TYP_BAGINT)))
   {
-    noll_error (1, "Building data formula ", "(bad type for terms)");
-    noll_dform_free (df);
-    return NULL;
+    if ( (t1->typ==NOLL_TYP_INT&&t2->typ==NOLL_TYP_RAT) || (t2->typ==NOLL_TYP_INT&&t1->typ==NOLL_TYP_RAT)) {
+
+    } else {
+      noll_error (1, "Building data formula ", "(bad type for terms)");
+      noll_dform_free (df);
+      return NULL;
+    }
   }
   df->p.targs = noll_dterm_array_new ();
   df->typ = NOLL_TYP_BOOL;
@@ -2994,18 +2991,28 @@ noll_mk_form_pred (noll_context_t * ctx, noll_var_array * lenv,
   uint_t i;
   for (i = 0; i < e->size; i++)
   {
+    uint_t pi = e->args[i]->p.sid;
+    // printf("args->discr: %d\t", e->args[i]->discr);
     if (e->args[i]->discr != NOLL_F_LVAR || e->args[i]->size != 0)
     {
-      noll_error (1, "Predicate call to ", pname);
-      noll_error (1, "Bad (last) parameters.", "");
-      free (actuals);
-      free (actuals_ty);
-      return NULL;
+      if (e->args[i]->discr == NOLL_F_INT) {
+        // constant
+        pi = e->args[i]->p.value + noll_vector_size(lenv);
+      } else {
+        noll_error (1, "Predicate call to ", pname);
+        noll_error (1, "Bad (last) parameters.", "");
+        free (actuals);
+        free (actuals_ty);
+        return NULL;
+      }
     }
-    uint_t pi = e->args[i]->p.sid;
+
+    // printf("pi: %d\n", pi);
+
     noll_uid_array_push (actuals, pi);
     noll_type_array_push (actuals_ty, noll_var_type (lenv, pi));
   }
+  printf("\n");
   pid = noll_pred_typecheck_call (pid, actuals_ty);
   noll_type_array_delete (actuals_ty);
   /// generate the corresponding space formula
