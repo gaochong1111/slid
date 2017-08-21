@@ -3,7 +3,7 @@ YICES_DIR = /usr/local/yices-1.0.40
 CC = gcc
 FLEX = flex
 BISON = bison
-CFLAGS = -static -std=c99 -pedantic -g -Wall
+CFLAGS = -static -std=c99 -pedantic -g -Wno-unused-function -Wno-incompatible-pointer-types -Wno-implicit-function-declaration -Wall
 LDFLAGS = -g -lgmp -lgmpxx -lstdc++ 
 SHARED = $(CC) -shared
 
@@ -59,5 +59,4 @@ smtlib2bisonparser.c: $(BISON_SRC) smtlib2flexlexer.c
 	$(BISON) -o $@ $<
 
 smtlib2flexlexer.c: smtlib2flexlexer.l
-	echo $(SYST)
 	$(FLEX) --header-file="smtlib2flexlexer.h" -o $@ $<

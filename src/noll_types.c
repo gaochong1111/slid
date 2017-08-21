@@ -329,7 +329,7 @@ noll_type_is_vartype (noll_type_t * t)
 {
   assert (NULL != t);
   /// depends on logic  // TODO NEW
-  if ((t->kind >= NOLL_TYP_INT) && (t->kind <= NOLL_TYP_SETLOC)|| (t->kind == NOLL_TYP_RAT))
+  if (((t->kind >= NOLL_TYP_INT) && (t->kind <= NOLL_TYP_SETLOC))|| (t->kind == NOLL_TYP_RAT))
     return true;
   return false;
 }
