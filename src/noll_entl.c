@@ -252,6 +252,287 @@ noll_entl_type (void)
   return 1;
 }
 
+/**
+ * check the predicate type: NOLL_PRED_LIN or NOLL_PRED_TREE
+ *
+ */
+void noll_check_predicate_type() {
+  // check the predicate type
+  for (uint_t pid = 0;
+       pid < noll_vector_size (preds_array); pid++)
+  {
+    noll_pred_t *p = noll_vector_at (preds_array, pid);
+    size_t size = (p->def->rec_rules == NULL) ? 0 : noll_vector_size (p->def->rec_rules);
+    noll_space_t* pcall = NULL;
+    if (size > 0) {
+      pcall = noll_vector_at (p->def->rec_rules, 0)->rec;
+      size_t pcall_num = noll_vector_size (pcall->m.sep);
+      if (pcall_num > 1)
+      {
+        noll_prob->pred_t = NOLL_PRED_TREE;
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * check the predicate definition and type the pred->typing
+ * @return 1, if ok
+ *        -1, otherwise
+ */
+int noll_check_tree_pred(noll_pred_t* pred) {
+  // check
+  int res  = 1;
+  noll_pred_type_init (pred);
+
+  uid_t fargs = pred->def->fargs;
+  if (fargs<2 || fargs%2 == 1) {
+    fprintf(stdout, "Error for predicate %s, arguments number must be great than 1 and even number. \n", pred->pname);
+    return -1;
+  }
+
+  noll_var_array* lvars = pred->def->vars;
+  noll_var_t* E = noll_vector_at(lvars, 1);
+  noll_var_t* F = noll_vector_at(lvars, 1+fargs/2);
+  if (E->vty->kind!=NOLL_TYP_RECORD || F->vty->kind!=NOLL_TYP_RECORD) {
+    fprintf(stdout, "Error for predicate %s, the firt parameter must be record type. \n", pred->pname);
+    return -1;
+  }
+
+  int type_match_flag = 1;
+
+  if (E->vty->kind!=F->vty->kind) {
+    type_match_flag = 0;
+    fprintf(stdout, "Error for predicate %s, the source parameters and destination parameters must be matched in types. \n", pred->pname);
+  }
+
+  int size_type_flag = 0;
+  int data_type_flag = 0;
+  noll_uid_array* alpha = noll_uid_array_new();
+  noll_uid_array_reserve(alpha, fargs/2);
+
+  noll_uid_array* beta = noll_uid_array_new();
+  noll_uid_array_reserve(beta, fargs/2);
+
+
+  for (uid_t i=2; i<=fargs/2; i++) {
+    noll_var_t* arg_alpha = noll_vector_at(lvars, i);
+    noll_var_t* arg_beta = noll_vector_at(lvars, i+fargs/2);
+
+    if (arg_alpha->vty->kind == NOLL_TYP_RAT) {
+      if (size_type_flag) {
+        fprintf(stdout, "Error for predicate %s, data parameters must be before size parameter in the source parameters. \n", pred->pname);
+        return -1;
+      } else {
+        data_type_flag = 1;
+      }
+    } else if (arg_alpha->vty->kind == NOLL_TYP_INT) {
+      size_type_flag = 1;
+    } else {
+      fprintf(stdout, "Error for predicate %s, there are only data and size parameters in the alpha source parameters. \n", pred->pname);
+      return -1;
+    }
+
+    if (!type_match_flag || arg_alpha->vty->kind != arg_beta->vty->kind) {
+      fprintf(stdout, "Error for predicate %s, source parameters must be mathed in type with the destination parameters. \n", pred->pname);
+      return -1;
+    }
+    noll_uid_array_push(alpha, arg_alpha->vid);
+    noll_uid_array_push(beta, arg_beta->vid);
+  }
+
+  // fill the tree predicate type
+  if (size_type_flag && data_type_flag) {
+    pred->typ->p.treekind = NOLL_PRED_TREE_GENRAL;
+  } else if (size_type_flag) {
+    pred->typ->p.treekind = NOLL_PRED_TREE_ONLY_SIZE;
+  } else if (data_type_flag) {
+    pred->typ->p.treekind = NOLL_PRED_TREE_ONLY_DATA;
+  } else {
+    pred->typ->p.treekind = NOLL_PRED_TREE_NONE_DATA;
+  }
+
+  // check rules for predicate
+  noll_pred_rule_array* base_rules = pred->def->base_rules;
+  // check base rule
+  if (noll_vector_size(base_rules) != 1) {
+    fprintf(stdout, "Error for predicate %s, the base rule must have exactly one. \n", pred->pname);
+    return -1;
+  }
+  noll_pred_rule_t* base_rule = noll_vector_at(base_rules, 0);
+
+  noll_pure_t* pure_base = base_rule->pure;
+
+  for (uid_t i=1; i<pure_base->size; i++) {
+    for (uid_t j=i+1; j<pure_base->size; j++) {
+      if (noll_pure_matrix_at(pure_base, i, j) !=  NOLL_PURE_EQ
+          && noll_pure_matrix_at(pure_base, i, j) !=  NOLL_PURE_NEQ) {
+        fprintf(stdout, "Error for predicate %s, the base rule must have only = or != relation. \n", pred->pname);
+        return -1;
+      }
+    }
+  }
+
+  if (base_rule->pto!=NULL&&base_rule->rec!=NULL && !noll_vector_empty(pure_base->data)) {
+    fprintf(stdout, "Error for predicate %s, the base rule must have only = or != relation. \n", pred->pname);
+    return -1;
+  }
+
+  //check the recursive rules
+  noll_pred_rule_array* rec_rules  = pred->def->rec_rules;
+  uid_t size_rules = noll_vector_size(rec_rules);
+  if (size_rules<1) {
+    fprintf(stdout, "Error for predicate %s, the number of inductive rule must be at least one. \n", pred->pname);
+    return -1;
+  }
+
+
+  for (uid_t i=0; i<size_rules; i++) {
+    noll_pred_rule_t* rec_rule = noll_vector_at(rec_rules, i);
+    noll_var_array* rec_vars = rec_rule->vars;
+
+    noll_uid_array* X_var = noll_uid_array_new();
+    noll_uid_array* x_var = noll_uid_array_new();
+    noll_uid_array* h_var = noll_uid_array_new();
+
+    for (uid_t j=0; j<noll_vector_size(rec_vars); j++) {
+      noll_var_t* exist_v = noll_vector_at(rec_vars, j);
+      if (exist_v->vty->kind == NOLL_TYP_INT) {
+        noll_uid_array_push(h_var, exist_v->vid);
+      } else if (exist_v->vty->kind == NOLL_TYP_RAT) {
+        noll_uid_array_push(x_var, exist_v->vid);
+      } else if (exist_v->vty->kind == NOLL_TYP_RECORD) {
+        noll_uid_array_push(X_var, exist_v->vid);
+      }
+    }
+
+    noll_pure_t* pure_rec = rec_rule->pure;
+    noll_dform_array* dforms_rec = pure_rec->data;
+
+    for (uid_t j=0; j<noll_vector_size(dforms_rec); j++) {
+      noll_dform_t* dform_rec = noll_vector_at(dforms_rec, j);
+      if (dform_rec->typ == NOLL_TYP_BOOL) {
+        // TODO: true?
+
+      }
+      if(dform_rec->kind>NOLL_DATA_GE){
+        fprintf(stdout, "Error for predicate %s, not supported op in data constraints in the inductive rule. \n", pred->pname);
+        return -1;
+      } else{
+        uid_t term_size = noll_vector_size(dform_rec->p.targs);
+        noll_dterm_t* term1 = noll_vector_at(dform_rec->p.targs, 0);
+        noll_dterm_t* term2 = noll_vector_at(dform_rec->p.targs, 1);
+        if (term1->kind != NOLL_DATA_VAR) {
+          fprintf(stdout, "Error for predicate %s, variable must be the first in data constraints in the inductive rule. \n", pred->pname);
+          return -1;
+        }
+
+        noll_var_t* var1 = noll_vector_at(rec_vars, term1->p.sid);
+
+        noll_var_t* var2 = NULL;
+        if (term2->kind == NOLL_DATA_VAR) {
+          var2 = noll_vector_at(rec_vars, term2->p.sid);
+        }
+        int size_type_constraint_flag = 0;
+        if (var1->vty->kind == NOLL_TYP_INT) {
+          size_type_constraint_flag = 1;
+          // size type constraint: h = n or h = h + n
+          if (term2->kind == NOLL_DATA_INT) {
+
+          } else if (term2->kind == NOLL_DATA_PLUS) {
+            // record alpha_i = delta_i + n : term1 = term21 + term22
+            noll_dterm_t* term21 = noll_vector_at(term2->args, 0);
+            noll_dterm_t* term22 = noll_vector_at(term2->args, 1);
+            if (term21->kind != NOLL_DATA_VAR || term22->kind!=NOLL_DATA_INT) {
+              fprintf(stdout, "Error for predicate %s, size type must be h op n or h op h+n in data constraints in the inductive rule. \n", pred->pname);
+              return -1;
+            }
+          } else {
+            fprintf(stdout, "Error for predicate %s, size type must be h op n or h op h+n in data constraints in the inductive rule. \n", pred->pname);
+            return -1;
+          }
+
+        } else if (var1->vty->kind == NOLL_TYP_RAT) {
+          if (size_type_constraint_flag) {
+            fprintf(stdout, "Error for predicate %s, size type must be after data type constraint in data constraints in the inductive rule. \n", pred->pname);
+            return -1;
+          }
+          // data type constraint x < d or x < x
+          if (term2->kind == NOLL_DATA_VAR || term2->kind == NOLL_DATA_INT) {
+          } else {
+            fprintf(stdout, "Error for predicate %s, data type must be x op d or x op x1 in data constraints in the inductive rule. \n", pred->pname);
+            return -1;
+          }
+        }
+      }
+    }
+
+    noll_pto_t pto_rec = rec_rule->pto->m.pto;
+    if (pto_rec.sid != E->vid) {
+      fprintf(stdout, "Error for predicate %s, the source pto must be the first predicate parameter  in the inductive rule. \n", pred->pname);
+      return -1;
+    }
+
+    noll_uid_array* fields_pto = pto_rec.fields;
+    noll_uid_array* dest_pto = pto_rec.dest;
+    // TODO:   fileds check
+
+
+    noll_space_t* pcall_rec = rec_rule->rec;
+    noll_space_t* phi_delta = noll_vector_at(pcall_rec->m.sep, 0);
+    noll_space_t* phi = noll_vector_at(pcall_rec->m.sep, 1);
+    if (noll_vector_at(phi_delta->m.ls.args ,fargs/2) == 0) {
+      phi = phi_delta;
+      phi_delta =  noll_vector_at(pcall_rec->m.sep, 1);
+    }
+
+    // delta, gamma, epsilon
+    noll_uid_array* delta = noll_uid_array_new();
+    noll_uid_array* gamma = noll_uid_array_new();
+    noll_uid_array* epsilon = noll_uid_array_new();
+
+    // pcall(Y,delta;F,beta) : phi_delta
+
+    uid_t Y_id = noll_vector_at(phi_delta->m.ls.args, 0);
+    for (uid_t j=1; j<fargs/2; j++) {
+      uid_t delta_vid = noll_vector_at(phi_delta->m.ls.args, j);
+      noll_uid_array_push(delta, delta_vid);
+
+      uid_t gamma_vid = noll_vector_at(phi->m.ls.args, j);
+      noll_uid_array_push(gamma, gamma_vid);
+    }
+
+    // pcall(X,gamma;nil,epsilon) : phi
+    uid_t X_id = noll_vector_at(phi->m.ls.args, 0);
+    for (uid_t j=fargs/2+1; j<fargs; j++) {
+      uid_t epsilon_vid = noll_vector_at(phi->m.ls.args, j);
+      noll_uid_array_push(epsilon, epsilon_vid);
+    }
+
+    // check C1
+    // check C2
+    // check C3
+    // check C4
+
+  }
+
+  return 1;
+}
+
+/**
+ * check all predicates
+ * @return 1, if ok
+ *        -1, otherwise
+ */
+int noll_check_preds() {
+  int res = 0;
+  for (uint_t pid = 0; pid < noll_vector_size (preds_array); pid++) {
+    noll_pred_t* pred = noll_vector_at(preds_array, pid);
+    noll_check_tree_pred(pred);
+  }
+  return res;
+}
 
 /**
  * compute the difference between two times.
@@ -286,46 +567,28 @@ noll_entl_solve (void)
 {
   int res = 0;
 
+  noll_check_predicate_type();
 
-  // check the predicate type
-  for (uint_t pid = 0;
-       pid < noll_vector_size (preds_array); pid++)
-  {
-    noll_pred_t *p = noll_vector_at (preds_array, pid);
-    size_t size = (p->def->rec_rules == NULL) ? 0 : noll_vector_size (p->def->rec_rules);
-    noll_space_t* pcall = NULL;
-    if (size > 0) {
-      pcall = noll_vector_at (p->def->rec_rules, 0)->rec;
-      size_t pcall_num = noll_vector_size (pcall->m.sep);
-      if (pcall_num > 1)
-      {
-        noll_prob->pred_t = NOLL_PRED_TREE;
-        break;
-      }
-    }
-  }
+  struct timeval tvBegin, tvEnd, tvDiff;
+
+  gettimeofday (&tvBegin, NULL);
 
   if (noll_prob->pred_t == NOLL_PRED_TREE)
   {
     // tree predicate
-    //#ifndef NDEBUG
+#ifndef NDEBUG
     noll_entl_fprint (stdout);
     fflush (stdout);
+#endif
 
-    // noll_pred_t *pi = noll_vector_at (preds_array, 0);
-    // lfp(pi);
+    // check the predicate definition
+
 
     res = csltp_sat_check(noll_prob->pform);
-    //#endif
   }
   else{
     // linear predicate
     noll_entl_type ();
-
-    struct timeval tvBegin, tvEnd, tvDiff;
-
-    // begin timer
-    gettimeofday (&tvBegin, NULL);
 
     if (noll_entl_is_sat ()) {
       // res = slid_sat_check(noll_prob->pform);
@@ -334,11 +597,10 @@ noll_entl_solve (void)
       // res = solve_entail();
     }
     //return noll_sat_solve (noll_prob->pform);
-
-    gettimeofday (&tvEnd, NULL);
-    time_difference (&tvDiff, &tvEnd, &tvBegin);
-    printf ("\nTotal time (sec): %ld.%06ld\n\n", (long int) tvDiff.tv_sec,
-            (long int) tvDiff.tv_usec);
   }
+  gettimeofday (&tvEnd, NULL);
+  time_difference (&tvDiff, &tvEnd, &tvBegin);
+  printf ("\nTotal time (sec): %ld.%06ld\n\n", (long int) tvDiff.tv_sec,
+          (long int) tvDiff.tv_usec);
   return res;
 }

@@ -22,7 +22,7 @@
             (and
                 (< ?y2 ?u)
                 (< ?u ?x2)
-                (= ?z 1)
+                (<= ?z 2)
                 (tobool
                     (ssep
                         (pto ?E (sref (ref left ?X) (ref right ?Y) (ref data ?u) (ref color ?z)))

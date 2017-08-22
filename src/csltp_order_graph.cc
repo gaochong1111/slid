@@ -51,7 +51,7 @@ bool Edge::operator < (const Edge& edge) const {
 }
 
 bool Edge::operator == (const Edge edge) const {
-        cout<< "in Edge: override == \n";
+        // cout<< "in Edge: override == \n";
         return this->label== edge.label && this->source == edge.source && this->dest == edge.dest;
 }
 
@@ -112,26 +112,6 @@ int find_vertex(const vector<Vertex>& vec, const Vertex& v) {
 void OrderGraph::addVertex(Vertex v) {
         if (this->vertexes.find(v) == this->vertexes.end()) {
                 this->vertexes.insert(v);
-                locale loc;
-                string name = v.getName();
-                if (isdigit(name[0], loc)) {
-                        for (auto vertex : this->vertexes) {
-                                if(vertex == v) continue;
-
-                                string dest = vertex.getName();
-                                int name_i = atoi(name.c_str());
-                                if(isdigit(dest[0], loc)) {
-                                        int dest_i = atoi(dest.c_str());
-                                        if (dest_i < name_i) {
-                                                Edge e_lt(vertex, LABEL_LT, v);
-                                                edges.insert(e_lt);
-                                        } else {
-                                                Edge e_gt(v, LABEL_LT, vertex);
-                                                edges.insert(e_gt);
-                                        }
-                                }
-                        }
-                }
         }
 }
 
@@ -146,32 +126,25 @@ int OrderGraph::addEdge(Edge edge) {
                 // Vertex v_s = edge.getSource();
                 // Vertex v_d = edge.getDest();
                 bool res = (edge.getSource() == edge.getDest());
-                // cout << v_s  << " --- " << v_d << " == : "<< res << endl;
                 if (res && edge.getLabel() == LABEL_LE) {
-                        // V <= V, do not insert
                         // cout << "do nothing .\n";
                         return 1;
                 }
-                edges.insert(edge);
-                return 1;
-        }
 
-        locale loc;
-        string source = edge.getSource().getName();
-        string dest = edge.getDest().getName();
-        bool is_source = isdigit(source[0], loc);
-        bool is_dest = isdigit(dest[0], loc);
-        if (is_source || is_dest) {
-                if (is_source) {
-                        this->addVertex(edge.getSource());
-                }
-                if (is_dest) {
-                        this->addVertex(edge.getDest());
+                if (edge.getLabel() == LABEL_LE) {
+                        Edge e_lt(edge.getSource(), LABEL_LT, edge.getDest());
+                        if (this->edges.find(e_lt) != this->edges.end()) {
+                                return 1;
+                        }
+                } else {
+                        Edge e_le(edge.getSource(), LABEL_LE, edge.getDest());
+                        if (this->edges.find(e_le) != this->edges.end()) {
+                                this->edges.erase(e_le);
+                        }
                 }
                 edges.insert(edge);
                 return 1;
         }
-
         return 0;
 }
 
@@ -192,7 +165,7 @@ void OrderGraph::saturate() {
 
         int size = this->edges.size();
 
-        while(new_edges != this->edges) {
+        while(!(new_edges == this->edges)) {
                 new_edges = this->edges;
                 for (auto edge1 : new_edges) {
                         for (auto edge2 : new_edges) {
@@ -248,7 +221,7 @@ int OrderGraph::substitution(const vector<Vertex>& old_v, const vector<Vertex>& 
                         return -1;
                 }
         }
-        if (old_vertexes.size() != old_v.size())
+        if (old_vertexes.size() != old_v.size() && old_vertexes.size() != new_v.size())
                 return -1;
         // insert new
         for (unsigned int i=0; i<new_v.size(); i++) {
@@ -262,7 +235,7 @@ int OrderGraph::substitution(const vector<Vertex>& old_v, const vector<Vertex>& 
                 Vertex dest = edge.getDest();
                 bool flag = false; // substitute flag
                 if (old_vertexes.find(edge.getSource()) != old_vertexes.end()) {
-                        // substitute source
+                        // substitute source !opt!
                         source = new_v[find_vertex(old_v, edge.getSource())];
                         flag = true;
                 }

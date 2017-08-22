@@ -50,8 +50,8 @@ int csltp_sat_check(noll_form_t * form) {
 
         abs_phi_star(ctx);
 
-        cout << "\nphi_star:\n";
-        cout << ctx.phi_star<<endl;
+        // cout << "\nphi_star:\n";
+        // cout << ctx.phi_star<<endl;
 
         z3::expr abs = ctx.pure_abs && ctx.space_abs && ctx.phi_star;
 
@@ -74,7 +74,7 @@ int csltp_sat_check(noll_form_t * form) {
 
 
 /**
- * compute all predicate lfp
+ * compute all predicate delta_ge1_p
  * @param ctx : csltp context
  */
 void compute_all_delta_ge1_p(csltp_context& ctx) {
@@ -194,6 +194,7 @@ z3::expr compute_delta_phi_pd(noll_pred_t* pred, z3::context& ctx) {
 
         // if pred->typing only data constraint
         OrderGraphSet ogset = lfp(pred);
+        print_order_graph_set(ogset, "order graph set:");
         for (int j=0; j<ogset.size(); j++) {
                 OrderGraph og = ogset.at(j);
                 z3::expr og_expr = graph2expr(og, ctx);
@@ -363,6 +364,8 @@ void abs_phi_star(csltp_context& ctx) {
 
 
 
+
+
 /**
  * compute lfp(pred)
  * @param pred: the predicate definition
@@ -397,11 +400,19 @@ OrderGraphSet lfp(noll_pred_t* pred) {
                 for (uid_t k=0; k<length_rules; k++) {
                         noll_pred_rule_t* rule = noll_vector_at(rec_rules, k);
 
+                        // extract constant -> set
+                        set<Vertex> constant_set;
+                        extract_constant_from_rule_pure(rule, constant_set);
+
                         // compute delta, gamma_epsilon
                         vector<Vertex> delta;
                         vector<Vertex> gamma_epsilon;
 
-                        extractRecCallDataPara(rule, fargs, delta, gamma_epsilon);
+                        extractRecCallDataPara(rule, fargs, delta, gamma_epsilon, constant_set);
+
+                        OrderGraph og_cons; // constant order graph
+                        create_constant_order_graph(constant_set, og_cons);
+
                         // print_vertex(delta, "delta:");
                         // print_vertex(gamma_epsilon, "epsilon:");
 
@@ -412,7 +423,7 @@ OrderGraphSet lfp(noll_pred_t* pred) {
                                         OrderGraph og2 = ogset.at(j);
 
                                         // g_delta constructed by recursive rule (data constraint)
-                                        OrderGraph g_delta;
+                                        OrderGraph g_delta = og_cons;
                                         pure2graph(rule, g_delta);
                                         // substitution1
                                         og1.substitution(alpha, delta);
@@ -423,7 +434,6 @@ OrderGraphSet lfp(noll_pred_t* pred) {
 
                                         // substitution2
                                         og2.substitution(old_vs2, new_vs2);
-                                        og2.printAsDot("og2.dot");
 
                                         //union
                                         g_delta.unionGraph(og1);
@@ -435,8 +445,9 @@ OrderGraphSet lfp(noll_pred_t* pred) {
                                         if (g_delta.isConsistent()) {
                                                 // restriction
                                                 set<Vertex> v_set;
+                                                old_vs2.insert(old_vs2.end(), constant_set.begin(), constant_set.end()); // add constant_set
                                                 vec2set(old_vs2, v_set);
-                                                g_delta.restriction(v_set);
+
                                                 ogset.addOrderGraph(g_delta);
                                         }
                                 }
@@ -660,11 +671,10 @@ void pure2graph(noll_pred_rule_t* rule, OrderGraph& og) {
                                         if (term2->kind == NOLL_DATA_VAR) {
                                                 v2 =  noll_vector_at (vars, term2->p.sid);
                                         } else if (term2->kind == NOLL_DATA_INT) {
-                                                stringstream ss;
-                                                ss<<term2->p.value;
-                                                v2 = noll_var_new(ss.str().c_str(), noll_mk_type_int(), NOLL_SCOPE_LOCAL);
-                                                Vertex v_con(v2->vname);
-                                                og.addVertex(v_con);
+                                                string con_str = to_string(term2->p.value);
+                                                v2 = noll_var_new(con_str.c_str(), noll_mk_type_int(), NOLL_SCOPE_LOCAL);
+                                                Vertex v_con(con_str);
+                                                // og.addVertex(v_con);
                                         }
                                 }
                         }
@@ -673,7 +683,6 @@ void pure2graph(noll_pred_rule_t* rule, OrderGraph& og) {
                 if (v1 != NULL && v2 != NULL) {
                         Vertex vertex1(v1->vname);
                         Vertex vertex2(v2->vname);
-
 
                         if (df->kind == NOLL_DATA_EQ) {
                                 Edge eq_e1(vertex1, LABEL_LE, vertex2);
@@ -730,8 +739,7 @@ void extractAlphaBeta(noll_pred_t* pred, vector<Vertex>& alpha, vector<Vertex>& 
  * @param fargs: the predicate argument number
  * @param delta_gamma, epsilon : output
  */
-void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>& delta, vector<Vertex>& gamma_epsilon) {
-        // TODO;....fix bug
+void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>& delta, vector<Vertex>& gamma_epsilon, set<Vertex>& constant_set) {
         noll_var_array* lvars = rule->vars;
 
         noll_space_array* sep = rule->rec->m.sep;
@@ -739,7 +747,6 @@ void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>&
 
         noll_space_t* phi_delta = NULL;
 
-        // cout <<"args:" <<noll_vector_at (phi->m.ls.args, fargs/2)<<endl;
         if (noll_vector_at (phi->m.ls.args, fargs/2) == 0) { // nil
                 phi_delta =  noll_vector_at(sep, 1);
         } else {
@@ -748,7 +755,7 @@ void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>&
         }
 
 
-        // delta
+        // delta gamma
         for (uid_t i = 1; i < fargs/2; i++)
         {
                 uint_t vid = noll_vector_at (phi_delta->m.ls.args, i);
@@ -756,22 +763,18 @@ void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>&
                 if (vid >= noll_vector_size(lvars)) {
                         Vertex v_con_delta(to_string((vid-noll_vector_size(lvars))));
                         delta.push_back(v_con_delta);
+                        constant_set.insert(v_con_delta);
                 } else {
                         noll_var_t *vi = noll_vector_at (lvars, vid);
                         Vertex v_delta(vi->vname);
                         delta.push_back(v_delta);
                 }
-        }
 
-
-        // gamma
-        for (uid_t i = 1; i < fargs/2; i++)
-
-        {
-                uint_t vid = noll_vector_at (phi->m.ls.args, i);
+                vid = noll_vector_at (phi->m.ls.args, i);
                 if (vid >= noll_vector_size(lvars)) {
                         Vertex v_con_gamma(to_string((vid-noll_vector_size(lvars))));
                         gamma_epsilon.push_back(v_con_gamma);
+                        constant_set.insert(v_con_gamma);
                 } else {
                         noll_var_t *vi = noll_vector_at (lvars, vid);
                         Vertex v_gamma(vi->vname);
@@ -786,6 +789,7 @@ void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>&
                 if (vid >= noll_vector_size(lvars)) {
                         Vertex v_con_epsilon(to_string((vid-noll_vector_size(lvars))));
                         gamma_epsilon.push_back(v_con_epsilon);
+                        constant_set.insert(v_con_epsilon);
                 } else {
                         noll_var_t *vi = noll_vector_at (lvars, vid);
                         Vertex v_epsilon(vi->vname);
@@ -806,6 +810,68 @@ void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>&
 void vec2set(vector<Vertex>& vec, set<Vertex>& v_set) {
         for (uid_t i=0; i<vec.size(); i++) {
                 v_set.insert(vec[i]);
+        }
+}
+
+/**
+ * extract constant from the inductive rule
+ * @param rule : the inductive rule
+ * @param constant_set : constant vertex set
+ */
+void extract_constant_from_rule_pure(noll_pred_rule_t* rule, set<Vertex>& constant_set) {
+        // from pure data formula
+        noll_dform_array* dfs = rule->pure->data;
+        noll_var_array* vars = rule->vars;
+
+        if (dfs == NULL) return;
+
+        for (uint_t i = 0; i < noll_vector_size (dfs); i++)
+        {
+                noll_dform_t* df = noll_vector_at(dfs, i);
+
+                noll_var_t* v1 = NULL;
+                noll_var_t* v2 = NULL;
+
+                if (df->p.targs != NULL && noll_vector_size (df->p.targs) == 2) {
+                        noll_dterm_t* term1 = noll_vector_at (df->p.targs, 0);
+                        noll_dterm_t* term2 = noll_vector_at (df->p.targs, 1);
+
+                        if (term1->kind == NOLL_DATA_VAR) {
+                                v1 =  noll_vector_at (vars, term1->p.sid);
+                                if (v1->vty->kind == NOLL_TYP_RAT) {
+                                        if (term2->kind == NOLL_DATA_VAR) {
+                                                v2 =  noll_vector_at (vars, term2->p.sid);
+                                        } else if (term2->kind == NOLL_DATA_INT) {
+                                                Vertex v_con(to_string(term2->p.value));
+                                                constant_set.insert(v_con);
+                                        }
+                                }
+                        }
+                }
+        }
+}
+
+/**
+ * create constant graph
+ * @param constant_set : the set of constant
+ * @param og_cons : the output graph
+ */
+void create_constant_order_graph(set<Vertex>& constant_set, OrderGraph& og_cons) {
+        for (auto cons : constant_set) {
+                og_cons.addVertex(cons);
+        }
+        for (auto cons1 : constant_set) {
+                for (auto cons2: constant_set) {
+                        int cons_v1 = atoi(cons1.getName().c_str());
+                        int cons_v2 = atoi(cons2.getName().c_str());
+                        if (cons_v1 < cons_v2) {
+                                Edge e_con_lt(cons1, LABEL_LT, cons2);
+                                og_cons.addEdge(e_con_lt);
+                        } else if (cons_v1 > cons_v2){
+                                Edge e_con_lt(cons2, LABEL_LT, cons1);
+                                og_cons.addEdge(e_con_lt);
+                        }
+                }
         }
 }
 

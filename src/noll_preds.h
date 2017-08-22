@@ -76,7 +76,16 @@ extern "C"
     NOLL_PRED_TREE,             // tree predicate
     NOLL_PRED_OTHER             // default
   } noll_pred_kind_e;
-   
+
+
+  typedef enum
+  {
+    NOLL_PRED_TREE_NONE_DATA,
+    NOLL_PRED_TREE_ONLY_DATA,
+    NOLL_PRED_TREE_ONLY_SIZE,
+    NOLL_PRED_TREE_GENRAL
+  } noll_pred_tree_kind;
+
   /** Arguments typing infos
    */
   typedef enum
@@ -108,17 +117,23 @@ extern "C"
      * with values of @type noll_field_e for each field used in pred
      */
     noll_uint_array *pfields;
-    noll_pred_kind_e pkind;     /* class of the inductive definition */
     bool isUnaryLoc;            /* the predicate has only source */
     bool useNil;                /* the predicate use fields to nil */
     bool isTwoDir;              /* the predicate is a two direction */
-    int nDir;
     noll_uid_array *argkind;    /* for each argument, kind of it */
 
     /* array of size @global preds_array
      * with values 1 for predicates called inside the definition of pred
      */
     noll_uint_array *ppreds;
+
+
+    noll_pred_kind_e pkind;     /* class of the inductive definition */
+    union {
+      noll_pred_tree_kind treekind; // the tree predicate type
+    }p;
+    int nDir; /* number of the location var*/
+
   } noll_pred_typing_t;
 
   /** Predicate information:
@@ -234,6 +249,14 @@ extern "C"
 
   /* Type the predicate definitions.*/
   int noll_pred_type (void);
+
+  /**
+   * Alloc the type structure and fill the fields with the default values
+   * @param p     predicate
+   * @return      1 if ok, 0 otherwise
+   */
+  int
+  noll_pred_type_init (noll_pred_t * p);
 
   /**
    * @brief  Retrieves the minimum field of a predicate

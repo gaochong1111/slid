@@ -180,7 +180,7 @@ void extractAlphaBeta(noll_pred_t* pred, vector<Vertex>& alpha, vector<Vertex>& 
  * @param fargs: the predicate argument number
  * @param delta_gamma, epsilon : output
  */
-void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>& delta, vector<Vertex>& gamma_epsilon);
+void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>& delta, vector<Vertex>& gamma_epsilon, set<Vertex>& constant_set);
 
 /**
  * vector (no same elements) to set
@@ -189,6 +189,21 @@ void extractRecCallDataPara(noll_pred_rule_t* rule, uid_t fargs, vector<Vertex>&
  */
 void vec2set(vector<Vertex>& vec, set<Vertex>& v_set);
 
+/**
+ * extract constant from the inductive rule
+ * @param rule : the inductive rule
+ * @param constant_set : constant vertex set
+ */
+void extract_constant_from_rule_pure(noll_pred_rule_t* rule, set<Vertex>& constant_set);
+
+/**
+ * create constant graph
+ * @param constant_set : the set of constant
+ * @param og_cons : the output graph
+ */
+void create_constant_order_graph(set<Vertex>& constant_set, OrderGraph& og_cons);
+
+
 /*******************************
  ***  print functions        ***
  ******************************/
@@ -196,6 +211,7 @@ void vec2set(vector<Vertex>& vec, set<Vertex>& v_set);
 void print_vertex(vector<Vertex> vec, string msg);
 
 void print_order_graph_set(OrderGraphSet& ogs, string msg);
+
 
 
 
