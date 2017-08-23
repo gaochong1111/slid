@@ -15,7 +15,7 @@ To compile:
 
 - GNU flex >= 2.5.33
 
-- GNU bison (tested under bison 2.4.1)
+- GNU bison (tested under bison 2.4.1 (better))
 
 - SMTLIB2 parser of Alberto Griggio available at 
   https://es.fbk.eu/people/griggio/misc/smtlib2parser.html
@@ -32,14 +32,29 @@ To compile:
   -- aptitude search boost
   -- sudo apt-get install libboost-dev
 
+Auxiliary Tools:
+- graphviz (More infomation at http://www.graphviz.org/)
+  -- sudo apt-get install graphviz
+  -- sudo apt-get install xdot (only in linux)
+
 Installation
 ============
 1) Compiling:
+   - modify Makefile
+     LIB_DIR=/usr/local/lib your # libz3.so directory
+     Z3LIB_PATH=/usr/local/lib/libz3.so # your libz3.so path
    - do 'make' in the directory
 
 
 2) Install:
    - move the 'compspen' binary to a known executable path
+
+Run
+===
+1) do 'compspen inputfile'
+   - the output includes some *.dot files, xdot can open *.dot as a picture.
+   
+
 
 
 
