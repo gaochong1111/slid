@@ -460,13 +460,13 @@ noll_pred_type_init (noll_pred_t * p)
   p->typ = (noll_pred_typing_t *) malloc (sizeof (struct noll_pred_typing_t));
 
   /* predicate type = type of the first parameter */
-  p->typ->ptype0 = noll_var_record (p->def->vars, 1);
+  // p->typ->ptype0 = noll_var_record (p->def->vars, 1);
 
   /* types covered */
   p->typ->ptypes = noll_uint_array_new ();
   /* resize the array to cover all the records, filled with 0 */
   noll_uint_array_resize (p->typ->ptypes, noll_vector_size (records_array));
-  noll_vector_at (p->typ->ptypes, p->typ->ptype0) = 1;
+  // noll_vector_at (p->typ->ptypes, p->typ->ptype0) = 1;
 
   /* fields used */
   p->typ->pfields = noll_uint_array_new ();

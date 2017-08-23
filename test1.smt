@@ -1,11 +1,15 @@
 (set-logic QF_SLRDI)
 
 (declare-sort RBth_t 0)
+(declare-sort Bsth_t 0)
 
 (declare-fun left() (Field RBth_t RBth_t))
 (declare-fun right() (Field RBth_t RBth_t))
 (declare-fun data() (Field RBth_t Rat))
 (declare-fun color() (Field RBth_t Rat))
+
+(declare-fun next() (Field Bsth_t Bsth_t))
+
 
 (define-fun rbth ((?E RBth_t) (?x Rat) (?y Rat) (?z Rat) (?F RBth_t) (?x1 Rat) (?y1 Rat) (?z1 Rat)) Space
 (tospace
@@ -22,10 +26,10 @@
             (and
                 (< ?y2 ?u)
                 (< ?u ?x2)
-                (<= ?z 2)
+                (<= ?z -2)
                 (tobool
                     (ssep
-                        (pto ?E (sref (ref left ?X) (ref right ?Y) (ref data ?u) (ref color ?z)))
+                        (pto ?E (sref (ref left ?Y)  (ref right ?X)  (ref data ?u) (ref color ?z)))
                         (rbth ?X ?x ?y2 1 ?F ?x1 ?y1 ?z1)
                         (rbth ?Y ?x2 ?y 1 nil ?y ?y 1)
                     )
@@ -35,6 +39,19 @@
     )
 )
 )
+
+
+(define-fun f1 ( (?E RBth_t)  (?x Rat)  (?h Int) (?F RBth_t)  (?x1 Rat) (?h1 Int))  Space (tospace
+    (or
+        (and (= ?E ?F) (< ?x ?x1) (tobool emp))
+
+        (exists ((?X RBth_t) (?x2 Rat) (?u Rat) (?h2 Int))
+            (and (= ?h (+ ?h2 1)) (< ?x ?u) (tobool (ssep (pto ?E (sref  (ref left ?X)  (ref right ?X) (ref data ?x2) (ref color ?u))) (f1 ?X ?x ?h2 nil ?x 0) (f1 ?X ?x ?h2 ?F ?x ?h))))
+        )
+
+))
+)
+
 
 (declare-fun Z1() RBth_t)
 (declare-fun Z2() RBth_t)

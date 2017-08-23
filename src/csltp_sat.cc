@@ -194,7 +194,7 @@ z3::expr compute_delta_phi_pd(noll_pred_t* pred, z3::context& ctx) {
 
         // if pred->typing only data constraint
         OrderGraphSet ogset = lfp(pred);
-        print_order_graph_set(ogset, "order graph set:");
+        print_order_graph_set(ogset, pred->pname);
         for (int j=0; j<ogset.size(); j++) {
                 OrderGraph og = ogset.at(j);
                 z3::expr og_expr = graph2expr(og, ctx);
@@ -888,13 +888,15 @@ void print_vertex(vector<Vertex> vec, string msg) {
         cout<<endl;
 }
 
-
-void print_order_graph_set(OrderGraphSet& ogset, string msg) {
-        cout << msg <<"\n size:" <<ogset.size()<<endl;
-
+/**
+ * print the order graph lfp for $prefix_G_$i.dot
+ * @param ogset : order graph set
+ * @param prefix : the file prefix
+ */
+void print_order_graph_set(OrderGraphSet& ogset, string prefix) {
         for (int i=0; i<ogset.size(); i++) {
                 stringstream ss;
-                ss << "G"<<i<<".dot";
+                ss << prefix << "_G_"<<i<<".dot";
                 ogset.at(i).printAsDot(ss.str());
         }
 }

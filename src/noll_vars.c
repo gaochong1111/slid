@@ -90,13 +90,13 @@ uid_t
 noll_var_array_find_local (noll_var_array * a, const char *name)
 {
   if (a && (noll_vector_size (a) > 0))
-    {
-      uid_t sz = noll_vector_size (a);
-      for (uid_t i = 0; i < sz; i++)
-        if (noll_vector_at (a, i) && !strcmp (name,
-                                              noll_vector_at (a, i)->vname))
-          return i;
-    }
+  {
+    uid_t sz = noll_vector_size (a);
+    for (uid_t i = 0; i < sz; i++)
+      if (noll_vector_at (a, i) && !strcmp (name,
+                                            noll_vector_at (a, i)->vname))
+        return i;
+  }
   return UNDEFINED_ID;
 }
 
@@ -108,23 +108,23 @@ char *
 noll_var_name (noll_var_array * a, uid_t vid, noll_typ_t ty)
 {
   if (&ty != &ty)
-    {
-      assert (0);               // just to avoid an "unused parameter warning"
-    }
+  {
+    assert (0);               // just to avoid an "unused parameter warning"
+  }
 
   if (a == NULL)
     return "unknown";
   if (vid == VNIL_ID)
-    {
-      return "nil";
-    }
+  {
+    return "nil";
+  }
   if (vid >= noll_vector_size (a))
-    {
-      printf
-        ("noll_var_name: called with identifier %d not in the local environment.\n",
-         vid);
-      return "unknown";
-    }
+  {
+    printf
+      ("noll_var_name: called with identifier %d not in the local environment.\n",
+       vid);
+    return "unknown";
+  }
   return (noll_vector_at (a, vid))->vname;
 }
 
@@ -136,12 +136,12 @@ noll_var_type (noll_var_array * a, uid_t vid)
   // if (vid == VNIL_ID)
   //  return NOLL_TYP_VOID;
   if (vid != VNIL_ID && vid >= noll_vector_size (a))
-    {
-      //  fprintf (stdout,
-      //         "Error: incorrect id (%d > %d) for location variable.\n", vid,
-      //         noll_vector_size (a));
-      return noll_mk_type_int ();
-    }
+  {
+    //  fprintf (stdout,
+    //         "Error: incorrect id (%d > %d) for location variable.\n", vid,
+    //         noll_vector_size (a));
+    return noll_mk_type_int ();
+  }
   noll_var_t *v = noll_vector_at (a, vid);
   noll_type_t *ty = v->vty;
   return ty;
@@ -152,22 +152,22 @@ noll_var_record (noll_var_array * a, uid_t vid)
 {
   noll_type_t *ty = noll_var_type (a, vid);
   if ((ty == NULL) || (ty->kind != NOLL_TYP_RECORD) || (ty->args == NULL))
-    {
-      /// NEW: do not signal an error because of Int and BagInt types
-      return UNDEFINED_ID;
-    }
+  {
+    /// NEW: do not signal an error because of Int and BagInt types
+    return UNDEFINED_ID;
+  }
 #ifndef NDEBUG
-  //fprintf (stdout, "noll_var_record: var %s, tid = %d\n", v->vname, ty->kind);
-  //fflush(stdout);
+  fprintf (stdout, "noll_var_record: var %s, tid = %d\n", v->vname, ty->kind);
+  fflush(stdout);
 #endif
   uid_t tid = noll_vector_at (ty->args, 0);
   if ((tid >= noll_vector_size (records_array))
       || (noll_vector_at (records_array, tid) == NULL))
-    {
-      fprintf (stdout, "Unknown record type for location variable %d.\n",
-               vid);
-      return UNDEFINED_ID;
-    }
+  {
+    fprintf (stdout, "Unknown record type for location variable %d.\n",
+             vid);
+    return UNDEFINED_ID;
+  }
   return tid;
 }
 
@@ -178,25 +178,25 @@ noll_var_array_fprint (FILE * f, noll_var_array * a, const char *msg)
   fprintf (f, "\n%s: ", msg);
   fflush (f);
   if (!a)
-    {
-      fprintf (f, "null\n");
-      return;
-    }
+  {
+    fprintf (f, "null\n");
+    return;
+  }
   fprintf (f, "[");
   uid_t length_a = noll_vector_size (a);
   for (uid_t i = 0; i < length_a; i++)
-    {
-      noll_var_t *vi = noll_vector_at (a, i);
-      assert (vi != NULL);
-      noll_type_t *ti = vi->vty;
-      if (vi->scope == NOLL_SCOPE_LOCAL)
-        fprintf (f, "L");
-      else
-        fprintf (f, "G");
-      fprintf (f, "%s:", vi->vname);
-      noll_type_fprint (f, ti);
-      fprintf (f, ", ");
-    }
+  {
+    noll_var_t *vi = noll_vector_at (a, i);
+    assert (vi != NULL);
+    noll_type_t *ti = vi->vty;
+    if (vi->scope == NOLL_SCOPE_LOCAL)
+      fprintf (f, "L");
+    else
+      fprintf (f, "G");
+    fprintf (f, "%s:", vi->vname);
+    noll_type_fprint (f, ti);
+    fprintf (f, ", ");
+  }
   fprintf (f, " - ]");
   fflush (f);
 }

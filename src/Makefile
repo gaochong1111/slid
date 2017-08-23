@@ -63,7 +63,7 @@ CCSRC = noll_types.c \
 # noll_sat.c noll_graph.c noll2bool.c  noll_norm.c  noll2graph.c 	noll2sat.c	\
 # slid_files: slid_sat.c
 
-CXXSRC =noll_entl.c csltp_order_graph.cc csltp_sat.cc\
+CXXSRC =noll_entl.cc csltp_order_graph.cc csltp_sat.cc\
 
 # slid_files:
 # sl_entail.cc\

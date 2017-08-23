@@ -210,6 +210,11 @@ void create_constant_order_graph(set<Vertex>& constant_set, OrderGraph& og_cons)
 
 void print_vertex(vector<Vertex> vec, string msg);
 
+/**
+ * print the order graph lfp for $prefix_G_$i.dot
+ * @param ogset : order graph set
+ * @param prefix : the file prefix
+ */
 void print_order_graph_set(OrderGraphSet& ogs, string msg);
 
 

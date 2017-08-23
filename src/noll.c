@@ -396,8 +396,8 @@ noll_mk_pred_exp2rule_space (noll_context_t * ctx, const char *name,
     }
     /// if starting from first parameter, then push in prule->pto
     /// otherwise in prule->nst
-    if (pto->m.pto.sid == VID_FST_PARAM)
-    {
+    // if (pto->m.pto.sid == VID_FST_PARAM)
+    // {
       if (prule->pto != NULL)
       {
         noll_error (1, "Building predicate definition ", name);
@@ -406,20 +406,20 @@ noll_mk_pred_exp2rule_space (noll_context_t * ctx, const char *name,
         return 0;
       }
       prule->pto = pto;
-    }
-    else
-    {
-      // this maybe not used?
-      if (prule->nst == NULL)
-      {
-        prule->nst = noll_space_new ();
-        prule->nst->kind = NOLL_SPACE_SSEP;
-        prule->nst->is_precise = true;
-        prule->nst->m.sep = noll_space_array_new ();
-      }
-      assert (prule->nst->kind == NOLL_SPACE_SSEP);
-      noll_space_array_push (prule->nst->m.sep, pto);
-    }
+      //  }
+    /* else */
+    /* { */
+    /*   // this maybe not used? */
+    /*   if (prule->nst == NULL) */
+    /*   { */
+    /*     prule->nst = noll_space_new (); */
+    /*     prule->nst->kind = NOLL_SPACE_SSEP; */
+    /*     prule->nst->is_precise = true; */
+    /*     prule->nst->m.sep = noll_space_array_new (); */
+    /*   } */
+    /*   assert (prule->nst->kind == NOLL_SPACE_SSEP); */
+    /*   noll_space_array_push (prule->nst->m.sep, pto); */
+    /* } */
     return 1;
   }
   case NOLL_F_PRED:
@@ -523,6 +523,8 @@ noll_mk_pred_exp2rule (noll_context_t * ctx, const char *name,
 {
   assert (exp != NULL);
 
+  // printf("exp: %d\n", exp->discr);
+
   int res = 1;
   if (exp->discr == NOLL_F_AND)
   {
@@ -537,7 +539,7 @@ noll_mk_pred_exp2rule (noll_context_t * ctx, const char *name,
         noll_mk_pred_exp2rule (ctx, name, exp->args[i], pid, prule, nrec_p,
                                false);
   }
-  else if ((exp->discr >= NOLL_F_EQ) && (exp->discr <= NOLL_F_SUBSET))
+  else if (((exp->discr >= NOLL_F_EQ) && (exp->discr <= NOLL_F_SUBSET)) || (exp->discr == NOLL_F_TRUE || exp->discr == NOLL_F_FALSE))
     res = noll_mk_pred_exp2rule_pure (ctx, name, exp, pid, prule, nrec_p);
   else if (exp->discr == NOLL_F_TOBOOL)
   {
@@ -1069,6 +1071,7 @@ noll_mk_pred_rule_rec (noll_context_t * ctx, const char *name,
   if (res == 0)
     return 0;
 
+
   /// check the pure part is compositional (recursive case)
   res = noll_mk_pred_rule_check_pure (name, prule, nrec_p, true);
   if (res == 0)
@@ -1091,6 +1094,8 @@ noll_mk_pred_rule_rec (noll_context_t * ctx, const char *name,
 
   /// push the rule; it also fills the simple rule case
   noll_pred_binding_push_rule (pdef, prule, true);
+
+
 
   return 1;
 }
@@ -1166,6 +1171,7 @@ noll_mk_pred_rules (noll_context_t * ctx, const char *name,
     noll_error (1, "No base rule provided!", "");
     return 0;
   }
+
 
   return 1;
 }
@@ -2752,6 +2758,12 @@ noll_exp_push_dform (noll_exp_t * e, noll_var_array * lenv, int level)
 
     break;
   }
+  case NOLL_F_TRUE:
+  case NOLL_F_FALSE:
+  {
+    noll_error (1, "Building data formula ", "(not supported true or false)");
+    noll_dform_free (df);
+  }
   default:
   {
     noll_error (1, "Building data formula ", "(bad operator)");
@@ -2989,6 +3001,7 @@ noll_mk_form_pred (noll_context_t * ctx, noll_var_array * lenv,
 
   assert (NULL != pname);
   uint_t i;
+  // printf("predicate :%s\n", pname);
   for (i = 0; i < e->size; i++)
   {
     uint_t pi = e->args[i]->p.sid;
@@ -3006,13 +3019,12 @@ noll_mk_form_pred (noll_context_t * ctx, noll_var_array * lenv,
         return NULL;
       }
     }
+    // printf("\n");
 
-    // printf("pi: %d\n", pi);
 
     noll_uid_array_push (actuals, pi);
     noll_type_array_push (actuals_ty, noll_var_type (lenv, pi));
   }
-  printf("\n");
   pid = noll_pred_typecheck_call (pid, actuals_ty);
   noll_type_array_delete (actuals_ty);
   /// generate the corresponding space formula
