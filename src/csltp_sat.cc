@@ -83,11 +83,7 @@ void compute_all_delta_ge1_p(csltp_context& ctx) {
         for (uid_t i=0; i<size_pred; i++) {
                 noll_pred_t* pred = noll_vector_at(preds_array, i);
                 uid_t fargs = pred->def->fargs;
-                // cout<< "predicate: " <<pred->pname << "\n";
-                // cout<< "size: " << ogset.size() << "\n";
-
                 z3::expr phi_pd_abs = compute_delta_phi_pd(pred, ctx.ctx);
-
                 // compute delta_ge1_p
                 z3::expr delta_ge1_p_abs =  ctx.ctx.bool_val(false);
                 // for all recursive rules
@@ -190,17 +186,25 @@ z3::expr compute_delta_ge1_r(noll_pred_rule_t* rule, noll_pred_t* pred, z3::expr
  * @return expr
  */
 z3::expr compute_delta_phi_pd(noll_pred_t* pred, z3::context& ctx) {
-        z3::expr phi_pd_abs = ctx.bool_val(false);
 
-        // if pred->typing only data constraint
-        OrderGraphSet ogset = lfp(pred);
-        print_order_graph_set(ogset, pred->pname);
-        for (int j=0; j<ogset.size(); j++) {
-                OrderGraph og = ogset.at(j);
-                z3::expr og_expr = graph2expr(og, ctx);
-                phi_pd_abs = phi_pd_abs || og_expr;
+        if (pred->typ->p.treekind == NOLL_PRED_TREE_ONLY_DATA) {
+                z3::expr phi_pd_abs = ctx.bool_val(false);
+                // if pred->typing only data constraint
+                OrderGraphSet ogset = lfp(pred);
+                print_order_graph_set(ogset, pred->pname);
+                for (int j=0; j<ogset.size(); j++) {
+                        OrderGraph og = ogset.at(j);
+                        z3::expr og_expr = graph2expr(og, ctx);
+                        phi_pd_abs = phi_pd_abs || og_expr;
+                }
+                return phi_pd_abs;
+        } else if (pred->typ->p.treekind == NOLL_PRED_TREE_NONE_DATA) {
+                return ctx.bool_val(true);
+        } else if (pred->typ->p.treekind == NOLL_PRED_TREE_ONLY_SIZE) {
+                return ctx.bool_val(true);
+        } else {
+                return ctx.bool_val(true);
         }
-        return phi_pd_abs;
 }
 
 
