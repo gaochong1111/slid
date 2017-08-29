@@ -288,11 +288,11 @@ void print_error_info(int code, noll_pred_t* pred) {
     "the only data and size parameters in the alpha source parameters. \n", // -1004 check
     "the number of size parameters in the alpha source parameters is at most one. \n", // -1005 check
     "the parameter in the alpha (or beta) source parameters must be different from each other. \n", // -1006 check
-    "the number of base rule must be exactly one. \n", //-1007 NONE
-    "the OP of base rule must include only = or !=. \n", // -1008 little bug
-    "the number of inductive rule must be at least one. \n", // -1009 BUG
+    "the number of base rules must be exactly one. \n", //-1007 NONE
+    "the OP of base rules must include only = or !=. \n", // -1008 little bug
+    "the number of inductive rules must be at least one. \n", // -1009 BUG
     "not supported op in the data constraints in the inductive rule. \n", // -1010 NONE
-    "the data constraints in the inductive rule must start with the variable. \n", //-1011 check
+    "the data constraints in each inductive rule must start with the variable. \n", //-1011 check
     "the size type must include like h op n or h op h+n in data constraints in the inductive rule. \n", //-1012 check
     "the data type constraints must be before the size type constraint in data constraints in the inductive rule. \n", // -1013 NONE
     "the data type must include like x op d or x op x1 in data constraints in the inductive rule. \n", //-1014 check
